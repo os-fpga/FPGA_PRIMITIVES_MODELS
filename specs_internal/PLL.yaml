@@ -1,0 +1,136 @@
+# Periphery Primitives Parameters and Properties (P4)
+#
+# This file contains the list of Verilog parameters and SDC properties that are
+# allowed for periphery primitives.
+#
+# See https://rapidsilicon.atlassian.net/wiki/spaces/RS/pages/214368265/Periphery+Primitive+Parameters+and+Properties+Definitions+P4DEF for more details
+#
+# The name needs to match the filename root
+# name: <primitive name>
+# desc: <optional description>
+#
+# ports:
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#
+# # set as Verilog parameter
+# parameters:
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>  
+#
+# # set in SDC or by synthesis attribute
+# properties:
+#    <property_name>:
+#        desc: <description>
+#        values: 
+#          - <enum_name>
+#          - <enum_name>
+#    <property_name>:
+#        desc: <description>
+#          - <enum_name>
+#          - <enum_name>
+#
+# primitive name should match the filename root.
+name: PLL
+desc: Phase locked loop
+category: periphery
+timescale: 1ps/1ps
+
+ports:
+   PLL_EN:
+     dir: input
+     desc: PLL Enable
+   CLK_IN:
+     dir: input
+     desc: Clock input
+   CLK_OUT:
+     dir: output
+     desc: Output clock, frequency is CLK_IN_FREQ*PLL_MULT/PLL_DIV/PLL_POST_DIV
+     type: reg
+     default: 1'b0
+   CLK_OUT_DIV2:
+     dir: output
+     desc: CLK_OUT divided by 2 output
+     type: reg
+     default: 1'b0
+   CLK_OUT_DIV3:
+     dir: output
+     desc: CLK_OUT divided by 3 output
+     type: reg
+     default: 1'b0
+   CLK_OUT_DIV4:
+     dir: output
+     desc: CLK_OUT divided by 4 output
+     type: reg
+     default: 1'b0
+   SERDES_FAST_CLK:
+     dir: output
+     desc: Gearbox fast clock output
+     type: reg
+     default: 1'b0
+   LOCK:
+     dir: output
+     desc: PLL lock signal
+     type: reg
+     default: 1'b0
+
+# set as Verilog parameter in netlist    
+parameters:
+    DIVIDE_CLK_IN_BY_2:
+      desc: Enable input divider (TRUE/FALSE)
+      default: "FALSE"
+      values:
+        - "TRUE"
+        - "FALSE"
+    PLL_MULT:
+      desc: VCO clock multiplier value (16-1000)
+      type: integer
+      default: 16
+      range: 16 .. 1000
+    PLL_DIV:
+      desc: VCO clock divider value (1-63)
+      type: integer
+      default: 1
+      range: 1 .. 63
+    PLL_POST_DIV:
+      desc: VCO clock post-divider value (2,4,6,8,10,12,14,16,18,20,24,28,30,32,36,40,42,48,50,56,60,70,72,84,98)
+      type: integer
+      default: 2
+      values:
+        - 2
+        - 4
+        - 6
+        - 8
+        - 10
+        - 12
+        - 14
+        - 16
+        - 18
+        - 20
+        - 24
+        - 28
+        - 30
+        - 32
+        - 36
+        - 40
+        - 42
+        - 48
+        - 50
+        - 56
+        - 60
+        - 70
+        - 72
+        - 84
+        - 98

@@ -1,0 +1,97 @@
+# Periphery Primitives Parameters and Properties (P4)
+#
+# This file contains the list of Verilog parameters and SDC properties that are
+# allowed for periphery primitives.
+#
+# See https://rapidsilicon.atlassian.net/wiki/spaces/RS/pages/214368265/Periphery+Primitive+Parameters+and+Properties+Definitions+P4DEF for more details
+#
+# The name needs to match the filename root
+# name: <primitive name>
+# desc: <optional description>
+#
+# ports:
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#
+# # set as Verilog parameter
+# parameters:
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>  
+#
+# # set in SDC or by synthesis attribute
+# properties:
+#    <property_name>:
+#        desc: <description>
+#        values: 
+#          - <enum_name>
+#          - <enum_name>
+#    <property_name>:
+#        desc: <description>
+#          - <enum_name>
+#          - <enum_name>
+#
+# primitive name should match the filename root.
+name: O_SERDES
+desc: Output Serializer
+category: periphery
+
+ports:
+   D[WIDTH-1:0]:
+     dir: input
+     desc: D input bus
+   RST:
+     dir: input
+     desc: Active-low, asynchronous reset
+   LOAD_WORD:
+     dir: input
+     desc: Load word input
+   CLK_IN: 
+     dir: input
+     desc: Fabric clock input
+   OE_IN: 
+     dir: input
+     desc: Output tri-state enable input
+   OE_OUT: 
+     dir: output
+     desc: Output tri-state enable output (conttect to O_BUFT or inferred tri-state signal)
+   Q:
+     dir: output
+     desc: Data output (Connect to output port, buffer or O_DELAY)
+   CHANNEL_BOND_SYNC_IN:
+     dir: input
+     desc: Channel bond sync input
+   CHANNEL_BOND_SYNC_OUT:
+     dir: output
+     desc: Channel bond sync output
+   PLL_LOCK:
+     dir: input
+     desc: PLL lock input
+   PLL_CLK:
+     dir: input
+     desc: PLL clock input
+
+# set as Verilog parameter in netlist    
+parameters:
+    DATA_RATE:
+      desc: Single or double data rate (SDR/DDR)
+      default: SDR
+      values:
+         - SDR
+         - DDR
+    WIDTH:
+      desc: Width of input data to serializer (3-10)
+      type: integer
+      default: 4
+      range: 3 .. 10

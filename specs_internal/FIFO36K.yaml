@@ -1,0 +1,137 @@
+# Periphery Primitives Parameters and Properties (P4)
+#
+# This file contains the list of Verilog parameters and SDC properties that are
+# allowed for periphery primitives.
+#
+# See https://rapidsilicon.atlassian.net/wiki/spaces/RS/pages/214368265/Periphery+Primitive+Parameters+and+Properties+Definitions+P4DEF for more details
+#
+# The name needs to match the filename root
+# name: <primitive name>
+# desc: <optional description>
+#
+# ports:
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#
+# # set as Verilog parameter
+# parameters:
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>  
+#
+# # set in SDC or by synthesis attribute
+# properties:
+#    <property_name>:
+#        desc: <description>
+#        values: 
+#          - <enum_name>
+#          - <enum_name>
+#    <property_name>:
+#        desc: <description>
+#          - <enum_name>
+#          - <enum_name>
+#
+# primitive name should match the filename root.
+name: FIFO36K
+desc: 36Kb FIFO
+category: core_fabric
+
+ports:
+   RESET:
+     dir: input
+     desc: Active high synchronous FIFO reset
+   WR_CLK:
+     dir: input
+     desc: Write clock
+   RD_CLK:
+     dir: input
+     desc: Read clock
+   WR_EN:
+     dir: input
+     desc: Write enable
+   RD_EN:
+     dir: input
+     desc: Read enable
+   WR_DATA[DATA_WRITE_WIDTH-1:0]:
+     dir: input
+     desc: Write data
+   RD_DATA[DATA_READ_WIDTH-1:0]:
+     dir: output
+     desc: Read data
+   EMPTY:
+     dir: output
+     desc: FIFO empty flag
+     type: reg
+     default: 1'b1
+   FULL:
+     dir: output
+     desc: FIFO full flag
+     type: reg
+     default: 1'b0
+   ALMOST_EMPTY:
+     dir: output
+     desc: FIFO almost empty flag
+     type: reg
+     default: 1'b0
+   ALMOST_FULL:
+     dir: output
+     desc: FIFO almost full flag
+     type: reg
+     default: 1'b0
+   PROG_EMPTY:
+     dir: output
+     desc: FIFO programmable empty flag
+     type: reg
+     default: 1'b1
+   PROG_FULL:
+     dir: output
+     desc: FIFO programmable full flag
+     type: reg
+     default: 1'b0
+   OVERFLOW:
+     dir: output
+     desc: FIFO overflow error flag
+     type: reg
+     default: 1'b0
+   UNDERFLOW:
+     dir: output
+     desc: FIFO underflow error flag
+     type: reg
+     default: 1'b0
+
+parameters:
+    DATA_WRITE_WIDTH:
+      desc: FIFO data write width (1-36)
+      type: integer
+      default: 36
+      range: 1 .. 36
+    DATA_READ_WIDTH:
+      desc: FIFO data read width (1-36)
+      type: integer
+      default: 36
+      range: 1 .. 36
+    FIFO_TYPE:
+      desc: Synchronous or Asynchronous data transfer (SYNCHRONOUS/ASYNCHRONOUS)
+      default: SYNCHRONOUS
+      values:
+        - SYNCHRONOUS
+        - ASYNCHRONOUS
+    PROG_EMPTY_THRESH:
+      desc: 12-bit Programmable empty depth
+      default: 12'h004
+      vector: 12
+    PROG_FULL_THRESH:
+      desc: 12-bit Programmable full depth
+      default: 12'hffa
+      vector: 12
