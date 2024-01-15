@@ -60,6 +60,7 @@ ports:
    C:
      dir:  input
      desc: Negedge clock
+     bb_attributes: clkbuf_sink
    Q:
      dir: output
      desc: Data Output
