@@ -54,9 +54,11 @@ ports:
    WR_CLK1:
      dir: input
      desc: Write clock, FIFO 1
+     bb_attributes: clkbuf_sink
    RD_CLK1:
      dir: input
      desc: Read clock, FIFO 1
+     bb_attributes: clkbuf_sink
    WR_EN1:
      dir: input
      desc: Write enable, FIFO 1
@@ -115,9 +117,11 @@ ports:
    WR_CLK2:
      dir: input
      desc: Write clock, FIFO 2
+     bb_attributes: clkbuf_sink
    RD_CLK2:
      dir: input
      desc: Read clock, FIFO 2
+     bb_attributes: clkbuf_sink
    WR_EN2:
      dir: input
      desc: Write enable, FIFO 2

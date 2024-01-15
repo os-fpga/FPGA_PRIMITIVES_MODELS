@@ -75,6 +75,7 @@ ports:
    CLK:
      dir: input
      desc: Clock
+     bb_attributes: clkbuf_sink
    RESET:
      dir: input
      desc: Reset input

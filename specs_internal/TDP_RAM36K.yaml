@@ -64,9 +64,11 @@ ports:
    CLK_A:
      dir: input
      desc: Clock port A
+     bb_attributes: clkbuf_sink
    CLK_B:
      dir: input
      desc: Clock port B
+     bb_attributes: clkbuf_sink
    BE_A[3:0]:
      dir: input
      desc: Byte-write enable port A

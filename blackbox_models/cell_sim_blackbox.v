@@ -2,7 +2,7 @@
 // BOOT_CLOCK black box model
 // Internal BOOT_CLK connection
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -17,7 +17,7 @@ endmodule
 // CARRY black box model
 // FLE carry logic
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -51,12 +51,13 @@ endmodule
 // CLK_BUF black box model
 // Global clock buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
 module CLK_BUF (
   input logic I,
+  (* clkbuf_driver *)
   output logic O
 );
 endmodule
@@ -65,7 +66,7 @@ endmodule
 // DFFNRE black box model
 // Negedge D flipflop with async reset and enable
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -73,6 +74,7 @@ module DFFNRE (
   input logic D,
   input logic R,
   input logic E,
+  (* clkbuf_sink *)
   input logic C,
   output reg Q
 );
@@ -82,7 +84,7 @@ endmodule
 // DFFRE black box model
 // Posedge D flipflop with async reset and enable
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -90,6 +92,7 @@ module DFFRE (
   input logic D,
   input logic R,
   input logic E,
+  (* clkbuf_sink *)
   input logic C,
   output reg Q
 );
@@ -99,7 +102,7 @@ endmodule
 // DSP19X2 black box model
 // Paramatizable dual 10x9-bit multiplier accumulator
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -124,6 +127,7 @@ module DSP19X2 #(
   input logic [8:0] B2,
   output logic [18:0] Z2,
   output logic [8:0] DLY_B2,
+  (* clkbuf_sink *)
   input logic CLK,
   input logic RESET,
   input logic [4:0] ACC_FIR,
@@ -142,7 +146,7 @@ endmodule
 // DSP38 black box model
 // Paramatizable 20x18-bit multiplier accumulator
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -160,6 +164,7 @@ module DSP38 #(
   input logic [5:0] ACC_FIR,
   output logic [37:0] Z,
   output reg [17:0] DLY_B,
+  (* clkbuf_sink *)
   input logic CLK,
   input logic RESET,
   input logic [2:0] FEEDBACK,
@@ -177,7 +182,7 @@ endmodule
 // FIFO18KX2 black box model
 // Dual 18Kb FIFO
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -194,7 +199,9 @@ module FIFO18KX2 #(
   parameter [10:0] PROG_FULL_THRESH2 = 11'h7fa // 11-bit Programmable full depth, FIFO 2
   ) (
   input logic RESET1,
+  (* clkbuf_sink *)
   input logic WR_CLK1,
+  (* clkbuf_sink *)
   input logic RD_CLK1,
   input logic WR_EN1,
   input logic RD_EN1,
@@ -209,7 +216,9 @@ module FIFO18KX2 #(
   output reg OVERFLOW1,
   output reg UNDERFLOW1,
   input logic RESET2,
+  (* clkbuf_sink *)
   input logic WR_CLK2,
+  (* clkbuf_sink *)
   input logic RD_CLK2,
   input logic WR_EN2,
   input logic RD_EN2,
@@ -230,7 +239,7 @@ endmodule
 // FIFO36K black box model
 // 36Kb FIFO
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -242,7 +251,9 @@ module FIFO36K #(
   parameter [11:0] PROG_FULL_THRESH = 12'hffa // 12-bit Programmable full depth
   ) (
   input logic RESET,
+  (* clkbuf_sink *)
   input logic WR_CLK,
+  (* clkbuf_sink *)
   input logic RD_CLK,
   input logic WR_EN,
   input logic RD_EN,
@@ -263,7 +274,7 @@ endmodule
 // I_BUF black box model
 // Input buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -283,7 +294,7 @@ endmodule
 // I_BUF_DS black box model
 // input differential buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -305,7 +316,7 @@ endmodule
 // I_DDR black box model
 // DDR input register
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -322,7 +333,7 @@ endmodule
 // I_DELAY black box model
 // Input Delay
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -343,7 +354,7 @@ endmodule
 // I_SERDES black box model
 // Input Serial Deserializer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -372,7 +383,7 @@ endmodule
 // LUT1 black box model
 // 1-input lookup table (LUT)
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -388,7 +399,7 @@ endmodule
 // LUT2 black box model
 // 2-input lookup table (LUT)
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -404,7 +415,7 @@ endmodule
 // LUT3 black box model
 // 3-input lookup table (LUT)
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -420,7 +431,7 @@ endmodule
 // LUT4 black box model
 // 4-input lookup table (LUT)
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -436,7 +447,7 @@ endmodule
 // LUT5 black box model
 // 5-input lookup table (LUT)
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -452,7 +463,7 @@ endmodule
 // LUT6 black box model
 // 6-input lookup table (LUT)
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -468,7 +479,7 @@ endmodule
 // O_BUF black box model
 // Output buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -490,7 +501,7 @@ endmodule
 // O_BUFT black box model
 // Output tri-state buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -512,7 +523,7 @@ endmodule
 // O_BUFT_DS black box model
 // Output differential tri-state buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -534,7 +545,7 @@ endmodule
 // O_BUF_DS black box model
 // Output differential buffer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -556,7 +567,7 @@ endmodule
 // O_DDR black box model
 // DDR output register
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -573,7 +584,7 @@ endmodule
 // O_DELAY black box model
 // Serdes output
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -594,7 +605,7 @@ endmodule
 // O_SERDES black box model
 // Output Serializer
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -620,7 +631,7 @@ endmodule
 // O_SERDES_CLK black box model
 // Output Serializer Clock
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -639,7 +650,7 @@ endmodule
 // PLL black box model
 // Phase locked loop
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -664,7 +675,7 @@ endmodule
 // SOC_FPGA_INTF_AHB_M black box model
 // SOC interface connection AHB Master
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -688,7 +699,7 @@ endmodule
 // SOC_FPGA_INTF_AHB_S black box model
 // SOC interface connection AHB Slave
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -715,7 +726,7 @@ endmodule
 // SOC_FPGA_INTF_AXI_M0 black box model
 // SOC interface connection AXI Master 0
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -764,7 +775,7 @@ endmodule
 // SOC_FPGA_INTF_AXI_M1 black box model
 // SOC interface connection AXI Master 1
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -813,7 +824,7 @@ endmodule
 // SOC_FPGA_INTF_DMA black box model
 // SOC DMA interface
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -829,7 +840,7 @@ endmodule
 // SOC_FPGA_INTF_IRQ black box model
 // SOC Interupt connection
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -845,7 +856,7 @@ endmodule
 // SOC_FPGA_INTF_JTAG black box model
 // SOC JTAG connection
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -863,7 +874,7 @@ endmodule
 // SOC_FPGA_TEMPERATURE black box model
 // SOC Temperature Interface
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -881,7 +892,7 @@ endmodule
 // TDP_RAM18KX2 black box model
 // Dual 18Kb True-dual-port RAM
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -903,7 +914,9 @@ module TDP_RAM18KX2 #(
   input logic WEN_B1,
   input logic REN_A1,
   input logic REN_B1,
+  (* clkbuf_sink *)
   input logic CLK_A1,
+  (* clkbuf_sink *)
   input logic CLK_B1,
   input logic [1:0] BE_A1,
   input logic [1:0] BE_B1,
@@ -942,7 +955,7 @@ endmodule
 // TDP_RAM36K black box model
 // 36Kb True-dual-port RAM
 //
-// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
@@ -958,7 +971,9 @@ module TDP_RAM36K #(
   input logic WEN_B,
   input logic REN_A,
   input logic REN_B,
+  (* clkbuf_sink *)
   input logic CLK_A,
+  (* clkbuf_sink *)
   input logic CLK_B,
   input logic [3:0] BE_A,
   input logic [3:0] BE_B,
@@ -981,7 +996,7 @@ endmodule
 //
 // Copyright (C) 2023 RapidSilicon
 //
-// genesis3 LLATChes
+// genesis3 LATChes
 //
 //------------------------------------------------------------------------------
 //------------------------------------------------------------------------------

@@ -54,9 +54,11 @@ ports:
    WR_CLK:
      dir: input
      desc: Write clock
+     bb_attributes: clkbuf_sink
    RD_CLK:
      dir: input
      desc: Read clock
+     bb_attributes: clkbuf_sink
    WR_EN:
      dir: input
      desc: Write enable

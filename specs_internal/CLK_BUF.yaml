@@ -54,3 +54,4 @@ ports:
    O:
      dir: output
      desc: Clock output
+     bb_attributes:  clkbuf_driver
