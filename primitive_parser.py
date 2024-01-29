@@ -435,7 +435,7 @@ def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,rele
     email_template += ''.join(content for condition, content in conditions_content_pairs if condition)
 
     if diff_bb is True :
-        email_template += "Blackbox file cell_sims_blackbox.v has new changes, kidnly review. "
+        email_template += "Blackbox file cell_sims_blackbox.v has new changes, kindly review. "
         with open("blaclbox_diff.txt", "w") as file:
                 file.write(diff_result)
 
@@ -456,7 +456,6 @@ def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,rele
 
     print("Email content generated and written to email.txt")
 
-
     # Specify the file path where you want to save the list
 
     # Open the file in write mode and write the list of strings
@@ -476,10 +475,6 @@ def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,rele
         with open("Pass_prim.txt", "w") as file:
             for string in sim_pass_list:
                 file.write(string + " ")
-
-
-
-
 
 def main():
 
