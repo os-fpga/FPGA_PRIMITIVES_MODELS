@@ -1,4 +1,4 @@
-// Wrapper to MAP New Primitive to Old Primitive for Synthesis
+// BRAM Mapping File
 
 module TDP_RAM36K #(
     parameter [32767:0] INIT          = {32768{1'b0}}, // Initial Contents of data memory
@@ -68,25 +68,27 @@ module TDP_RAM36K #(
   
   // Write Data Port A
   assign WDATA_A1 = (WRITE_WIDTH_A == 36 || WRITE_WIDTH_A == 18) ? {WPARITY_A[1:0], WDATA_A[15:0]} :
-                    (WRITE_WIDTH_A == 9 || WRITE_WIDTH_A == 4 || WRITE_WIDTH_A == 2 || WRITE_WIDTH_A == 1) ? {WPARITY_A[0], 8'd0, WDATA_A[7:0]} : 18'bzzzzzzzzzzzzzzzzzz;
-  assign WDATA_A2 = (WRITE_WIDTH_A == 36 || WRITE_WIDTH_A == 18) ? {WPARITY_A[3:2], WDATA_A[31:16]} : 18'bzzzzzzzzzzzzzzzzzz;
+                    (WRITE_WIDTH_A == 9  || WRITE_WIDTH_A == 4 || WRITE_WIDTH_A == 2 || WRITE_WIDTH_A == 1) ? {1'bx, WPARITY_A[0], {8{1'bx}}, WDATA_A[7:0]} : {18{1'bz}};
+  assign WDATA_A2 = (WRITE_WIDTH_A == 36 || WRITE_WIDTH_A == 18) ? {WPARITY_A[3:2], WDATA_A[31:16]} : 
+                    (WRITE_WIDTH_A == 9  || WRITE_WIDTH_A == 4 || WRITE_WIDTH_A == 2 || WRITE_WIDTH_A == 1) ? {18{1'bx}} : {18{1'bz}};
 
   // Write Data Port B
   assign WDATA_B1 = (WRITE_WIDTH_B == 36 || WRITE_WIDTH_B == 18) ? {WPARITY_B[1:0], WDATA_B[15:0]} :
-                    (WRITE_WIDTH_B == 9 || WRITE_WIDTH_B == 4 || WRITE_WIDTH_B == 2 || WRITE_WIDTH_B == 1) ? {WPARITY_B[0], 8'd0, WDATA_B[7:0]} : 18'bzzzzzzzzzzzzzzzzzz;
-  assign WDATA_B2 = (WRITE_WIDTH_B == 36 || WRITE_WIDTH_B == 18) ? {WPARITY_B[3:2], WDATA_B[31:16]} : 18'bzzzzzzzzzzzzzzzzzz;   
+                    (WRITE_WIDTH_B == 9  || WRITE_WIDTH_B == 4 || WRITE_WIDTH_B == 2 || WRITE_WIDTH_B == 1) ? {1'bx, WPARITY_B[0], {8{1'bx}}, WDATA_B[7:0]} : {18{1'bz}};
+  assign WDATA_B2 = (WRITE_WIDTH_B == 36 || WRITE_WIDTH_B == 18) ? {WPARITY_B[3:2], WDATA_B[31:16]} : 
+                    (WRITE_WIDTH_B == 9  || WRITE_WIDTH_B == 4 || WRITE_WIDTH_B == 2 || WRITE_WIDTH_B == 1) ? {18{1'bx}} : {18{1'bz}};   
   
   // Read Data Port A
   assign RDATA_A   = (READ_WIDTH_A == 36 || READ_WIDTH_A == 18) ? {DATA_OUT_A2[15:0], DATA_OUT_A1[15:0]} :
-                     (READ_WIDTH_A == 9 || READ_WIDTH_A == 4 || READ_WIDTH_A == 2 || READ_WIDTH_A == 1) ? DATA_OUT_A1[7:0] : 32'bzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz;
+                     (READ_WIDTH_A == 9  || READ_WIDTH_A == 4 || READ_WIDTH_A == 2 || READ_WIDTH_A == 1) ? {{24{1'bx}}, DATA_OUT_A1[7:0]} : {32{1'bz}};
   assign RPARITY_A = (READ_WIDTH_A == 36 || READ_WIDTH_A == 18) ? {DATA_OUT_A2[17:16], DATA_OUT_A1[17:16]} :
-                     (READ_WIDTH_A == 9 || READ_WIDTH_A == 4 || READ_WIDTH_A == 2 || READ_WIDTH_A == 1) ? DATA_OUT_A1[16] : 4'bzzzz;
+                     (READ_WIDTH_A == 9  || READ_WIDTH_A == 4 || READ_WIDTH_A == 2 || READ_WIDTH_A == 1) ? {{3{1'bx}}, DATA_OUT_A1[16]} : {4{1'bz}};
 
   // Read Data Port B
   assign RDATA_B   = (READ_WIDTH_B == 36 || READ_WIDTH_B == 18) ? {DATA_OUT_B2[15:0], DATA_OUT_B1[15:0]} :
-                     (READ_WIDTH_B == 9 || READ_WIDTH_B == 4 || READ_WIDTH_B == 2 || READ_WIDTH_B == 1) ? DATA_OUT_B1[7:0] : 32'bzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz;
+                     (READ_WIDTH_B == 9  || READ_WIDTH_B == 4 || READ_WIDTH_B == 2 || READ_WIDTH_B == 1) ? {{24{1'bx}}, DATA_OUT_B1[7:0]} : {32{1'bz}};
   assign RPARITY_B = (READ_WIDTH_B == 36 || READ_WIDTH_B == 18) ? {DATA_OUT_B2[17:16], DATA_OUT_B1[17:16]} :
-                     (READ_WIDTH_B == 9 || READ_WIDTH_B == 4 || READ_WIDTH_B == 2 || READ_WIDTH_B == 1) ? DATA_OUT_B1[16] : 4'bzzzz;
+                     (READ_WIDTH_B == 9  || READ_WIDTH_B == 4 || READ_WIDTH_B == 2 || READ_WIDTH_B == 1) ? {{3{1'bx}}, DATA_OUT_B1[16]} : {4{1'bz}};
 
 // Memory Initialization
 function [18432-1:0] sram1();
