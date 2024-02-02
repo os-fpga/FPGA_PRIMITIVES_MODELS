@@ -1,4 +1,4 @@
-// Wrapper to MAP New Primitive to Old Primitive for Synthesis
+// BRAM Mapping File
 
 module TDP_RAM36K #(
     parameter [32767:0] INIT          = {32768{1'b0}}, // Initial Contents of data memory
