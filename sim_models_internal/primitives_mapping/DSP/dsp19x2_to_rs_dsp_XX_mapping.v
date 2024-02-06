@@ -74,7 +74,7 @@ module DSP19X2 #(
     generate
         if (output_select == 3'b000 && input_reg == 1'b1) begin
             RS_DSP_MULT_REGIN # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULT_REGIN (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -88,7 +88,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b001 && input_reg == 1'b0) begin
             RS_DSP_MULT_REGOUT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULT_REGOUT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -102,7 +102,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b001 && input_reg == 1'b1) begin
             RS_DSP_MULT_REGIN_REGOUT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULT_REGIN_REGOUT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -116,7 +116,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b010 && input_reg == 1'b0) begin
             RS_DSP_MULTADD # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTADD (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -137,7 +137,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b010 && input_reg == 1'b1) begin
             RS_DSP_MULTADD_REGIN # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTADD_REGIN (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -158,7 +158,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b011 && input_reg == 1'b0) begin
             RS_DSP_MULTADD_REGOUT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTADD_REGOUT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -179,7 +179,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b011 && input_reg == 1'b1) begin
             RS_DSP_MULTADD_REGIN_REGOUT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTADD_REGIN_REGOUT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -200,7 +200,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b100 && input_reg == 1'b0) begin
             RS_DSP_MULTACC # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTACC (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -219,7 +219,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b100 && input_reg == 1'b1) begin
             RS_DSP_MULTACC_REGIN # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTACC_REGIN (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -238,7 +238,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b101 && input_reg == 1'b0) begin
             RS_DSP_MULTACC_REGOUT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTACC_REGOUT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -257,7 +257,7 @@ module DSP19X2 #(
         end
         else if (output_select == 3'b101 && input_reg == 1'b1) begin
             RS_DSP_MULTACC_REGIN_REGOUT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULTACC_REGIN_REGOUT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
@@ -276,7 +276,7 @@ module DSP19X2 #(
         end
         else begin
             RS_DSP_MULT # (
-                .MODE_BITS({{COEFF1_0[9:0], COEFF2_0[9:0]}, {COEFF1_1[9:0], COEFF2_1[9:0]}, {COEFF1_2[9:0], COEFF2_2[9:0]}, {COEFF1_3[9:0], COEFF2_3[9:0]}, 4'bxxxx, 1'b1})
+                .MODE_BITS({{COEFF1_0, COEFF2_0}, {COEFF1_1, COEFF2_1}, {COEFF1_2, COEFF2_2}, {COEFF1_3, COEFF2_3}, 4'bxxxx, 1'b1})
             ) RS_DSP_MULT (
                 .a({A1, A2}), 
                 .b({B1, B2}), 
