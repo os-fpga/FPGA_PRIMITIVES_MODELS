@@ -5,14 +5,14 @@
 // --------------------------------------------------------------------------
 
 module FIFO18KX2 #(
-    parameter DATA_WRITE_WIDTH1 = 5'b10010,        // Write Data Width of FIFO1 from 1, 2, 4, 9, 18
-    parameter DATA_READ_WIDTH1 = 5'b10010,         // Read Data Width of FIFO1 from 1, 2, 4, 9, 18
+    parameter DATA_WRITE_WIDTH1 = 5'b10010,        // Write Data Width of FIFO1: 9 and 18 for translation in hardware
+    parameter DATA_READ_WIDTH1 = 5'b10010,         // Read Data Width of FIFO1: 9 and 18 for translation in hardware
     parameter FIFO_TYPE1 = "SYNCHRONOUS",       // Synchronous or Asynchronous FIFO1     
     parameter PROG_EMPTY_THRESH1 = 11'b00000000100,     // Threshold indicating that the FIFO1 buffer is considered Empty
     parameter PROG_FULL_THRESH1 = 11'b10011111010,      // Threshold indicating that the FIFO1 buffer is considered Full
     
-    parameter DATA_WRITE_WIDTH2 = 5'b10010,        // Write Data Width of FIFO2 from 1, 2, 4, 9, 18
-    parameter DATA_READ_WIDTH2 = 5'b10010,         // Read Data Width of FIFO1 from 1, 2, 4, 9, 18
+    parameter DATA_WRITE_WIDTH2 = 5'b10010,        // Write Data Width of FIFO2: 9 and 18 for transation in hardware
+    parameter DATA_READ_WIDTH2 = 5'b10010,         // Read Data Width of FIFO1: 9 and 18 for transation in hardware
     parameter FIFO_TYPE2 = "SYNCHRONOUS",       // Synchronous or Asynchronous FIFO2    
     parameter PROG_EMPTY_THRESH2 = 11'b00000000100,     // Threshold indicating that the FIFO2 buffer is considered Empty
     parameter PROG_FULL_THRESH2 = 11'b10011111010       // Threshold indicating that the FIFO2 buffer is considered Full
@@ -53,18 +53,13 @@ module FIFO18KX2 #(
     output wire UNDERFLOW2                      // 1-bit output: Underflow Flag
 );
 
-localparam data_width_write1 = (DATA_WRITE_WIDTH1 > 4'b1001) ? 5'b10010 : DATA_WRITE_WIDTH1;
-localparam data_width_write2 = (DATA_WRITE_WIDTH2 > 4'b1001) ? 5'b10010 : DATA_WRITE_WIDTH2;
-localparam data_width_read1 = (DATA_READ_WIDTH1 > 4'b1001) ? 5'b10010 : DATA_READ_WIDTH1;
-localparam data_width_read2 = (DATA_READ_WIDTH2 > 4'b1001) ? 5'b10010 : DATA_READ_WIDTH2;
-
 initial begin
-    if ((DATA_WRITE_WIDTH1 < 1'b1) || (DATA_WRITE_WIDTH1 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH1 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_WRITE_WIDTH1);
+    if (!(DATA_WRITE_WIDTH1 == 5'b10010) || (DATA_WRITE_WIDTH1 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH1);
     #1 $stop;
     end
-    if ((DATA_READ_WIDTH1 < 1'b1) || (DATA_READ_WIDTH1 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_READ_WIDTH1 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_READ_WIDTH1);
+    if (!(DATA_READ_WIDTH1 == 5'b10010) || (DATA_READ_WIDTH1 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_READ_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH1);
     #1 $stop;
     end
     case(FIFO_TYPE1)
@@ -76,12 +71,12 @@ initial begin
       end
     endcase
 
-    if ((DATA_WRITE_WIDTH2 < 1'b1) || (DATA_WRITE_WIDTH2 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_WRITE_WIDTH2);
+    if (!(DATA_WRITE_WIDTH2 == 5'b10010) || (DATA_WRITE_WIDTH2 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH2);
     #1 $stop;
     end
-    if ((DATA_READ_WIDTH2 < 1'b1) || (DATA_READ_WIDTH2 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_READ_WIDTH2 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_READ_WIDTH2);
+    if (!(DATA_READ_WIDTH2 == 5'b10010) || (DATA_READ_WIDTH2 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_READ_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH2);
     #1 $stop;
     end
     case(FIFO_TYPE2)
@@ -100,7 +95,7 @@ localparam fifo_type2   = (FIFO_TYPE2 == "SYNCHRONOUS") ? 1'b1 : 1'b0;
 
 // FIFO1
 generate
-  if (data_width_write1 == 5'b10010 && data_width_read1 == 5'b10010)
+  if (DATA_WRITE_WIDTH1 == 5'b10010 && DATA_READ_WIDTH1 == 5'b10010)
       begin
           RS_TDP36K #(
               // ----------------------------------------------------------Appending 12th bit as dont care bit
@@ -120,7 +115,7 @@ generate
           );
       end
 
-  else if (data_width_write1 == 4'b1001 && data_width_read1 == 4'b1001)
+  else if (DATA_WRITE_WIDTH1 == 4'b1001 && DATA_READ_WIDTH1 == 4'b1001)
       begin
           wire [17:0] rd_data1;
           assign RD_DATA1 = {rd_data1[16], rd_data1[7:0]};
@@ -141,7 +136,7 @@ generate
               .CLK_B2(RD_CLK1)
           );
       end
-  else if (data_width_write1 == 5'b10010 && data_width_read1 == 4'b1001)
+  else if (DATA_WRITE_WIDTH1 == 5'b10010 && DATA_READ_WIDTH1 == 4'b1001)
       begin
           wire [17:0] rd_data1;
           assign RD_DATA1 = {rd_data1[16], rd_data1[7:0]};
@@ -188,7 +183,7 @@ endgenerate
 
 // FIFO2
 generate
-  if (data_width_write2 == 5'b10010 && data_width_read2 == 5'b10010)
+  if (DATA_WRITE_WIDTH2 == 5'b10010 && DATA_READ_WIDTH2 == 5'b10010)
       begin
           RS_TDP36K #(
               // ----------------------------------------------------------Appending 12th bit as dont care bit
@@ -208,7 +203,7 @@ generate
           );
       end
 
-  else if (data_width_write2 == 4'b1001 && data_width_read2 == 4'b1001)
+  else if (DATA_WRITE_WIDTH2 == 4'b1001 && DATA_READ_WIDTH2 == 4'b1001)
       begin
           wire [17:0] rd_data2;
           assign RD_DATA2 = {rd_data2[16], rd_data2[7:0]};
@@ -229,7 +224,7 @@ generate
               .CLK_B2(RD_CLK2)
           );
       end
-  else if (data_width_write2 == 5'b10010 && data_width_read2 == 4'b1001)
+  else if (DATA_WRITE_WIDTH2 == 5'b10010 && DATA_READ_WIDTH2 == 4'b1001)
       begin
           wire [17:0] rd_data2;
           assign RD_DATA2 = {rd_data2[16], rd_data2[7:0]};

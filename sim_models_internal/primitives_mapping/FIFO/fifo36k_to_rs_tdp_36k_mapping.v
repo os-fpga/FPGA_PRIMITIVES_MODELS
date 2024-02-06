@@ -5,11 +5,11 @@
 // --------------------------------------------------------------------------
 
 module FIFO36K #(
-    parameter   DATA_WRITE_WIDTH    = 6'b100100,               // Supported Data Width 1 - 36
-    parameter   DATA_READ_WIDTH     = 6'b100100,               // Supported Data Width 1 - 36
+    parameter   DATA_WRITE_WIDTH    = 6'b100100,           // Supported Data Width: 9, 18 and 36 for translation in hardware
+    parameter   DATA_READ_WIDTH     = 6'b100100,           // Supported Data Width: 9, 18 and 36 for translation in hardware
     parameter   FIFO_TYPE           = "SYNCHRONOUS",       // Synchronous or Asynchronous
-    parameter   PROG_FULL_THRESH    = 12'b111111111010,             // Threshold indicating that the FIFO buffer is considered Full
-    parameter   PROG_EMPTY_THRESH   = 12'b000000000100              // Threshold indicating that the FIFO buffer is considered Empty
+    parameter   PROG_FULL_THRESH    = 12'b111111111010,    // Threshold indicating that the FIFO buffer is considered Full
+    parameter   PROG_EMPTY_THRESH   = 12'b000000000100     // Threshold indicating that the FIFO buffer is considered Empty
 )
 (
     input wire  [DATA_WRITE_WIDTH-1:0] WR_DATA,            // 36-bits Data coming inside FIFO
@@ -29,22 +29,13 @@ module FIFO36K #(
     input wire  RESET                                      // 1-bit input:  Active Low Synchronous Reset
 );
 
-localparam data_width_width = 
-    (DATA_WRITE_WIDTH > 5'b10010) ? 6'b100100 :
-    (DATA_WRITE_WIDTH > 4'b1001)  ? 5'b10010 :
-                          DATA_WRITE_WIDTH;
-localparam data_width_read = 
-    (DATA_READ_WIDTH > 5'b10010) ? 6'b100100 :
-    (DATA_READ_WIDTH > 4'b1001)  ? 5'b10010 :
-                          DATA_READ_WIDTH;
-
 initial begin
-    if ((DATA_WRITE_WIDTH < 1'b1) || (DATA_WRITE_WIDTH > 6'b100100)) begin
-       $display("FIFO36K instance %m DATA_WRITE_WIDTH set to incorrect value, %d.  Values must be between 1 and 36.", DATA_WRITE_WIDTH);
+    if (!(DATA_WRITE_WIDTH == 6'b100100) || (DATA_WRITE_WIDTH == 5'b10010) || (DATA_WRITE_WIDTH == 4'b1001)) begin
+       $display("FIFO36K instance %m DATA_WRITE_WIDTH set to incorrect value, %d.  Values must be either 9, 18 or 36.", DATA_WRITE_WIDTH);
     #1 $stop;
     end
-    if ((DATA_READ_WIDTH < 1'b1) || (DATA_READ_WIDTH > 6'b100100)) begin
-       $display("FIFO36K instance %m DATA_READ_WIDTH set to incorrect value, %d.  Values must be between 1 and 36.", DATA_READ_WIDTH);
+    if (!(DATA_READ_WIDTH == 6'b100100) || (DATA_READ_WIDTH == 5'b10010) || (DATA_READ_WIDTH == 4'b1001)) begin
+       $display("FIFO36K instance %m DATA_READ_WIDTH set to incorrect value, %d.  Values must be either 9, 18 or 36.", DATA_READ_WIDTH);
     #1 $stop;
     end
     case(FIFO_TYPE)
@@ -62,7 +53,7 @@ localparam fifo_type   = (FIFO_TYPE == "SYNCHRONOUS")     ? 1'b1      : 1'b0;
 
 // FIFO
 generate
-    if (data_width_width == 6'b100100 && data_width_read == 6'b100100)
+    if (DATA_WRITE_WIDTH == 6'b100100 && DATA_READ_WIDTH == 6'b100100)
         begin
             RS_TDP36K #(
                 .MODE_BITS({fifo_type, {4{3'b110}}, 1'b1, 1'b0, 1'b0, 1'b0, PROG_EMPTY_THRESH[11:0], PROG_FULL_THRESH[11:0], 39'b000000000000000000000000000000000000000, 1'b0})
@@ -83,7 +74,7 @@ generate
             );
         end
 
-    else if (data_width_width == 5'b10010 && data_width_read == 5'b10010)
+    else if (DATA_WRITE_WIDTH == 5'b10010 && DATA_READ_WIDTH == 5'b10010)
         begin
             RS_TDP36K #(
                 // ----------------------------------------------------------Appending 12th bit as dont care bit
@@ -103,7 +94,7 @@ generate
             );
         end
 
-    else if (data_width_width == 4'b1001 && data_width_read == 4'b1001)
+    else if (DATA_WRITE_WIDTH == 4'b1001 && DATA_READ_WIDTH == 4'b1001)
         begin
             wire [17:0] rd_data;
             assign RD_DATA = {rd_data[16], rd_data[7:0]};
@@ -124,7 +115,7 @@ generate
                 .CLK_B2(RD_CLK)
             );
         end
-    else if (data_width_width == 6'b100100 && data_width_read == 5'b10010)
+    else if (DATA_WRITE_WIDTH == 6'b100100 && DATA_READ_WIDTH == 5'b10010)
         begin
             RS_TDP36K #(
                 .MODE_BITS({fifo_type, {2{3'b010}}, {2{3'b110}}, 1'b1, 1'b0, 1'b0, 1'b0, PROG_EMPTY_THRESH[11:0], PROG_FULL_THRESH[11:0], 39'b000000000000000000000000000000000000000, 1'b0})
@@ -143,7 +134,7 @@ generate
                 .CLK_B2(RD_CLK)
             );
         end
-    else if (data_width_width == 6'b100100 && data_width_read == 4'b1001)
+    else if (DATA_WRITE_WIDTH == 6'b100100 && DATA_READ_WIDTH == 4'b1001)
         begin
             wire [17:0] rd_data;
             assign RD_DATA = {rd_data[16], rd_data[7:0]};
@@ -164,7 +155,7 @@ generate
                 .CLK_B2(RD_CLK)
             );
         end
-    else if (data_width_width == 5'b10010 && data_width_read == 4'b1001)
+    else if (DATA_WRITE_WIDTH == 5'b10010 && DATA_READ_WIDTH == 4'b1001)
         begin
             wire [17:0] rd_data;
             assign RD_DATA = {rd_data[16], rd_data[7:0]};
@@ -185,7 +176,7 @@ generate
                 .CLK_B2(RD_CLK)
             );
         end
-    else if (data_width_width == 4'b1001 && data_width_read == 5'b10010)
+    else if (DATA_WRITE_WIDTH == 4'b1001 && DATA_READ_WIDTH == 5'b10010)
         begin
             wire [17:0] rd_data;
             assign RD_DATA = {rd_data[17], rd_data[15:8], rd_data[16], rd_data[7:0]};
@@ -206,7 +197,7 @@ generate
                 .CLK_B2(RD_CLK)
             );
         end
-    else if (data_width_width == 5'b10010 && data_width_read == 6'b100100)
+    else if (DATA_WRITE_WIDTH == 5'b10010 && DATA_READ_WIDTH == 6'b100100)
         begin
             RS_TDP36K #(
                 .MODE_BITS({fifo_type, {2{3'b110}}, {2{3'b010}}, 1'b1, 1'b0, 1'b0, 1'b0, PROG_EMPTY_THRESH[11:0], PROG_FULL_THRESH[11:0], 39'b000000000000000000000000000000000000000, 1'b0})
