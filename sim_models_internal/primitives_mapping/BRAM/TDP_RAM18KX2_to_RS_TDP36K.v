@@ -10,16 +10,16 @@
 module TDP_RAM18KX2 #(
   parameter [16383:0] INIT1         = {16384{1'b0}}, // Initial Contents of data memory, RAM 1
   parameter [2047:0] INIT1_PARITY   = {2048{1'b0}}, // Initial Contents of parity memory, RAM 1
-  parameter WRITE_WIDTH_A1          = 18, // Write data width on port A, RAM 1 (1-18)
-  parameter WRITE_WIDTH_B1          = 18, // Write data width on port B, RAM 1 (1-18)
-  parameter READ_WIDTH_A1           = 18, // Read data width on port A, RAM 1 (1-18)
-  parameter READ_WIDTH_B1           = 18, // Read data width on port B, RAM 1 (1-18)
+  parameter WRITE_WIDTH_A1          = 18, // Write data width on port A, RAM 1 (1,2,4,9,18)
+  parameter WRITE_WIDTH_B1          = 18, // Write data width on port B, RAM 1 (1,2,4,9,18)
+  parameter READ_WIDTH_A1           = 18, // Read data width on port A, RAM 1  (1,2,4,9,18)
+  parameter READ_WIDTH_B1           = 18, // Read data width on port B, RAM 1  (1,2,4,9,18)
   parameter [16383:0] INIT2         = {16384{1'b0}}, // Initial Contents of memory, RAM 2
   parameter [2047:0] INIT2_PARITY   = {2048{1'b0}}, // Initial Contents of memory, RAM 2
-  parameter WRITE_WIDTH_A2          = 18, // Write data width on port A, RAM 2 (1-18)
-  parameter WRITE_WIDTH_B2          = 18, // Write data width on port B, RAM 2 (1-18)
-  parameter READ_WIDTH_A2           = 18, // Read data width on port A, RAM 2 (1-18)
-  parameter READ_WIDTH_B2           = 18 // Read data width on port B, RAM 2 (1-18)
+  parameter WRITE_WIDTH_A2          = 18, // Write data width on port A, RAM 2 (1,2,4,9,18)
+  parameter WRITE_WIDTH_B2          = 18, // Write data width on port B, RAM 2 (1,2,4,9,18)
+  parameter READ_WIDTH_A2           = 18, // Read data width on port A, RAM 2  (1,2,4,9,18)
+  parameter READ_WIDTH_B2           = 18 // Read data width on port B, RAM 2   (1,2,4,9,18)
 ) 
 (
   // Ports
@@ -139,7 +139,7 @@ assign RDATA_A1   = DATA_OUT_A1[15:0];
 assign RDATA_B1   = DATA_OUT_B1[15:0];
 assign RPARITY_A1 = DATA_OUT_A1[17:16];
 assign RPARITY_B1 = DATA_OUT_B1[17:16];
-// Port 1
+// Port 2
 assign RDATA_A2   = DATA_OUT_A2[15:0];
 assign RDATA_B2   = DATA_OUT_B2[15:0];
 assign RPARITY_A2 = DATA_OUT_A2[17:16];

@@ -3,10 +3,10 @@
 module TDP_RAM36K #(
     parameter [32767:0] INIT          = {32768{1'b0}}, // Initial Contents of data memory
     parameter [4095:0]  INIT_PARITY   = {4096{1'b0}}, // Initial Contents of parity memory
-    parameter WRITE_WIDTH_A           = 36, // Write data width on port A (1-36)
-    parameter READ_WIDTH_A            = 36, // Read data width on port A (1-36)
-    parameter WRITE_WIDTH_B           = 36, // Write data width on port B (1-36)
-    parameter READ_WIDTH_B            = 36  // Read data width on port B (1-36)
+    parameter WRITE_WIDTH_A           = 36, // Write data width on port A (1,2,4,9,18, 36)
+    parameter READ_WIDTH_A            = 36, // Read data width on port A  (1,2,4,9,18, 36)
+    parameter WRITE_WIDTH_B           = 36, // Write data width on port B (1,2,4,9,18, 36)
+    parameter READ_WIDTH_B            = 36  // Read data width on port B  (1,2,4,9,18, 36)
   ) 
   (
     // Ports
