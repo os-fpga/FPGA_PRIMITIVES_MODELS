@@ -104,18 +104,16 @@ module RS_TDP36K #(
                 if (WMODE_A1_i == 3'b110) begin
                     assign wr_data = {WDATA_A2, WDATA_A1};
                 end else if (WMODE_A1_i == 3'b010) begin
-                    assign wr_data [17:0] = WDATA_A1;
+                    assign wr_data = {{18{1'bx}}, WDATA_A1};
                 end else if (WMODE_A1_i == 3'b100) begin
-                    assign wr_data [8:0] = {WDATA_A1[16], WDATA_A1[7:0]};
+                    assign wr_data = {{27{1'bx}}, WDATA_A1[16], WDATA_A1[7:0]};
                 end
 
                 wire [35:0] rd_data;
-                if (RMODE_B1_i == 3'b110) begin
+                if (RMODE_B1_i == 3'b110 || RMODE_B1_i == 3'b010) begin
                     assign {RDATA_B2, RDATA_B1} = rd_data;
-                end else if (RMODE_B1_i == 3'b010) begin
-                    assign RDATA_B1 = rd_data [17:0];
                 end else if (RMODE_B1_i == 3'b100) begin
-                    assign {RDATA_B1[16], RDATA_B1[7:0]} = rd_data [8:0];
+                    assign {RDATA_B2, RDATA_B2} = {{19{1'bx}}, rd_data[8], {8{1'bx}}, rd_data[7:0]};
                 end
 
                 FIFO36K #(
@@ -349,27 +347,28 @@ module RS_TDP36K #(
                 if (WMODE_A1_i == 3'b010) begin
                     assign wr_data1 = WDATA_A1;
                 end else if (WMODE_A1_i == 3'b100) begin
-                    assign wr_data1 [8:0] = {WDATA_A1[16], WDATA_A1[7:0]};
+                    assign wr_data1 = {{9{1'bx}}, WDATA_A1[16], WDATA_A1[7:0]};
                 end
 
                 wire [17:0] rd_data1;
                 if (RMODE_B1_i == 3'b010) begin
                     assign RDATA_B1 = rd_data1;
                 end else if (RMODE_B1_i == 3'b100) begin
-                    assign {RDATA_B1[16], RDATA_B1[7:0]} = rd_data1 [8:0];
+                    assign RDATA_B1 = {1'bx, rd_data1[8], {8{1'bx}}, rd_data1[7:0]};
                 end
 
                 wire [17:0] wr_data2;
                 if (WMODE_A2_i == 3'b010) begin
                     assign wr_data2 = WDATA_A2;
                 end else if (WMODE_A2_i == 3'b100) begin
-                    assign wr_data2 [8:0] = {WDATA_A2[16], WDATA_A2[7:0]};
+                    assign wr_data2 = {{9{1'bx}}, WDATA_A2[16], WDATA_A2[7:0]};
                 end
                 wire [17:0] rd_data2;
                 if (RMODE_B2_i == 3'b010) begin
                     assign RDATA_B2 = rd_data2;
                 end else if (RMODE_B2_i == 3'b100) begin
-                    assign {RDATA_B2[16], RDATA_B2[7:0]} = rd_data2;
+                    assign RDATA_B2 = {1'bx, rd_data2[8], {8{1'bx}}, rd_data2[7:0]};
+
                 end
 
                 FIFO18KX2 #(
@@ -740,14 +739,14 @@ module RS_TDP36K #(
                 if (WMODE_A1_i == 3'b010) begin
                     assign wr_data1 = WDATA_A1;
                 end else if (WMODE_A1_i == 3'b100) begin
-                    assign wr_data1 [8:0] = {WDATA_A1[16], WDATA_A1[7:0]};
+                    assign wr_data1 = {{9{1'bx}}, WDATA_A1[16], WDATA_A1[7:0]};
                 end
 
                 wire [17:0] rd_data1;
                 if (RMODE_B1_i == 3'b010) begin
                     assign RDATA_B1 = rd_data1;
                 end else if (RMODE_B1_i == 3'b100) begin
-                    assign {RDATA_B1[16], RDATA_B1[7:0]} = rd_data1 [8:0];
+                    assign RDATA_B1 = {1'bx, rd_data1[8], {8{1'bx}}, rd_data1[7:0]};
                 end
 
                 FIFO18KX2 #(
@@ -1063,13 +1062,13 @@ module RS_TDP36K #(
                 if (WMODE_A2_i == 3'b010) begin
                     assign wr_data2 = WDATA_A2;
                 end else if (WMODE_A2_i == 3'b100) begin
-                    assign wr_data2 [8:0] = {WDATA_A2[16], WDATA_A2[7:0]};
+                    assign wr_data2 = {{9{1'bx}}, WDATA_A2[16], WDATA_A2[7:0]};
                 end
                 wire [17:0] rd_data2;
                 if (RMODE_B2_i == 3'b010) begin
                     assign RDATA_B2 = rd_data2;
                 end else if (RMODE_B2_i == 3'b100) begin
-                    assign {RDATA_B2[16], RDATA_B2[7:0]} = rd_data2;
+                    assign RDATA_B2 = {1'bx, rd_data2[8], {8{1'bx}}, rd_data2[7:0]};
                 end
 
                 FIFO18KX2 #(
