@@ -17,7 +17,7 @@ initial begin
     `elsif PNR
         $dumpfile("pnr_R36W36.vcd");
     `else
-        $dumpfile("rtl_R36W361.vcd");
+        $dumpfile("rtl_R36W36.vcd");
     `endif
     $dumpvars;
 end

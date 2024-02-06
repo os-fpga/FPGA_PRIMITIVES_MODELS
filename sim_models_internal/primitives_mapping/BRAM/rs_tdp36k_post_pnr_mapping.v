@@ -100,18 +100,20 @@ module RS_TDP36K #(
                     (RMODE_B1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
 
-                wire [35:0] wr_data;
+                wire [data_width_write - 1:0] wr_data;
                 if (WMODE_A1_i == 3'b110) begin
                     assign wr_data = {WDATA_A2, WDATA_A1};
                 end else if (WMODE_A1_i == 3'b010) begin
-                    assign wr_data = {{18{1'bx}}, WDATA_A1};
+                    assign wr_data = WDATA_A1;
                 end else if (WMODE_A1_i == 3'b100) begin
-                    assign wr_data = {{27{1'bx}}, WDATA_A1[16], WDATA_A1[7:0]};
+                    assign wr_data = {WDATA_A1[16], WDATA_A1[7:0]};
                 end
 
-                wire [35:0] rd_data;
-                if (RMODE_B1_i == 3'b110 || RMODE_B1_i == 3'b010) begin
+                wire [data_width_read -1:0] rd_data;
+                if (RMODE_B1_i == 3'b110) begin
                     assign {RDATA_B2, RDATA_B1} = rd_data;
+                end else if (RMODE_B1_i == 3'b010) begin
+                    assign {RDATA_B2, RDATA_B1} = {{18{1'bx}}, rd_data};
                 end else if (RMODE_B1_i == 3'b100) begin
                     assign {RDATA_B2, RDATA_B2} = {{19{1'bx}}, rd_data[8], {8{1'bx}}, rd_data[7:0]};
                 end
@@ -343,27 +345,27 @@ module RS_TDP36K #(
                 localparam fifo_type1   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
                 localparam fifo_type2   = (SYNC_FIFO2_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS"; 
 
-                wire [17:0] wr_data1;
+                wire [data_width_write1 - 1:0] wr_data1;
                 if (WMODE_A1_i == 3'b010) begin
                     assign wr_data1 = WDATA_A1;
                 end else if (WMODE_A1_i == 3'b100) begin
-                    assign wr_data1 = {{9{1'bx}}, WDATA_A1[16], WDATA_A1[7:0]};
+                    assign wr_data1 = {WDATA_A1[16], WDATA_A1[7:0]};
                 end
 
-                wire [17:0] rd_data1;
+                wire [data_width_read1 - 1:0] rd_data1;
                 if (RMODE_B1_i == 3'b010) begin
                     assign RDATA_B1 = rd_data1;
                 end else if (RMODE_B1_i == 3'b100) begin
                     assign RDATA_B1 = {1'bx, rd_data1[8], {8{1'bx}}, rd_data1[7:0]};
                 end
 
-                wire [17:0] wr_data2;
+                wire [data_width_write2 - 1:0] wr_data2;
                 if (WMODE_A2_i == 3'b010) begin
                     assign wr_data2 = WDATA_A2;
                 end else if (WMODE_A2_i == 3'b100) begin
-                    assign wr_data2 = {{9{1'bx}}, WDATA_A2[16], WDATA_A2[7:0]};
+                    assign wr_data2 = {WDATA_A2[16], WDATA_A2[7:0]};
                 end
-                wire [17:0] rd_data2;
+                wire [data_width_read2 - 1:0] rd_data2;
                 if (RMODE_B2_i == 3'b010) begin
                     assign RDATA_B2 = rd_data2;
                 end else if (RMODE_B2_i == 3'b100) begin
@@ -735,14 +737,14 @@ module RS_TDP36K #(
                 localparam data_width_read1 =  (RMODE_B1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type1   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
 
-                wire [17:0] wr_data1;
+                wire [data_width_write1 - 1:0] wr_data1;
                 if (WMODE_A1_i == 3'b010) begin
                     assign wr_data1 = WDATA_A1;
                 end else if (WMODE_A1_i == 3'b100) begin
-                    assign wr_data1 = {{9{1'bx}}, WDATA_A1[16], WDATA_A1[7:0]};
+                    assign wr_data1 = {WDATA_A1[16], WDATA_A1[7:0]};
                 end
 
-                wire [17:0] rd_data1;
+                wire [data_width_read1 - 1:0] rd_data1;
                 if (RMODE_B1_i == 3'b010) begin
                     assign RDATA_B1 = rd_data1;
                 end else if (RMODE_B1_i == 3'b100) begin
@@ -1058,13 +1060,13 @@ module RS_TDP36K #(
                 localparam data_width_read2 =  (RMODE_B2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type2   = (SYNC_FIFO2_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS"; 
                 
-                wire [17:0] wr_data2;
+                wire [data_width_write2 - 1:0] wr_data2;
                 if (WMODE_A2_i == 3'b010) begin
                     assign wr_data2 = WDATA_A2;
                 end else if (WMODE_A2_i == 3'b100) begin
-                    assign wr_data2 = {{9{1'bx}}, WDATA_A2[16], WDATA_A2[7:0]};
+                    assign wr_data2 = {WDATA_A2[16], WDATA_A2[7:0]};
                 end
-                wire [17:0] rd_data2;
+                wire [data_width_read2 - 1:0] rd_data2;
                 if (RMODE_B2_i == 3'b010) begin
                     assign RDATA_B2 = rd_data2;
                 end else if (RMODE_B2_i == 3'b100) begin
