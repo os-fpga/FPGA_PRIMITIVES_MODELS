@@ -6,9 +6,9 @@
 
 module RS_TDP36K #(
     // Mode Bits
-    parameter [0:80] MODE_BITS = 81'b000000000000000000000000000000000000000000000000000000000000000000000000000000000,
+    parameter [0:80] MODE_BITS = {81{1'b0}},
     // Memory Initialization
-    parameter [36863:0] INIT_i = 36864'b0
+    parameter [36863:0] INIT_i = {36864{1'b0}}
 )
 (
     // Ports
@@ -180,42 +180,20 @@ module RS_TDP36K #(
                                             MODE_BITS[4:6]   == 3'b011  ? 2  : 1 ;
 
                 // Write Data Port A
-                if (write_mode_A == 36 || write_mode_A == 18) begin
-                    assign WDATA_A   = {WDATA_A2[15:0],  WDATA_A1[15:0]};
-                    assign WPARITY_A = {WDATA_A2[17:16], WDATA_A1[17:16]};
-                end
-                else if (write_mode_A == 9 || write_mode_A == 4 || write_mode_A == 2 || write_mode_A == 1) begin
-                    assign WDATA_A   = WDATA_A1[7:0];
-                    assign WPARITY_A = WDATA_A1[8];
-                end
+                assign WDATA_A   = {WDATA_A2[15:0],  WDATA_A1[15:0]};
+                assign WPARITY_A = {WDATA_A2[17:16], WDATA_A1[17:16]};
 
                 // Write Data Port B
-                if (write_mode_B == 36 || write_mode_B == 18) begin
-                    assign WDATA_B   = {WDATA_B2[15:0],  WDATA_B1[15:0]};
-                    assign WPARITY_B = {WDATA_B2[17:16], WDATA_B1[17:16]};
-                end
-                else if (write_mode_B == 9 || write_mode_B == 4 || write_mode_B == 2 || write_mode_B == 1) begin
-                    assign WDATA_B   = WDATA_B1[7:0];
-                    assign WPARITY_B = WDATA_B1[8];
-                end
+                assign WDATA_B   = {WDATA_B2[15:0],  WDATA_B1[15:0]};
+                assign WPARITY_B = {WDATA_B2[17:16], WDATA_B1[17:16]};
 
                 // Read Data Port A
-                if (read_mode_A == 36 || read_mode_A == 18) begin
-                    assign RDATA_A1   = {RPARITY_A[1:0], RDATA_A[15:0]};
-                    assign RDATA_A2   = {RPARITY_A[3:2], RDATA_A[31:16]};
-                end
-                else if (read_mode_A == 9 || read_mode_A == 4 || read_mode_A == 2 || read_mode_A == 1) begin
-                    assign RDATA_A1   = {RPARITY_A[0], RDATA_A[7:0]};
-                end
+                assign RDATA_A1   = {RPARITY_A[1:0], RDATA_A[15:0]};
+                assign RDATA_A2   = {RPARITY_A[3:2], RDATA_A[31:16]};
 
                 // Read Data Port B
-                if (read_mode_B == 36 || read_mode_B == 18) begin
-                    assign RDATA_B1   = {RPARITY_B[1:0], RDATA_B[15:0]};
-                    assign RDATA_B2   = {RPARITY_B[3:2], RDATA_B[31:16]};
-                end
-                else if (read_mode_B == 9 || read_mode_B == 4 || read_mode_B == 2 || read_mode_B == 1) begin
-                    assign RDATA_B1   = {RPARITY_B[0], RDATA_B[7:0]};
-                end
+                assign RDATA_B1   = {RPARITY_B[1:0], RDATA_B[15:0]};
+                assign RDATA_B2   = {RPARITY_B[3:2], RDATA_B[31:16]};
 
                 // Memory Initialization
                 localparam [18431:0]INIT1 = INIT_i[18431:0];
@@ -244,12 +222,12 @@ module RS_TDP36K #(
 
                 // New Model TDP_RAM36K
                 TDP_RAM36K #(
-                    .INIT(data_i),                        // Initial Contents of data memory
-                    .INIT_PARITY(pairty_i),                 // Initial Contents of parity memory
-                    .WRITE_WIDTH_A(write_mode_A),   // Write data width on port A (1-36)
-                    .WRITE_WIDTH_B(write_mode_B),   // Write data width on port B (1-36)
-                    .READ_WIDTH_A(read_mode_A),     // Read data width on port A (1-36)
-                    .READ_WIDTH_B(read_mode_B)      // Read data width on port B (1-36)
+                    .INIT(data_i),                  // Initial Contents of data memory
+                    .INIT_PARITY(pairty_i),         // Initial Contents of parity memory
+                    .WRITE_WIDTH_A(write_mode_A),   // Write data width on port A 
+                    .WRITE_WIDTH_B(write_mode_B),   // Write data width on port B 
+                    .READ_WIDTH_A(read_mode_A),     // Read data width on port A 
+                    .READ_WIDTH_B(read_mode_B)      // Read data width on port B 
                 ) 
                 tdp_ram36k_inst
                 (
@@ -506,76 +484,32 @@ module RS_TDP36K #(
                                             MODE_BITS[45:47] == 3'b011  ? 2  : 1 ;
 
                 // Write Data Port-1
-                if (write_mode_A1 == 18) begin
                 assign WDATA_A11   = WDATA_A1[15:0];
                 assign WPARITY_A11 = WDATA_A1[17:16];
-                end
-                else if (write_mode_A1 == 9 || write_mode_A1 == 4 || write_mode_A1 == 2 || write_mode_A1 == 1) begin
-                assign WDATA_A11   = WDATA_A1[7:0];
-                assign WPARITY_A11 = WDATA_A1[8];
-                end
 
                 // Write Data Port-1
-                if (write_mode_B1 == 18) begin
-                    assign WDATA_B11   = WDATA_B1[15:0];
-                    assign WPARITY_B11 = WDATA_B1[17:16];
-                end
-                else if (write_mode_B1 == 9 || write_mode_B1 == 4 || write_mode_B1 == 2 || write_mode_B1 == 1) begin
-                    assign WDATA_B11   = WDATA_B1[7:0];
-                    assign WPARITY_B11 = WDATA_B1[8];
-                end
+                assign WDATA_B11   = WDATA_B1[15:0];
+                assign WPARITY_B11 = WDATA_B1[17:16];
 
                 // Read Data Port-1
-                if (read_mode_A1 == 18) begin
-                    assign RDATA_A1   = {RPARITY_A11[1:0], RDATA_A11[15:0]};
-                end
-                else if (read_mode_A1 == 9 || read_mode_A1 == 4 || read_mode_A1 == 2 || read_mode_A1 == 1) begin
-                    assign RDATA_A1   = {RPARITY_A11[0], RDATA_A11[7:0]};
-                end
+                assign RDATA_A1   = {RPARITY_A11[1:0], RDATA_A11[15:0]};
 
                 // Read Data Port-1
-                if (read_mode_B1 == 18) begin
-                    assign RDATA_B1   = {RPARITY_B11[1:0], RDATA_B11[15:0]};
-                end
-                else if (read_mode_B1 == 9 || read_mode_B1 == 4 || read_mode_B1 == 2 || read_mode_B1 == 1) begin
-                    assign RDATA_B1   = {RPARITY_B11[0], RDATA_B11[7:0]};
-                end
+                assign RDATA_B1   = {RPARITY_B11[1:0], RDATA_B11[15:0]};
 
                 // Write Data Port-2
-                if (write_mode_A2 == 18) begin
-                    assign WDATA_A22   = WDATA_A2[15:0];
-                    assign WPARITY_A22 = WDATA_A2[17:16];
-                end
-                else if (write_mode_A2 == 9 || write_mode_A2 == 4 || write_mode_A2 == 2 || write_mode_A2 == 1) begin
-                    assign WDATA_A22   = WDATA_A2[7:0];
-                    assign WPARITY_A22 = WDATA_A2[8];
-                end
+                assign WDATA_A22   = WDATA_A2[15:0];
+                assign WPARITY_A22 = WDATA_A2[17:16];
 
                 // Write Data Port-2
-                if (write_mode_B2 == 18) begin
-                    assign WDATA_B22   = WDATA_B2[15:0];
-                    assign WPARITY_B22 = WDATA_B2[17:16];
-                end
-                else if (write_mode_B2 == 9 || write_mode_B2 == 4 || write_mode_B2 == 2 || write_mode_B2 == 1) begin
-                    assign WDATA_B22   = WDATA_B2[7:0];
-                    assign WPARITY_B22 = WDATA_B2[8];
-                end
+                assign WDATA_B22   = WDATA_B2[15:0];
+                assign WPARITY_B22 = WDATA_B2[17:16];
 
                 // Read Data Port-2
-                if (read_mode_A2 == 18) begin
-                    assign RDATA_A2   = {RPARITY_A22[1:0], RDATA_A22[15:0]};
-                end
-                else if (read_mode_A2 == 9 || read_mode_A2 == 4 || read_mode_A2 == 2 || read_mode_A2 == 1) begin
-                    assign RDATA_A2   = {RPARITY_A22[0], RDATA_A22[7:0]};
-                end
+                assign RDATA_A2   = {RPARITY_A22[1:0], RDATA_A22[15:0]};
 
                 // Read Data Port-2
-                if (read_mode_B2 == 18) begin
-                    assign RDATA_B2   = {RPARITY_B22[1:0], RDATA_B22[15:0]};
-                end
-                else if (read_mode_B2 == 9 || read_mode_B2 == 4 || read_mode_B2 == 2 || read_mode_B2 == 1) begin
-                    assign RDATA_B2   = {RPARITY_B22[0], RDATA_B22[7:0]};
-                end
+                assign RDATA_B2   = {RPARITY_B22[1:0], RDATA_B22[15:0]};
 
                 // Memory Initialization
                 localparam [18431:0]INIT1 = INIT_i[18431:0];
@@ -622,16 +556,16 @@ module RS_TDP36K #(
                 TDP_RAM18KX2 # (
                     .INIT1(data_i1),                // Initial Contents of data memory, RAM 1
                     .INIT1_PARITY(pairty_i1),       // Initial Contents of parity memory, RAM 1
-                    .WRITE_WIDTH_A1(write_mode_A1), // Write data width on port A, RAM 1 (1-18)
-                    .WRITE_WIDTH_B1(write_mode_B1), // Write data width on port B, RAM 1 (1-18)
-                    .READ_WIDTH_A1(read_mode_A1),   // Read data width on port A, RAM 1 (1-18)
-                    .READ_WIDTH_B1(read_mode_B1),   // Read data width on port B, RAM 1 (1-18)
+                    .WRITE_WIDTH_A1(write_mode_A1), // Write data width on port A, RAM 1 
+                    .WRITE_WIDTH_B1(write_mode_B1), // Write data width on port B, RAM 1 
+                    .READ_WIDTH_A1(read_mode_A1),   // Read data width on port A, RAM 1 
+                    .READ_WIDTH_B1(read_mode_B1),   // Read data width on port B, RAM 1 
                     .INIT2(data_i2),                // Initial Contents of memory, RAM 2
                     .INIT2_PARITY(pairty_i2),       // Initial Contents of memory, RAM 2
-                    .WRITE_WIDTH_A2(write_mode_A2), // Write data width on port A, RAM 2 (1-18)
-                    .WRITE_WIDTH_B2(write_mode_B2), // Write data width on port B, RAM 2 (1-18)
-                    .READ_WIDTH_A2(read_mode_A2),   // Read data width on port A, RAM 2 (1-18)
-                    .READ_WIDTH_B2(read_mode_B2)    // Read data width on port B, RAM 2 (1-18)
+                    .WRITE_WIDTH_A2(write_mode_A2), // Write data width on port A, RAM 2
+                    .WRITE_WIDTH_B2(write_mode_B2), // Write data width on port B, RAM 2
+                    .READ_WIDTH_A2(read_mode_A2),   // Read data width on port A, RAM 2
+                    .READ_WIDTH_B2(read_mode_B2)    // Read data width on port B, RAM 2
                 )
                 TDP_RAM18KX2_inst (
                     .WEN_A1(WEN_A1),            // Write-enable port A, RAM 1
@@ -874,49 +808,27 @@ module RS_TDP36K #(
                                             MODE_BITS[45:47] == 3'b011  ? 2  : 1 ;
                 
                 // Write Data Port-2
-                if (write_mode_A2 == 18) begin
-                   assign WDATA_A22   = WDATA_A2[15:0];
-                   assign WPARITY_A22 = WDATA_A2[17:16];
-                end
-                else if (write_mode_A2 == 9 || write_mode_A2 == 4 || write_mode_A2 == 2 || write_mode_A2 == 1) begin
-                    assign WDATA_A22   = WDATA_A2[7:0];
-                    assign WPARITY_A22 = WDATA_A2[8];
-                end
+                assign WDATA_A22   = WDATA_A2[15:0];
+                assign WPARITY_A22 = WDATA_A2[17:16];
 
                 // Write Data Port-2
-                if (write_mode_B2 == 18) begin
-                    assign WDATA_B22   = WDATA_B2[15:0];
-                    assign WPARITY_B22 = WDATA_B2[17:16];
-                end
-                else if (write_mode_B2 == 9 || write_mode_B2 == 4 || write_mode_B2 == 2 || write_mode_B2 == 1) begin
-                    assign WDATA_B22   = WDATA_B2[7:0];
-                    assign WPARITY_B22 = WDATA_B2[8];
-                end
+                assign WDATA_B22   = WDATA_B2[15:0];
+                assign WPARITY_B22 = WDATA_B2[17:16];
 
                 // Read Data Port-2
-                if (read_mode_A2 == 18) begin
-                    assign RDATA_A2   = {RPARITY_A22[1:0], RDATA_A22[15:0]};
-                end
-                else if (read_mode_A2 == 9 || read_mode_A2 == 4 || read_mode_A2 == 2 || read_mode_A2 == 1) begin
-                    assign RDATA_A2   = {RPARITY_A22[0], RDATA_A22[7:0]};
-                end
+                assign RDATA_A2   = {RPARITY_A22[1:0], RDATA_A22[15:0]};
 
                 // Read Data Port-2
-                if (read_mode_B2 == 18) begin
-                    assign RDATA_B2   = {RPARITY_B22[1:0], RDATA_B22[15:0]};
-                end
-                else if (read_mode_B2 == 9 || read_mode_B2 == 4 || read_mode_B2 == 2 || read_mode_B2 == 1) begin
-                    assign RDATA_B2   = {RPARITY_B22[0], RDATA_B22[7:0]};
-                end
+                assign RDATA_B2   = {RPARITY_B22[1:0], RDATA_B22[15:0]};
 
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
                     .INIT2(),                       // Initial Contents of memory, RAM 2
                     .INIT2_PARITY(),                // Initial Contents of memory, RAM 2
-                    .WRITE_WIDTH_A2(write_mode_A2), // Write data width on port A, RAM 2 (1-18)
-                    .WRITE_WIDTH_B2(write_mode_B2), // Write data width on port B, RAM 2 (1-18)
-                    .READ_WIDTH_A2(read_mode_A2),   // Read data width on port A, RAM 2 (1-18)
-                    .READ_WIDTH_B2(read_mode_B2)    // Read data width on port B, RAM 2 (1-18)
+                    .WRITE_WIDTH_A2(write_mode_A2), // Write data width on port A, RAM 2
+                    .WRITE_WIDTH_B2(write_mode_B2), // Write data width on port B, RAM 2
+                    .READ_WIDTH_A2(read_mode_A2),   // Read data width on port A, RAM 2
+                    .READ_WIDTH_B2(read_mode_B2)    // Read data width on port B, RAM 2
                 )
                 TDP_RAM18KX2_inst (
                     .WEN_A2(WEN_A2),            // Write-enable port A, RAM 2
@@ -1030,50 +942,29 @@ module RS_TDP36K #(
                                             MODE_BITS[4:6]   == 3'b100  ? 9  :
                                             MODE_BITS[4:6]   == 3'b001  ? 4  :
                                             MODE_BITS[4:6]   == 3'b011  ? 2  : 1 ;
+                
                 // Write Data Port-1
-                if (write_mode_A1 == 18) begin
-                   assign WDATA_A11   = WDATA_A1[15:0];
-                   assign WPARITY_A11 = WDATA_A1[17:16];
-                end
-                else if (write_mode_A1 == 9 || write_mode_A1 == 4 || write_mode_A1 == 2 || write_mode_A1 == 1) begin
-                    assign WDATA_A11   = WDATA_A1[7:0];
-                    assign WPARITY_A11 = WDATA_A1[8];
-                end
+                assign WDATA_A11   = WDATA_A1[15:0];
+                assign WPARITY_A11 = WDATA_A1[17:16];
 
                 // Write Data Port-1
-                if (write_mode_B1 == 18) begin
-                    assign WDATA_B11   = WDATA_B1[15:0];
-                    assign WPARITY_B11 = WDATA_B1[17:16];
-                end
-                else if (write_mode_B1 == 9 || write_mode_B1 == 4 || write_mode_B1 == 2 || write_mode_B1 == 1) begin
-                    assign WDATA_B11   = WDATA_B1[7:0];
-                    assign WPARITY_B11 = WDATA_B1[8];
-                end
+                assign WDATA_B11   = WDATA_B1[15:0];
+                assign WPARITY_B11 = WDATA_B1[17:16];
 
                 // Read Data Port-1
-                if (read_mode_A1 == 18) begin
-                    assign RDATA_A1   = {RPARITY_A11[1:0], RDATA_A11[15:0]};
-                end
-                else if (read_mode_A1 == 9 || read_mode_A1 == 4 || read_mode_A1 == 2 || read_mode_A1 == 1) begin
-                    assign RDATA_A1   = {RPARITY_A11[0], RDATA_A11[7:0]};
-                end
+                assign RDATA_A1   = {RPARITY_A11[1:0], RDATA_A11[15:0]};
 
                 // Read Data Port-1
-                if (read_mode_B1 == 18) begin
-                    assign RDATA_B1   = {RPARITY_B11[1:0], RDATA_B11[15:0]};
-                end
-                else if (read_mode_B1 == 9 || read_mode_B1 == 4 || read_mode_B1 == 2 || read_mode_B1 == 1) begin
-                    assign RDATA_B1   = {RPARITY_B11[0], RDATA_B11[7:0]};
-                end
+                assign RDATA_B1   = {RPARITY_B11[1:0], RDATA_B11[15:0]};
 
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
                     .INIT1(),                       // Initial Contents of data memory, RAM 1
                     .INIT1_PARITY(),                // Initial Contents of parity memory, RAM 1
-                    .WRITE_WIDTH_A1(write_mode_A1), // Write data width on port A, RAM 1 (1-18)
-                    .WRITE_WIDTH_B1(write_mode_B1), // Write data width on port B, RAM 1 (1-18)
-                    .READ_WIDTH_A1(read_mode_A1),   // Read data width on port A, RAM 1 (1-18)
-                    .READ_WIDTH_B1(read_mode_B1)   // Read data width on port B, RAM 1 (1-18)
+                    .WRITE_WIDTH_A1(write_mode_A1), // Write data width on port A, RAM 1
+                    .WRITE_WIDTH_B1(write_mode_B1), // Write data width on port B, RAM 1
+                    .READ_WIDTH_A1(read_mode_A1),   // Read data width on port A, RAM 1
+                    .READ_WIDTH_B1(read_mode_B1)   // Read data width on port B, RAM 1
                 )
                 TDP_RAM18KX2_inst (
                     .WEN_A1(WEN_A1),            // Write-enable port A, RAM 1
