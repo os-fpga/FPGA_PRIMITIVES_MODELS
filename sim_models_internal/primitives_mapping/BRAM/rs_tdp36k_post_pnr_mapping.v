@@ -92,7 +92,7 @@ module RS_TDP36K #(
                     end
                 end
 
-                localparam data_width_write = 
+                localparam data_width_width = 
                     (WMODE_A1_i == 3'b110) ? 6'b100100 :
                     (WMODE_A1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read = 
@@ -119,7 +119,7 @@ module RS_TDP36K #(
                 end
 
                 FIFO36K #(
-                    .DATA_WRITE_WIDTH(data_width_write),
+                    .DATA_WRITE_WIDTH(data_width_width),
                     .DATA_READ_WIDTH(data_width_read),
                     .FIFO_TYPE(fifo_type),
                     .PROG_FULL_THRESH(UPAF1_i),
@@ -338,9 +338,9 @@ module RS_TDP36K #(
                     end
                 end
 
-                localparam data_width_write1 = (WMODE_A1_i == 3'b010) ? 5'b10010 : 4'b1001;
+                localparam data_width_width1 = (WMODE_A1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read1 =  (RMODE_B1_i == 3'b010) ? 5'b10010 : 4'b1001;
-                localparam data_width_write2 = (WMODE_A2_i == 3'b010) ? 5'b10010 : 4'b1001;
+                localparam data_width_width2 = (WMODE_A2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read2 =  (RMODE_B2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type1   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
                 localparam fifo_type2   = (SYNC_FIFO2_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS"; 
@@ -373,12 +373,12 @@ module RS_TDP36K #(
                 end
 
                 FIFO18KX2 #(
-                    .DATA_WRITE_WIDTH1(data_width_write1),
+                    .DATA_WRITE_WIDTH1(data_width_width1),
                     .DATA_READ_WIDTH1(data_width_read1),
                     .FIFO_TYPE1(fifo_type1),
                     .PROG_FULL_THRESH1(UPAF1_i),
                     .PROG_EMPTY_THRESH1(UPAE1_i),
-                    .DATA_WRITE_WIDTH2(data_width_write2),
+                    .DATA_WRITE_WIDTH2(data_width_width2),
                     .DATA_READ_WIDTH2(data_width_read2),
                     .FIFO_TYPE2(fifo_type2),
                     .PROG_FULL_THRESH2(UPAF2_i),
@@ -732,7 +732,7 @@ module RS_TDP36K #(
                     end
                 end
 
-                localparam data_width_write1 = (WMODE_A1_i == 3'b010) ? 5'b10010 : 4'b1001;
+                localparam data_width_width1 = (WMODE_A1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read1 =  (RMODE_B1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type1   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
 
@@ -751,7 +751,7 @@ module RS_TDP36K #(
                 end
 
                 FIFO18KX2 #(
-                    .DATA_WRITE_WIDTH1(data_width_write1),
+                    .DATA_WRITE_WIDTH1(data_width_width1),
                     .DATA_READ_WIDTH1(data_width_read1),
                     .FIFO_TYPE1(fifo_type1),
                     .PROG_FULL_THRESH1(UPAF1_i),
@@ -1055,7 +1055,7 @@ module RS_TDP36K #(
                     end
                 end
 
-                localparam data_width_write2 = (WMODE_A2_i == 3'b010) ? 5'b10010 : 4'b1001;
+                localparam data_width_width2 = (WMODE_A2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read2 =  (RMODE_B2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type2   = (SYNC_FIFO2_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS"; 
                 
@@ -1073,7 +1073,7 @@ module RS_TDP36K #(
                 end
 
                 FIFO18KX2 #(
-                    .DATA_WRITE_WIDTH2(data_width_write2),
+                    .DATA_WRITE_WIDTH2(data_width_width2),
                     .DATA_READ_WIDTH2(data_width_read2),
                     .FIFO_TYPE2(fifo_type2),
                     .PROG_FULL_THRESH2(UPAF2_i),
