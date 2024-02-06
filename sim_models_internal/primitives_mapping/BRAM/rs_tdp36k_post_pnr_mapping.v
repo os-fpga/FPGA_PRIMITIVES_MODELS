@@ -115,7 +115,7 @@ module RS_TDP36K #(
                 end else if (RMODE_B1_i == 3'b010) begin
                     assign {RDATA_B2, RDATA_B1} = {{18{1'bx}}, rd_data};
                 end else if (RMODE_B1_i == 3'b100) begin
-                    assign {RDATA_B2, RDATA_B2} = {{19{1'bx}}, rd_data[8], {8{1'bx}}, rd_data[7:0]};
+                    assign {RDATA_B2, RDATA_B1} = {{19{1'bx}}, rd_data[8], {8{1'bx}}, rd_data[7:0]};
                 end
 
                 FIFO36K #(
