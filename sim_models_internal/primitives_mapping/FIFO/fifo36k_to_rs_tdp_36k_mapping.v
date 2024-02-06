@@ -30,12 +30,12 @@ module FIFO36K #(
 );
 
 initial begin
-    if ((DATA_WRITE_WIDTH < 1'b1) || (DATA_WRITE_WIDTH > 6'b100100)) begin
-       $display("FIFO36K instance %m DATA_WRITE_WIDTH set to incorrect value, %d.  Values must be between 1 and 36.", DATA_WRITE_WIDTH);
+    if (!(DATA_WRITE_WIDTH == 6'b100100) || (DATA_WRITE_WIDTH == 5'b10010) || (DATA_WRITE_WIDTH == 4'b1001)) begin
+       $display("FIFO36K instance %m DATA_WRITE_WIDTH set to incorrect value, %d.  Values must be either 9, 18 or 36.", DATA_WRITE_WIDTH);
     #1 $stop;
     end
-    if ((DATA_READ_WIDTH < 1'b1) || (DATA_READ_WIDTH > 6'b100100)) begin
-       $display("FIFO36K instance %m DATA_READ_WIDTH set to incorrect value, %d.  Values must be between 1 and 36.", DATA_READ_WIDTH);
+    if (!(DATA_READ_WIDTH == 6'b100100) || (DATA_READ_WIDTH == 5'b10010) || (DATA_READ_WIDTH == 4'b1001)) begin
+       $display("FIFO36K instance %m DATA_READ_WIDTH set to incorrect value, %d.  Values must be either 9, 18 or 36.", DATA_READ_WIDTH);
     #1 $stop;
     end
     case(FIFO_TYPE)

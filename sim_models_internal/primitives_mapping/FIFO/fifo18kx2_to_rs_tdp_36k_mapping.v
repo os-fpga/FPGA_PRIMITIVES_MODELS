@@ -54,12 +54,12 @@ module FIFO18KX2 #(
 );
 
 initial begin
-    if ((DATA_WRITE_WIDTH1 < 1'b1) || (DATA_WRITE_WIDTH1 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH1 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_WRITE_WIDTH1);
+    if (!(DATA_WRITE_WIDTH1 == 5'b10010) || (DATA_WRITE_WIDTH1 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH1);
     #1 $stop;
     end
-    if ((DATA_READ_WIDTH1 < 1'b1) || (DATA_READ_WIDTH1 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_READ_WIDTH1 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_READ_WIDTH1);
+    if (!(DATA_READ_WIDTH1 == 5'b10010) || (DATA_READ_WIDTH1 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_READ_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH1);
     #1 $stop;
     end
     case(FIFO_TYPE1)
@@ -71,12 +71,12 @@ initial begin
       end
     endcase
 
-    if ((DATA_WRITE_WIDTH2 < 1'b1) || (DATA_WRITE_WIDTH2 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_WRITE_WIDTH2);
+    if (!(DATA_WRITE_WIDTH2 == 5'b10010) || (DATA_WRITE_WIDTH2 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH2);
     #1 $stop;
     end
-    if ((DATA_READ_WIDTH2 < 1'b1) || (DATA_READ_WIDTH2 > 5'b10010)) begin
-       $display("FIFO18KX2 instance %m DATA_READ_WIDTH2 set to incorrect value, %d.  Values must be between 1 and 18.", DATA_READ_WIDTH2);
+    if (!(DATA_READ_WIDTH2 == 5'b10010) || (DATA_READ_WIDTH2 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_READ_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH2);
     #1 $stop;
     end
     case(FIFO_TYPE2)
