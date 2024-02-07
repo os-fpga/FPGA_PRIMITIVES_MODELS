@@ -51,12 +51,9 @@ ports:
    D:
      dir: input
      desc: Data input (connect to input port, buffer or I_DELAY)
-   RST:
+   RX_RST:
      dir:  input
      desc: Active-low asycnhronous reset
-   FIFO_RST:
-     dir: input
-     desc: FIFO reset
    BITSLIP_ADJ:
      dir: input
      desc: BITSLIP_ADJ input
