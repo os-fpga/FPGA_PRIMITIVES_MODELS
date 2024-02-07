@@ -141,7 +141,7 @@ jobs:
            case "${{ matrix.scenarios }}" in
               "pass")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=${{ ONLY_EMAIL_ID }}" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
