@@ -52,12 +52,11 @@ jobs:
       run: sudo apt install -y iverilog
 
     - name: Download Latest Release
-      uses: robinraju/release-downloader@v1.8
+      uses: robinraju/release-downloader@v1.9
       with:
         repository: "RapidSilicon/SpicaProduct"
         latest: true
-        tarBall: true
-        zipBall: true
+        fileName: "generic-*.tar.gz"
         token: "${{ secrets.SIM_MODEL_DOWNLOAD }}"
 
     - name:  Unzip Release
@@ -146,8 +145,8 @@ jobs:
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=nadeem.yaseen@rapidsilicon.com,bilal.ahmed@rapidsilicon.com,ashraf@rapidsilicon.com,moin.ijaz@rapidsilicon.com,george.chen@rapidsilicon.com" >> $GITHUB_ENV
-                  #echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
+                  #echo "email_ids=nadeem.yaseen@rapidsilicon.com,bilal.ahmed@rapidsilicon.com,ashraf@rapidsilicon.com,moin.ijaz@rapidsilicon.com,george.chen@rapidsilicon.com" >> $GITHUB_ENV
+                  echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
@@ -345,8 +344,8 @@ jobs:
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=nadeem.yaseen@rapidsilicon.com,ashraf@rapidsilicon.com,bilal.ahmed@rapidsilicon.com,moin.ijaz@rapidsilicon.com,george.chen@rapidsilicon.com" >> $GITHUB_ENV
-                  #echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
+                  #echo "email_ids=nadeem.yaseen@rapidsilicon.com,ashraf@rapidsilicon.com,bilal.ahmed@rapidsilicon.com,moin.ijaz@rapidsilicon.com,george.chen@rapidsilicon.com" >> $GITHUB_ENV
+                  echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
