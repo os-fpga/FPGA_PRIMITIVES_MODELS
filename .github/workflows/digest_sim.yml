@@ -145,8 +145,8 @@ jobs:
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  #echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
-                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
+                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
@@ -190,7 +190,8 @@ jobs:
           destination_branch: "main"                                                                   # name of branch on which PR go
           pr_title: "Pulling SIMs release ${{ github.event.client_payload.new_release }} into main. "               # Title of pull request
           pr_body: "An automated PR to check in New SIMs Release. Click on the link to see regression results ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"                              # Full markdown support, requires pr_title
-          pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
+          #pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
+          pr_reviewer: "ashrafnisar"
           pr_assignee: "NadeemYaseen"                                                  # Comma-separated list (no spaces)
           pr_label: "openfpga_castor_pd_sim"                                             # Comma-separated list (no spaces)
           pr_allow_empty: true                                                            # Creates pull request even if there are no changes
@@ -343,8 +344,8 @@ jobs:
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  #echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
-                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
+                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
@@ -376,7 +377,8 @@ jobs:
           destination_branch: "main"                                                                   # name of branch on which PR go
           pr_title: "Pulling SIMs release ${{ github.event.client_payload.new_release }} into main. "               # Title of pull request
           pr_body: "An automated PR to check in New SIMs Release. Click on the link to see regression results ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"                              # Full markdown support, requires pr_title
-          pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
+          #pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
+          pr_reviewer: "ashrafnisar"
           pr_assignee: "NadeemYaseen"                                                  # Comma-separated list (no spaces)
           pr_label: "openfpga_castor_pd_sim"                                             # Comma-separated list (no spaces)
           pr_allow_empty: true                                                            # Creates pull request even if there are no changes
