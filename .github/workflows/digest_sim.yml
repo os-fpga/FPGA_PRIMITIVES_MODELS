@@ -26,7 +26,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         persist-credentials: false
@@ -54,7 +54,7 @@ jobs:
     - name: Download Latest Release
       uses: robinraju/release-downloader@v1.9
       with:
-        repository: "RapidSilicon/SpicaProduct"
+        repository: "${{ secrets.SRC_RELEASE_REPO }}"
         latest: true
         fileName: "generic-*.tar.gz"
         token: "${{ secrets.SIM_MODEL_DOWNLOAD }}"
@@ -141,12 +141,12 @@ jobs:
            case "${{ matrix.scenarios }}" in
               "pass")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
+                  echo "email_ids=${{ ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  #echo "email_ids=nadeem.yaseen@rapidsilicon.com,bilal.ahmed@rapidsilicon.com,ashraf@rapidsilicon.com,moin.ijaz@rapidsilicon.com,george.chen@rapidsilicon.com" >> $GITHUB_ENV
-                  echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
+                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
@@ -173,8 +173,8 @@ jobs:
       uses: GuillaumeFalourd/git-commit-push@v1.3
       if: contains(steps.do_push.outputs.has_changed, 'true')
       with:
-        email: nadeem.yaseen@rapidsilicon.com
-        name: nadeemyaseen-rs
+        email: pu.engineerg@gmail.com
+        name: NadeemYaseen
         commit_message: Added SIM change files from ${{ github.event.client_payload.new_release }}
         files: "${{ env.path_to_commit }}"
         target_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_internal
@@ -190,8 +190,8 @@ jobs:
           destination_branch: "main"                                                                   # name of branch on which PR go
           pr_title: "Pulling SIMs release ${{ github.event.client_payload.new_release }} into main. "               # Title of pull request
           pr_body: "An automated PR to check in New SIMs Release. Click on the link to see regression results ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"                              # Full markdown support, requires pr_title
-          pr_reviewer: "moinijaz-RS"                                                         # Comma-separated list (no spaces)
-          pr_assignee: "nadeemyaseen-rs"                                                  # Comma-separated list (no spaces)
+          pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
+          pr_assignee: "NadeemYaseen"                                                  # Comma-separated list (no spaces)
           pr_label: "openfpga_castor_pd_sim"                                             # Comma-separated list (no spaces)
           pr_allow_empty: true                                                            # Creates pull request even if there are no changes
           github_token: ${{ secrets.SIM_MODEL_DOWNLOAD }}
@@ -208,7 +208,7 @@ jobs:
           body:  file://email.txt
           #to: nadeem.yaseen@rapidsilicon.com
           to: "${{ env.email_ids }}"
-          from: sqa@rapidsilicon.com
+          from: ${{secrets.MAIL_USERNAME}}
           #attachments: and2_verilog.tar.gz
 
 # --------------------------------------------------------------- #          
@@ -229,7 +229,7 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
       with:
         fetch-depth: 0
         persist-credentials: false
@@ -255,12 +255,11 @@ jobs:
       run: sudo apt install -y iverilog
 
     - name: Download Latest Release
-      uses: robinraju/release-downloader@v1.8
+      uses: robinraju/release-downloader@v1.9
       with:
-        repository: "RapidSilicon/SpicaProduct"
+        repository: "${{ secrets.SRC_RELEASE_REPO }}"
         latest: true
-        tarBall: true
-        zipBall: true
+        fileName: "generic-*.tar.gz"
         token: "${{ secrets.SIM_MODEL_DOWNLOAD }}"
 
     - name:  Unzip Release
@@ -340,12 +339,12 @@ jobs:
            case "${{ matrix.scenarios }}" in
               "pass")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  #echo "email_ids=nadeem.yaseen@rapidsilicon.com,ashraf@rapidsilicon.com,bilal.ahmed@rapidsilicon.com,moin.ijaz@rapidsilicon.com,george.chen@rapidsilicon.com" >> $GITHUB_ENV
-                  echo "email_ids=nadeem.yaseen@rapidsilicon.com" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
+                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
@@ -360,8 +359,8 @@ jobs:
       if: contains(steps.do_push.outputs.has_changed, 'true')
       uses: GuillaumeFalourd/git-commit-push@v1.3
       with:
-        email: nadeem.yaseen@rapidsilicon.com
-        name: nadeemyaseen-rs
+        email: pu.engineerg@gmail.com
+        name: NadeemYaseen
         commit_message: Added SIM change files from ${{ github.event.client_payload.new_release }}
         files: "${{ env.path_to_commit }}"
         target_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_external
@@ -377,8 +376,8 @@ jobs:
           destination_branch: "main"                                                                   # name of branch on which PR go
           pr_title: "Pulling SIMs release ${{ github.event.client_payload.new_release }} into main. "               # Title of pull request
           pr_body: "An automated PR to check in New SIMs Release. Click on the link to see regression results ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"                              # Full markdown support, requires pr_title
-          pr_reviewer: "moinijaz-RS"                                                         # Comma-separated list (no spaces)
-          pr_assignee: "nadeemyaseen-rs"                                                  # Comma-separated list (no spaces)
+          pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
+          pr_assignee: "NadeemYaseen"                                                  # Comma-separated list (no spaces)
           pr_label: "openfpga_castor_pd_sim"                                             # Comma-separated list (no spaces)
           pr_allow_empty: true                                                            # Creates pull request even if there are no changes
           github_token: ${{ secrets.SIM_MODEL_DOWNLOAD }}
@@ -395,7 +394,7 @@ jobs:
           body:  file://email.txt
           #to: nadeem.yaseen@rapidsilicon.com
           to: "${{ env.email_ids }}"
-          from: sqa@rapidsilicon.com
+          from: ${{secrets.MAIL_USERNAME}}
           #attachments: and2_verilog.tar.gz   
 
 
