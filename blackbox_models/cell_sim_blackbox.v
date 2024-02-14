@@ -362,19 +362,19 @@ module I_SERDES #(
   parameter DATA_RATE = "SDR", // Single or double data rate (SDR/DDR)
   parameter WIDTH = 4, // Width of Deserialization (3-10)
   parameter DPA_MODE = "NONE" // Select Dynamic Phase Alignment or Clock Data Recovery (NONE/DPA/CDR)
-) (
-  input D, // Data input (connect to input port, buffer or I_DELAY)
-  input RX_RST, // Active-low asycnhronous reset
-  input BITSLIP_ADJ, // BITSLIP_ADJ input
-  input EN, // EN input data (input data is low when driven low)
-  input CLK_IN, // Fabric clock input
-  output CLK_OUT, // Fabric clock output
-  output [WIDTH-1:0] Q, // Data output
-  output DATA_VALID, // DATA_VALID output
-  output DPA_LOCK, // DPA_LOCK output
-  output DPA_ERROR, // DPA_ERROR output
-  input PLL_LOCK, // PLL lock input
-  input PLL_CLK // PLL clock input
+  ) (
+  input logic D,
+  input logic RX_RST,
+  input logic BITSLIP_ADJ,
+  input logic EN,
+  input logic CLK_IN,
+  output logic CLK_OUT,
+  output logic [WIDTH-1:0] Q,
+  output logic DATA_VALID,
+  output logic DPA_LOCK,
+  output logic DPA_ERROR,
+  input logic PLL_LOCK,
+  input logic PLL_CLK
 );
 endmodule
 `endcelldefine
