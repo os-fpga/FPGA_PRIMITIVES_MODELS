@@ -4,11 +4,13 @@
 
 `default_nettype none
 
+`timescale 1ns/1ps
+
 module RS_TDP36K #(
     // Mode Bits
-    parameter [0:80] MODE_BITS = {81{1'b0}},
+    parameter [0:80] MODE_BITS = 0,
     // Memory Initialization
-    parameter [36863:0] INIT_i = {36864{1'b0}}
+    parameter [36863:0] INIT_i = 0
 )
 (
     // Ports
@@ -76,6 +78,74 @@ module RS_TDP36K #(
 
     // Split (1 bit)
     localparam [0:0] SPLIT_i       = MODE_BITS[80];
+
+    // Memory Initialization
+    localparam [18431:0]INIT1 = INIT_i[18431:0];
+    localparam [18431:0]INIT2 = INIT_i[36863:18432];
+
+    // Initialization Data
+    function [32768-1:0] data();
+        integer i;
+        data = 0;
+        for (i = 0; i < 1024; i = i + 1) begin
+            data[i*32 +: 16]        = INIT1[i*18 +: 16]; // Extracts every 16 bits from INIT1 and append in lower 16 bits of data
+            data[i*32 + 16 +: 16]   = INIT2[i*18 +: 16]; // Extracts every 16 bits from INIT2 and append in upper 16 bits of data
+        end
+    endfunction
+
+    // Initialization Parity
+    function [4096-1:0] parity();
+        integer i;
+        parity = 0;
+        for (i = 0; i < 1024; i = i + 1) begin
+            parity[i*4 +: 2]        = INIT1[i*16 + 17 -: 2]; // Extracts every 16th, 17th bit from INIT1 and append in lower 2 bits of parity
+            parity[i*4 + 2 +: 2]    = INIT2[i*16 + 17 -: 2]; // Extracts every 16th, 17th bit from INIT2 and append in upper 2 bits of parity
+        end
+    endfunction
+
+    localparam [32767:0] data_i     = data() ;
+    localparam [4095:0]  pairty_i   = parity();
+
+    // RAM1 Data
+    function [16384-1:0] data1();
+        integer i;
+        data1 = 0;
+        for (i = 0; i < 1024; i = i + 1) begin
+            data1[i*16 +: 16]        = INIT1[i*18 +: 16]; // Extracts every 16 bit data from SRAM1 
+        end
+    endfunction
+
+    // RAM1 Parity
+    function [2048-1:0] parity1();
+        integer i;
+        parity1 = 0;
+        for (i = 0; i < 1024; i = i + 1) begin
+            parity1[i*2 +: 2]        = INIT1[i*16 + 17 -: 2]; // Extracts every 16th and 17th bit parity from SRAM1
+        end
+    endfunction
+
+    // RAM2 Data
+    function [16384-1:0] data2();
+        integer i;
+        data2 = 0;
+        for (i = 0; i < 1024; i = i + 1) begin
+            data2[i*16 +: 16]        = INIT2[i*18 +: 16]; // Extracts every 16 bit data from SRAM2
+        end
+    endfunction
+
+    // RAM2 Parity
+    function [2048-1:0] parity2();
+        integer i;
+        parity2 = 0;
+        for (i = 0; i < 1024; i = i + 1) begin
+            parity2[i*2 +: 2]        = INIT2[i*16 + 17 -: 2]; // Extracts every 16th and 17th bit parity from SRAM2
+        end
+    endfunction
+
+    localparam [16383:0] data_i1    = data1();
+    localparam [2047:0]  pairty_i1  = parity1();
+    localparam [16383:0] data_i2    = data2();
+    localparam [2047:0]  pairty_i2  = parity2();
 
     generate
         if (SPLIT_i == 1'b0) begin
@@ -194,31 +264,6 @@ module RS_TDP36K #(
                 // Read Data Port B
                 assign RDATA_B1   = {RPARITY_B[1:0], RDATA_B[15:0]};
                 assign RDATA_B2   = {RPARITY_B[3:2], RDATA_B[31:16]};
-
-                // Memory Initialization
-                localparam [18431:0]INIT1 = INIT_i[18431:0];
-                localparam [18431:0]INIT2 = INIT_i[36863:18432];
-
-                function [32768-1:0] data();
-                    integer i;
-                    data = {32768{1'b0}};
-                    for (i = 0; i < 1024; i = i + 1) begin
-                        data[i*32 +: 16]        = INIT1[i*18 +: 16]; // Extracts every 16 bits from INIT1 and append in lower 16 bits of data
-                        data[i*32 + 16 +: 16]   = INIT2[i*18 +: 16]; // Extracts every 16 bits from INIT2 and append in upper 16 bits of data
-                    end
-                endfunction
-
-                function [4096-1:0] parity();
-                    integer i;
-                    parity = {4096{1'b0}};
-                    for (i = 0; i < 1024; i = i + 1) begin
-                        parity[i*4 +: 2]        = INIT1[i*16 + 17 -: 2]; // Extracts every 16th, 17th bit from INIT1 and append in lower 2 bits of parity
-                        parity[i*4 + 2 +: 2]    = INIT2[i*16 + 17 -: 2]; // Extracts every 16th, 17th bit from INIT2 and append in upper 2 bits of parity
-                    end
-                endfunction
-
-                localparam [32767:0] data_i = data() ;
-                localparam [4095:0] pairty_i = parity();
 
                 // New Model TDP_RAM36K
                 TDP_RAM36K #(
@@ -512,47 +557,6 @@ module RS_TDP36K #(
                 // Read Data Port-2
                 assign RDATA_B2   = {RPARITY_B22[1:0], RDATA_B22[15:0]};
 
-                // Memory Initialization
-                localparam [18431:0]INIT1 = INIT_i[18431:0];
-                localparam [18431:0]INIT2 = INIT_i[36863:18432];
-            
-                function [16384-1:0] data1();
-                    integer i;
-                    data1 = {16384{1'b0}};
-                    for (i = 0; i < 1024; i = i + 1) begin
-                        data1[i*16 +: 16]        = INIT1[i*18 +: 16]; // Extracts every 16 bit data from SRAM1 
-                    end
-                endfunction
-            
-                function [2048-1:0] parity1();
-                    integer i;
-                    parity1 = {2048{1'b0}};
-                    for (i = 0; i < 1024; i = i + 1) begin
-                        parity1[i*2 +: 2]        = INIT1[i*16 + 17 -: 2]; // Extracts every 16th and 17th bit parity from SRAM1
-                    end
-                endfunction
-            
-                function [16384-1:0] data2();
-                    integer i;
-                    data2 = {16384{1'b0}};
-                    for (i = 0; i < 1024; i = i + 1) begin
-                        data2[i*16 +: 16]        = INIT2[i*18 +: 16]; // Extracts every 16 bit data from SRAM2
-                    end
-                endfunction
-            
-                function [2048-1:0] parity2();
-                    integer i;
-                    parity2 = {2048{1'b0}};
-                    for (i = 0; i < 1024; i = i + 1) begin
-                        parity2[i*2 +: 2]        = INIT2[i*16 + 17 -: 2]; // Extracts every 16th and 17th bit parity from SRAM2
-                    end
-                endfunction
-            
-                localparam [16383:0] data_i1    = data1() ;
-                localparam [2047:0]  pairty_i1  = parity1();
-                localparam [16383:0] data_i2    = data2() ;
-                localparam [2047:0]  pairty_i2  = parity2();
-
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
                     .INIT1(data_i1),                // Initial Contents of data memory, RAM 1
@@ -824,8 +828,8 @@ module RS_TDP36K #(
 
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
-                    .INIT2(),                       // Initial Contents of memory, RAM 2
-                    .INIT2_PARITY(),                // Initial Contents of memory, RAM 2
+                    .INIT2(data_i2),                       // Initial Contents of memory, RAM 2
+                    .INIT2_PARITY(pairty_i2),                // Initial Contents of memory, RAM 2
                     .WRITE_WIDTH_A2(write_mode_A2), // Write data width on port A, RAM 2
                     .WRITE_WIDTH_B2(write_mode_B2), // Write data width on port B, RAM 2
                     .READ_WIDTH_A2(read_mode_A2),   // Read data width on port A, RAM 2
@@ -960,8 +964,8 @@ module RS_TDP36K #(
 
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
-                    .INIT1(),                       // Initial Contents of data memory, RAM 1
-                    .INIT1_PARITY(),                // Initial Contents of parity memory, RAM 1
+                    .INIT1(data_i1),                       // Initial Contents of data memory, RAM 1
+                    .INIT1_PARITY(pairty_i1),                // Initial Contents of parity memory, RAM 1
                     .WRITE_WIDTH_A1(write_mode_A1), // Write data width on port A, RAM 1
                     .WRITE_WIDTH_B1(write_mode_B1), // Write data width on port B, RAM 1
                     .READ_WIDTH_A1(read_mode_A1),   // Read data width on port A, RAM 1
