@@ -1,5 +1,7 @@
 // BRAM Mapping File
 
+`timescale 1ns/1ps
+
 module TDP_RAM36K #(
     parameter [32767:0] INIT          = {32768{1'b0}}, // Initial Contents of data memory
     parameter [4095:0]  INIT_PARITY   = {4096{1'b0}}, // Initial Contents of parity memory
@@ -83,12 +85,12 @@ module TDP_RAM36K #(
     assign RPARITY_B = {DATA_OUT_B2[17:16], DATA_OUT_B1[17:16]};
 
 // Memory Initialization
-function [18432-1:0] sram1();
+    function [18432-1:0] sram1();
     integer i;
     sram1 = {18432{1'b0}};
     for (i = 0; i < 2048; i=i+2) begin // When i = 0,2,4,6,8.... (Even) (Total 1024 iterations)
-        sram1[(i*9)+:16]             = INIT[(i*16)+:16];      // Extracts first 16-bits from INIT and place into fisrt 16 places in SRAM1.
-        sram1[(((i+2)*9)-2)+:2]      = INIT_PARITY[(i*2)+:2]; // Extracts first 2-bits from INIT_PARITY and place into the next two places in SRAM1.
+        sram1[(i*9) +:16]             = INIT[(i*16) +:16];      // Extracts first 16-bits from INIT and place into fisrt 16 places in SRAM1.
+        sram1[(((i+2)*9)-2) +:2]      = INIT_PARITY[(i*2) +:2]; // Extracts first 2-bits from INIT_PARITY and place into the next two places in SRAM1.
         end
 endfunction
 
@@ -96,12 +98,12 @@ function [18432-1:0] sram2();
     integer i;
     sram2 = {18432{1'b0}};
     for (i = 1; i < 2048; i=i+2) begin // When i = 1,3,5,7,9.... (Odd) (Total 1024 iterations)
-        sram2[((i-1)*9)+:16]         = INIT[(i*16)+:16];      // Extracts next 16-bits onwards to 16 bits from INIT and place into the first 16 places in SRAM2.
-        sram2[(((i+1)*9)-2)+:2]      = INIT_PARITY[(i*2)+:2]; // Extracts next 2-bits onwards to 2-bits from INIT_PARITY and place into the next two places in SRAM2.
+        sram2[((i-1)*9) +:16]         = INIT[(i*16) +:16];      // Extracts next 16-bits onwards to 16 bits from INIT and place into the first 16 places in SRAM2.
+        sram2[(((i+1)*9)-2) +:2]      = INIT_PARITY[(i*2) +:2]; // Extracts next 2-bits onwards to 2-bits from INIT_PARITY and place into the next two places in SRAM2.
         end
 endfunction
 
-localparam INIT_i1 = {sram2(), sram1()};
+localparam [36863:0] INIT_i1 = {sram2(), sram1()};
 
 // Mode Bits
 localparam [0:80] MODE_BITS = {1'b0, read_mode_A, read_mode_B, write_mode_A, write_mode_B, 29'd0, read_mode_A, read_mode_B, write_mode_A, write_mode_B, 27'd0};
