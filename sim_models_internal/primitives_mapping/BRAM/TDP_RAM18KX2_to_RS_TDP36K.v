@@ -114,8 +114,8 @@ function [18432-1:0] sram1();
     integer i;
     sram1 = {18432{1'b0}};
     for (i = 0; i < 1024; i=i+1) begin // (1024*18) = 18432 bits
-        sram1[(i*18)+:16]               = INIT1[(i*16)+:16];       // Extracts first 16-bits from INIT1 and place into fisrt 16 places in SRAM1.
-        sram1[((i+1)*16+(2*i))+:2]      = INIT1_PARITY[(i*2)+:2]; // Extracts first 2-bits from INIT1_PARITY and place into the next two places in SRAM1.
+        sram1[(i*18) +:16]               = INIT1[(i*16) +:16];       // Extracts first 16-bits from INIT1 and place into fisrt 16 places in SRAM1.
+        sram1[((i+1)*16+(2*i))+:2]       = INIT1_PARITY[(i*2) +:2];  // Extracts first 2-bits from INIT1_PARITY and place into the next two places in SRAM1.
         end
 endfunction
 
@@ -123,12 +123,12 @@ function [18432-1:0] sram2();
     integer i;
     sram2 = {18432{1'b0}};
     for (i = 0; i < 1024; i=i+1) begin // (1024*18) = 18432 bits
-        sram2[(i*18)+:16]                = INIT2[(i*16)+:16];      // Extracts first 16-bits from INIT2 and place into fisrt 16 places in SRAM2..
-        sram2[((i+1)*16+(2*i))+:2 ]      = INIT2_PARITY[(i*2)+:2]; // Extracts first 2-bits from INIT2_PARITY and place into the next two places in SRAM2.
+        sram2[(i*18) +:16]                = INIT2[(i*16) +:16];      // Extracts first 16-bits from INIT2 and place into fisrt 16 places in SRAM2..
+        sram2[((i+1)*16+(2*i)) +:2]      = INIT2_PARITY[(i*2) +:2]; // Extracts first 2-bits from INIT2_PARITY and place into the next two places in SRAM2.
         end
 endfunction
 
-localparam INIT_i1 = {sram2(), sram1()};
+localparam [36863:0] INIT_i1 = {sram2(), sram1()};
 
 // Mode Bits (Split Mode)
 localparam MODE_BITS = {1'b0, read_mode_A1, read_mode_B1, write_mode_A1, write_mode_B1, 29'd0, read_mode_A2, read_mode_B2, write_mode_A2, write_mode_B2, 26'd0, 1'd1};

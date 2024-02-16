@@ -8,9 +8,9 @@
 
 module RS_TDP36K #(
     // Mode Bits
-    parameter [0:80] MODE_BITS = 0,
+    parameter [0:80] MODE_BITS = {81{1'b0}},
     // Memory Initialization
-    parameter [36863:0] INIT_i = 0
+    parameter [36863:0] INIT_i = {36864{1'b0}}
 )
 (
     // Ports
@@ -73,8 +73,8 @@ module RS_TDP36K #(
     localparam [0:0] POWERDN2_i    = MODE_BITS[55];
     localparam [0:0] SLEEP2_i      = MODE_BITS[56];
     localparam [0:0] PROTECT2_i    = MODE_BITS[57];
-    localparam [0:10] UPAE2_i       = MODE_BITS[58:68];
-    localparam [0:10] UPAF2_i       = MODE_BITS[69:79];
+    localparam [0:10] UPAE2_i      = MODE_BITS[58:68];
+    localparam [0:10] UPAF2_i      = MODE_BITS[69:79];
 
     // Split (1 bit)
     localparam [0:0] SPLIT_i       = MODE_BITS[80];
@@ -86,62 +86,64 @@ module RS_TDP36K #(
     // Initialization Data
     function [32768-1:0] data();
         integer i;
-        data = 0;
+        data = {32768{1'b0}};
         for (i = 0; i < 1024; i = i + 1) begin
-            data[i*32 +: 16]        = INIT1[i*18 +: 16]; // Extracts every 16 bits from INIT1 and append in lower 16 bits of data
-            data[i*32 + 16 +: 16]   = INIT2[i*18 +: 16]; // Extracts every 16 bits from INIT2 and append in upper 16 bits of data
+            data[i*32 +:16]        = INIT1[i*18 +:16]; // Extracts every 16 bits from INIT1 and append in lower 16 bits of data
+            data[i*32 + 16 +:16]   = INIT2[i*18 +:16]; // Extracts every 16 bits from INIT2 and append in upper 16 bits of data
         end
     endfunction
 
     // Initialization Parity
     function [4096-1:0] parity();
         integer i;
-        parity = 0;
+        parity = {4096{1'b0}};
         for (i = 0; i < 1024; i = i + 1) begin
-            parity[i*4 +: 2]        = INIT1[i*16 + 17 -: 2]; // Extracts every 16th, 17th bit from INIT1 and append in lower 2 bits of parity
-            parity[i*4 + 2 +: 2]    = INIT2[i*16 + 17 -: 2]; // Extracts every 16th, 17th bit from INIT2 and append in upper 2 bits of parity
+            parity[i*4 +:2]        = INIT1[((i+1)*16+(2*i)) +:2]; // Extracts every 16th, 17th bit from INIT1 and append in lower 2 bits of parity
+            parity[i*4 + 2 +:2]    = INIT2[((i+1)*16+(2*i)) +:2]; // Extracts every 16th, 17th bit from INIT2 and append in upper 2 bits of parity
         end
     endfunction
 
+    // for TDP_RAM36K
     localparam [32767:0] data_i     = data() ;
     localparam [4095:0]  pairty_i   = parity();
 
     // RAM1 Data
     function [16384-1:0] data1();
         integer i;
-        data1 = 0;
+        data1 = {16384{1'b0}};
         for (i = 0; i < 1024; i = i + 1) begin
-            data1[i*16 +: 16]        = INIT1[i*18 +: 16]; // Extracts every 16 bit data from SRAM1 
+            data1[i*16 +:16]        = INIT1[i*18 +:16]; // Extracts every 16 bit data from RAM1 
         end
     endfunction
 
     // RAM1 Parity
     function [2048-1:0] parity1();
         integer i;
-        parity1 = 0;
+        parity1 = {2048{1'b0}};
         for (i = 0; i < 1024; i = i + 1) begin
-            parity1[i*2 +: 2]        = INIT1[i*16 + 17 -: 2]; // Extracts every 16th and 17th bit parity from SRAM1
+            parity1[i*2 +:2]        = INIT1[((i+1)*16+(2*i)) +:2]; // Extracts every 16th and 17th bit parity from RAM1
         end
     endfunction
 
     // RAM2 Data
     function [16384-1:0] data2();
         integer i;
-        data2 = 0;
+        data2 = {16384{1'b0}};
         for (i = 0; i < 1024; i = i + 1) begin
-            data2[i*16 +: 16]        = INIT2[i*18 +: 16]; // Extracts every 16 bit data from SRAM2
+            data2[i*16 +:16]        = INIT2[i*18 +:16]; // Extracts every 16 bit data from RAM2
         end
     endfunction
 
     // RAM2 Parity
     function [2048-1:0] parity2();
         integer i;
-        parity2 = 0;
+        parity2 = {2048{1'b0}};
         for (i = 0; i < 1024; i = i + 1) begin
-            parity2[i*2 +: 2]        = INIT2[i*16 + 17 -: 2]; // Extracts every 16th and 17th bit parity from SRAM2
+            parity2[i*2 +:2]        = INIT2[((i+1)*16+(2*i)) +:2]; // Extracts every 16th and 17th bit parity from RAM2
         end
     endfunction
 
+    // for TDP_RAM18KX2
     localparam [16383:0] data_i1    = data1();
     localparam [2047:0]  pairty_i1  = parity1();
     localparam [16383:0] data_i2    = data2();
