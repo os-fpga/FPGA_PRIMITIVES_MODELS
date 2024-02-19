@@ -466,28 +466,28 @@ module RS_TDP36K #(
             end
             else if (FMODE1_i == 1'b0 || FMODE2_i == 1'b0) begin
                 // Internal Write Port-1
-                wire [31:0] WDATA_A11;
-                wire [3:0] WPARITY_A11;
-                wire [31:0] WDATA_B11;
-                wire [3:0] WPARITY_B11;
+                wire [15:0] WDATA_A11;
+                wire [1:0]  WPARITY_A11;
+                wire [15:0] WDATA_B11;
+                wire [1:0]  WPARITY_B11;
 
                 // Internal Read Port-1
-                wire [31:0] RDATA_A11;
-                wire [3:0] RPARITY_A11;
-                wire [31:0] RDATA_B11;
-                wire [3:0] RPARITY_B11;
+                wire [15:0] RDATA_A11;
+                wire [1:0]  RPARITY_A11;
+                wire [15:0] RDATA_B11;
+                wire [1:0]  RPARITY_B11;
 
                 // Internal Write Port-2
-                wire [31:0] WDATA_A22;
-                wire [3:0] WPARITY_A22;
-                wire [31:0] WDATA_B22;
-                wire [3:0] WPARITY_B22;
+                wire [15:0] WDATA_A22;
+                wire [1:0]  WPARITY_A22;
+                wire [15:0] WDATA_B22;
+                wire [1:0]  WPARITY_B22;
 
                 // Internal Read Port-2
-                wire [31:0] RDATA_A22;
-                wire [3:0] RPARITY_A22;
-                wire [31:0] RDATA_B22;
-                wire [3:0] RPARITY_B22;
+                wire [15:0] RDATA_A22;
+                wire [1:0]  RPARITY_A22;
+                wire [15:0] RDATA_B22;
+                wire [1:0]  RPARITY_B22;
 
                 // Modes Mapping Port-1
                 localparam write_mode_A1 =  MODE_BITS[7:9]   == 3'b010  ? 18 : 
@@ -583,8 +583,8 @@ module RS_TDP36K #(
                     .CLK_B1(CLK_B1),            // Clock port B, RAM 1
                     .BE_A1(BE_A1),              // Byte-write enable port A, RAM 1
                     .BE_B1(BE_B1),              // Byte-write enable port B, RAM 1
-                    .ADDR_A1(ADDR_A1),          // Address port A, RAM 1
-                    .ADDR_B1(ADDR_B1),          // Address port B, RAM 1
+                    .ADDR_A1(ADDR_A1[13:0]),    // Address port A, RAM 1
+                    .ADDR_B1(ADDR_B1[13:0]),    // Address port B, RAM 1
                     .WDATA_A1(WDATA_A11),       // Write data port A, RAM 1
                     .WPARITY_A1(WPARITY_A11),   // Write parity port A, RAM 1
                     .WDATA_B1(WDATA_B11),       // Write data port B, RAM 1
@@ -782,16 +782,16 @@ module RS_TDP36K #(
                 );
 
                 // Internal Write Port-2
-                wire [31:0] WDATA_A22;
-                wire [3:0] WPARITY_A22;
-                wire [31:0] WDATA_B22;
-                wire [3:0] WPARITY_B22;
+                wire [15:0] WDATA_A22;
+                wire [1:0]  WPARITY_A22;
+                wire [15:0] WDATA_B22;
+                wire [1:0]  WPARITY_B22;
 
                 // Internal Read Port-2
-                wire [31:0] RDATA_A22;
-                wire [3:0] RPARITY_A22;
-                wire [31:0] RDATA_B22;
-                wire [3:0] RPARITY_B22;
+                wire [15:0] RDATA_A22;
+                wire [1:0]  RPARITY_A22;
+                wire [15:0] RDATA_B22;
+                wire [1:0]  RPARITY_B22;
 
                 // Modes Mapping Port-2
                 localparam write_mode_A2 =  MODE_BITS[48:50] == 3'b010  ? 18 : 
@@ -830,8 +830,8 @@ module RS_TDP36K #(
 
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
-                    .INIT2(data_i2),                       // Initial Contents of memory, RAM 2
-                    .INIT2_PARITY(pairty_i2),                // Initial Contents of memory, RAM 2
+                    .INIT2(data_i2),                // Initial Contents of memory, RAM 2
+                    .INIT2_PARITY(pairty_i2),       // Initial Contents of memory, RAM 2
                     .WRITE_WIDTH_A2(write_mode_A2), // Write data width on port A, RAM 2
                     .WRITE_WIDTH_B2(write_mode_B2), // Write data width on port B, RAM 2
                     .READ_WIDTH_A2(read_mode_A2),   // Read data width on port A, RAM 2
@@ -918,16 +918,16 @@ module RS_TDP36K #(
             end
             else if (FMODE1_i == 1'b0 || FMODE2_i == 1'b1) begin
                 // Internal Write Port-1
-                wire [31:0] WDATA_A11;
-                wire [3:0] WPARITY_A11;
-                wire [31:0] WDATA_B11;
-                wire [3:0] WPARITY_B11;
+                wire [15:0] WDATA_A11;
+                wire [1:0]  WPARITY_A11;
+                wire [15:0] WDATA_B11;
+                wire [1:0]  WPARITY_B11;
 
                 // Internal Read Port-1
-                wire [31:0] RDATA_A11;
-                wire [3:0] RPARITY_A11;
-                wire [31:0] RDATA_B11;
-                wire [3:0] RPARITY_B11;
+                wire [15:0] RDATA_A11;
+                wire [1:0]  RPARITY_A11;
+                wire [15:0] RDATA_B11;
+                wire [1:0]  RPARITY_B11;
 
                 // Modes Mapping Port-1
                 localparam write_mode_A1 =  MODE_BITS[7:9]   == 3'b010  ? 18 : 
@@ -966,12 +966,12 @@ module RS_TDP36K #(
 
                 // New Model TDP_RAM18KX2
                 TDP_RAM18KX2 # (
-                    .INIT1(data_i1),                       // Initial Contents of data memory, RAM 1
-                    .INIT1_PARITY(pairty_i1),                // Initial Contents of parity memory, RAM 1
+                    .INIT1(data_i1),                // Initial Contents of data memory, RAM 1
+                    .INIT1_PARITY(pairty_i1),       // Initial Contents of parity memory, RAM 1
                     .WRITE_WIDTH_A1(write_mode_A1), // Write data width on port A, RAM 1
                     .WRITE_WIDTH_B1(write_mode_B1), // Write data width on port B, RAM 1
                     .READ_WIDTH_A1(read_mode_A1),   // Read data width on port A, RAM 1
-                    .READ_WIDTH_B1(read_mode_B1)   // Read data width on port B, RAM 1
+                    .READ_WIDTH_B1(read_mode_B1)    // Read data width on port B, RAM 1
                 )
                 TDP_RAM18KX2_inst (
                     .WEN_A1(WEN_A1),            // Write-enable port A, RAM 1
@@ -982,8 +982,8 @@ module RS_TDP36K #(
                     .CLK_B1(CLK_B1),            // Clock port B, RAM 1
                     .BE_A1(BE_A1),              // Byte-write enable port A, RAM 1
                     .BE_B1(BE_B1),              // Byte-write enable port B, RAM 1
-                    .ADDR_A1(ADDR_A1),          // Address port A, RAM 1
-                    .ADDR_B1(ADDR_B1),          // Address port B, RAM 1
+                    .ADDR_A1(ADDR_A1[13:0]),    // Address port A, RAM 1
+                    .ADDR_B1(ADDR_B1[13:0]),    // Address port B, RAM 1
                     .WDATA_A1(WDATA_A11),       // Write data port A, RAM 1
                     .WPARITY_A1(WPARITY_A11),   // Write parity port A, RAM 1
                     .WDATA_B1(WDATA_B11),       // Write data port B, RAM 1
