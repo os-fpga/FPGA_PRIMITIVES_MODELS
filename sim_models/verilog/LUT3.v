@@ -14,8 +14,10 @@ module LUT3 #(
   output Y // Data Output
 );
 
-  assign Y = INIT_VALUE[A] ;
+  //assign Y = INIT_VALUE[A] ;
+  \$bmux #(.WIDTH(1), .S_WIDTH(3)) mux(.A(INIT_VALUE), .S(A), .Y(Y));
 
 
 endmodule
 `endcelldefine
+
