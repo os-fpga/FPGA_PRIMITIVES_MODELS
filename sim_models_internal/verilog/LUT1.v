@@ -21,6 +21,7 @@ module LUT1 #(
 endmodule
 `endcelldefine
 
+`celldefine
 module \$bmux (A, S, Y);
 
 parameter WIDTH = 0;
@@ -45,3 +46,4 @@ generate
 endgenerate
 
 endmodule
+`endcelldefine
