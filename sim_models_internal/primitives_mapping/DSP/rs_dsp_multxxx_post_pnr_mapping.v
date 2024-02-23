@@ -1,6 +1,13 @@
+ 
 // Copyright (C) 2023 RapidSilicon
 //
 // RS_DSP_MULTxxx Reverse Mapping File for Post PnR Simulation
+/* ------------------------------Release Notes-----------------------------
+Dated: 23/02/24
+Update: Convention updated to match the forward mapping files
+ ----> A1 = [19:10], B1 = [17:9]
+ ----> A2 = [9:0],   B2 = [8:0]
+*/
 
 `default_nettype none
 
@@ -54,12 +61,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b)
@@ -124,12 +131,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULT_REGIN (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
@@ -196,12 +203,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULT_REGOUT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
@@ -269,12 +276,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULT_REGIN_REGOUT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
@@ -356,13 +363,13 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTADD (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
-            .DLY_B1(dly_b[8:0]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
+            .DLY_B1(dly_b[17:9]),
             .DLY_B2(dly_b[17:9]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
@@ -451,13 +458,13 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTADD_REGIN (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
-            .DLY_B1(dly_b[8:0]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
+            .DLY_B1(dly_b[17:9]),
             .DLY_B2(dly_b[17:9]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
@@ -546,13 +553,13 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTADD_REGOUT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
-            .DLY_B1(dly_b[8:0]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
+            .DLY_B1(dly_b[17:9]),
             .DLY_B2(dly_b[17:9]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
@@ -641,13 +648,13 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTADD_REGIN_REGOUT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
-            .DLY_B1(dly_b[8:0]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
+            .DLY_B1(dly_b[17:9]),
             .DLY_B2(dly_b[17:9]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
@@ -732,12 +739,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTACC (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
@@ -820,12 +827,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTACC_REGIN (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
@@ -908,12 +915,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTACC_REGOUT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
@@ -996,12 +1003,12 @@ generate
             .COEFF2_2(COEFF_2[10:19]),
             .COEFF2_3(COEFF_3[10:19])
         ) DSP19X2_MULTACC_REGIN_REGOUT (
-            .A1(a[9:0]),
-            .B1(b[8:0]),
-            .Z1(z[18:0]),
-            .A2(a[19:10]),
-            .B2(b[17:9]),
-            .Z2(z[37:19]),
+            .A1(a[19:10]),
+            .B1(b[17:9]),
+            .Z1(z[37:19]),
+            .A2(a[9:0]),
+            .B2(b[8:0]),
+            .Z2(z[18:0]),
             .FEEDBACK(feedback),
             .UNSIGNED_A(unsigned_a),
             .UNSIGNED_B(unsigned_b),
