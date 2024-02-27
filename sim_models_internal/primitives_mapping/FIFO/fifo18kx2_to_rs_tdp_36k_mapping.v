@@ -3,7 +3,7 @@
 // --------------------------------------------------------------------------
 // ---------------------- FIFO18KX2 Primitive -------------------------------
 // --------------------------------------------------------------------------
-
+// -----------------Revision 1: Simplified Model 27/02/24-------------------//
 module FIFO18KX2 #(
     parameter DATA_WRITE_WIDTH1 = 5'b10010,        // Write Data Width of FIFO1: 9 and 18 for translation in hardware
     parameter DATA_READ_WIDTH1 = 5'b10010,         // Read Data Width of FIFO1: 9 and 18 for translation in hardware
@@ -54,11 +54,11 @@ module FIFO18KX2 #(
 );
 
 initial begin
-    if (!(DATA_WRITE_WIDTH1 == 5'b10010) || (DATA_WRITE_WIDTH1 == 4'b1001)) begin
+    if (!(DATA_WRITE_WIDTH1 == 5'b10010 || DATA_WRITE_WIDTH1 == 4'b1001)) begin
        $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH1);
     #1 $stop;
     end
-    if (!(DATA_READ_WIDTH1 == 5'b10010) || (DATA_READ_WIDTH1 == 4'b1001)) begin
+    if (!(DATA_READ_WIDTH1 == 5'b10010 || DATA_READ_WIDTH1 == 4'b1001)) begin
        $display("FIFO18KX2 instance %m DATA_READ_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH1);
     #1 $stop;
     end
@@ -71,11 +71,11 @@ initial begin
       end
     endcase
 
-    if (!(DATA_WRITE_WIDTH2 == 5'b10010) || (DATA_WRITE_WIDTH2 == 4'b1001)) begin
-       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH2);
+    if (!(DATA_WRITE_WIDTH2 == 5'b10010 || DATA_WRITE_WIDTH2 == 4'b1001)) begin
+       $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrected value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH2);
     #1 $stop;
     end
-    if (!(DATA_READ_WIDTH2 == 5'b10010) || (DATA_READ_WIDTH2 == 4'b1001)) begin
+    if (!(DATA_READ_WIDTH2 == 5'b10010 || DATA_READ_WIDTH2 == 4'b1001)) begin
        $display("FIFO18KX2 instance %m DATA_READ_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH2);
     #1 $stop;
     end
@@ -90,183 +90,100 @@ initial begin
 end
 
 // Synchronous/Asynchronous FIFO 
-localparam fifo_type1   = (FIFO_TYPE1 == "SYNCHRONOUS") ? 1'b1 : 1'b0;
-localparam fifo_type2   = (FIFO_TYPE2 == "SYNCHRONOUS") ? 1'b1 : 1'b0;
+localparam fifo_type1           = (FIFO_TYPE1 == "SYNCHRONOUS") ? 1'b1 : 1'b0;
+localparam fifo_type2           = (FIFO_TYPE2 == "SYNCHRONOUS") ? 1'b1 : 1'b0;
+localparam data_width_write1    = (DATA_WRITE_WIDTH1 == 5'd18) ? 3'b010 : 3'b100;
+localparam data_width_read1     = (DATA_READ_WIDTH1 == 5'd18) ? 3'b010 : 3'b100;
+localparam data_width_write2    = (DATA_WRITE_WIDTH2 == 5'd18) ? 3'b010 : 3'b100;
+localparam data_width_read2     = (DATA_READ_WIDTH2 == 5'd18) ? 3'b010 : 3'b100;
 
-// FIFO1
-generate
-  if (DATA_WRITE_WIDTH1 == 5'b10010 && DATA_READ_WIDTH1 == 5'b10010)
-      begin
-          RS_TDP36K #(
-              // ----------------------------------------------------------Appending 12th bit as dont care bit
-              .MODE_BITS({fifo_type1, {4{3'b010}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH1[10:0], 1'bx, PROG_FULL_THRESH1[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W18_R18 (
-              .WEN_A1(WR_EN1),
-              .REN_B1(RD_EN1),
-              .CLK_A1(WR_CLK1),
-              .CLK_B1(RD_CLK1),
-              .WDATA_A1(WR_DATA1[17:0]),
-              .RDATA_A1({EMPTY1, ALMOST_EMPTY1, PROG_EMPTY1, UNDERFLOW1, FULL1, ALMOST_FULL1, PROG_FULL1, OVERFLOW1}),
-              .RDATA_B1(RD_DATA1[17:0]),
-              .FLUSH1(RESET1),
-              .CLK_A2(WR_CLK1),
-              .CLK_B2(RD_CLK1)
-          );
-      end
 
-  else if (DATA_WRITE_WIDTH1 == 4'b1001 && DATA_READ_WIDTH1 == 4'b1001)
-      begin
-          wire [17:0] rd_data1;
-          assign RD_DATA1 = {rd_data1[16], rd_data1[7:0]};
-          RS_TDP36K #(
-              // ----------------------------------------------------------Appending 12th bit as dont care bit
-              .MODE_BITS({fifo_type1, {4{3'b100}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH1[10:0], 1'bx, PROG_FULL_THRESH1[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W9_R9 (
-              .WEN_A1(WR_EN1),
-              .REN_B1(RD_EN1),
-              .CLK_A1(WR_CLK1),
-              .CLK_B1(RD_CLK1),
-              .WDATA_A1({1'bx, WR_DATA1[8], {8{1'bx}}, WR_DATA1[7:0]}),
-              .RDATA_A1({EMPTY1, ALMOST_EMPTY1, PROG_EMPTY1, UNDERFLOW1, FULL1, ALMOST_FULL1, PROG_FULL1, OVERFLOW1}),
-              .RDATA_B1(rd_data1),
-              .FLUSH1(RESET1),
-              .CLK_A2(WR_CLK1),
-              .CLK_B2(RD_CLK1)
-          );
-      end
-  else if (DATA_WRITE_WIDTH1 == 5'b10010 && DATA_READ_WIDTH1 == 4'b1001)
-      begin
-          wire [17:0] rd_data1;
-          assign RD_DATA1 = {rd_data1[16], rd_data1[7:0]};
-          // ----------------------------------------------------------Appending 12th bit as dont care bit
-          RS_TDP36K #(
-              .MODE_BITS({fifo_type1, {2{3'b100}}, {2{3'b010}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH1[10:0], 1'bx, PROG_FULL_THRESH1[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W18_R9 (
-              .WEN_A1(WR_EN1),
-              .REN_B1(RD_EN1),
-              .CLK_A1(WR_CLK1),
-              .CLK_B1(RD_CLK1),
-              .WDATA_A1({WR_DATA1[17], WR_DATA1[8], WR_DATA1[16:9], WR_DATA1[7:0]}),
-              .RDATA_A1({EMPTY1, ALMOST_EMPTY1, PROG_EMPTY1, UNDERFLOW1, FULL1, ALMOST_FULL1, PROG_FULL1, OVERFLOW1}),
-              .RDATA_B1(rd_data1),
-              .FLUSH1(RESET1),
-              .CLK_A2(WR_CLK1),
-              .CLK_B2(RD_CLK1)
-          );
-      end
-  else
-      begin
-          wire [17:0] rd_data1;
-          assign RD_DATA1 = {rd_data1[17], rd_data1[15:8], rd_data1[16], rd_data1[7:0]};
-          RS_TDP36K #(
-              // ----------------------------------------------------------Appending 12th bit as dont care bit
-              .MODE_BITS({fifo_type1, {2{3'b010}}, {2{3'b100}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH1[10:0], 1'bx, PROG_FULL_THRESH1[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W9_R18 (
-              .WEN_A1(WR_EN1),
-              .REN_B1(RD_EN1),
-              .CLK_A1(WR_CLK1),
-              .CLK_B1(RD_CLK1),
-              .WDATA_A1({1'bx, WR_DATA1[8], {8{1'bx}}, WR_DATA1[7:0]}),
-              .RDATA_A1({EMPTY1, ALMOST_EMPTY1, PROG_EMPTY1, UNDERFLOW1, FULL1, ALMOST_FULL1, PROG_FULL1, OVERFLOW1}),
-              .RDATA_B1(rd_data1),
-              .FLUSH1(RESET1),
-              .CLK_A2(WR_CLK1),
-              .CLK_B2(RD_CLK1)
-          );
-      end
+wire [17:0] wrt_data1;
+wire [17:0] rd_data1;
+wire [17:0] wrt_data2;
+wire [17:0] rd_data2;
+wire [17:0] fifo1_flags;
+wire [17:0] fifo2_flags;
 
-endgenerate
+assign OVERFLOW1 = fifo1_flags[0];
+assign PROG_FULL1 = fifo1_flags[1];
+assign ALMOST_EMPTY1 = fifo1_flags[2];
+assign FULL1 = fifo1_flags[3];
+assign UNDERFLOW1 = fifo1_flags[4];
+assign PROG_EMPTY1 = fifo1_flags[5];
+assign ALMOST_EMPTY1 = fifo1_flags[6];
+assign EMPTY1 = fifo1_flags[7];
 
-// FIFO2
-generate
-  if (DATA_WRITE_WIDTH2 == 5'b10010 && DATA_READ_WIDTH2 == 5'b10010)
-      begin
-          RS_TDP36K #(
-              // ----------------------------------------------------------Appending 12th bit as dont care bit
-              .MODE_BITS({fifo_type2, {4{3'b010}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH2[10:0], 1'bx, PROG_FULL_THRESH2[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W18_R18 (
-              .WEN_A1(WR_EN2),
-              .REN_B1(RD_EN2),
-              .CLK_A1(WR_CLK2),
-              .CLK_B1(RD_CLK2),
-              .WDATA_A1(WR_DATA2[17:0]),
-              .RDATA_A1({EMPTY2, ALMOST_EMPTY2, PROG_EMPTY2, UNDERFLOW2, FULL2, ALMOST_FULL2, PROG_FULL2, OVERFLOW2}),
-              .RDATA_B1(RD_DATA2[17:0]),
-              .FLUSH1(RESET2),
-              .CLK_A2(WR_CLK2),
-              .CLK_B2(RD_CLK2)
-          );
-      end
+assign OVERFLOW2 = fifo2_flags[0];
+assign PROG_FULL2 = fifo2_flags[1];
+assign ALMOST_EMPTY2 = fifo2_flags[2];
+assign FULL2 = fifo2_flags[3];
+assign UNDERFLOW2 = fifo2_flags[4];
+assign PROG_EMPTY2 = fifo2_flags[5];
+assign ALMOST_EMPTY2 = fifo2_flags[6];
+assign EMPTY2 = fifo2_flags[7];
 
-  else if (DATA_WRITE_WIDTH2 == 4'b1001 && DATA_READ_WIDTH2 == 4'b1001)
-      begin
-          wire [17:0] rd_data2;
-          assign RD_DATA2 = {rd_data2[16], rd_data2[7:0]};
-          RS_TDP36K #(
-              // ----------------------------------------------------------Appending 12th bit as dont care bit
-              .MODE_BITS({fifo_type2, {4{3'b100}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH2[10:0], 1'bx, PROG_FULL_THRESH2[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W9_R9 (
-              .WEN_A1(WR_EN2),
-              .REN_B1(RD_EN2),
-              .CLK_A1(WR_CLK2),
-              .CLK_B1(RD_CLK2),
-              .WDATA_A1({1'bx, WR_DATA2[8], {8{1'bx}}, WR_DATA2[7:0]}),
-              .RDATA_A1({EMPTY2, ALMOST_EMPTY2, PROG_EMPTY2, UNDERFLOW2, FULL2, ALMOST_FULL2, PROG_FULL2, OVERFLOW2}),
-              .RDATA_B1(rd_data2),
-              .FLUSH1(RESET2),
-              .CLK_A2(WR_CLK2),
-              .CLK_B2(RD_CLK2)
-          );
-      end
-  else if (DATA_WRITE_WIDTH2 == 5'b10010 && DATA_READ_WIDTH2 == 4'b1001)
-      begin
-          wire [17:0] rd_data2;
-          assign RD_DATA2 = {rd_data2[16], rd_data2[7:0]};
-          // ----------------------------------------------------------Appending 12th bit as dont care bit
-          RS_TDP36K #(
-              .MODE_BITS({fifo_type2, {2{3'b100}}, {2{3'b010}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH2[10:0], 1'bx, PROG_FULL_THRESH2[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W18_R9 (
-              .WEN_A1(WR_EN2),
-              .REN_B1(RD_EN2),
-              .CLK_A1(WR_CLK2),
-              .CLK_B1(RD_CLK2),
-              .WDATA_A1({WR_DATA2[17], WR_DATA2[8], WR_DATA2[16:9], WR_DATA2[7:0]}),
-              .RDATA_A1({EMPTY2, ALMOST_EMPTY2, PROG_EMPTY2, UNDERFLOW2, FULL2, ALMOST_FULL2, PROG_FULL2, OVERFLOW2}),
-              .RDATA_B1(rd_data2),
-              .FLUSH1(RESET2),
-              .CLK_A2(WR_CLK2),
-              .CLK_B2(RD_CLK2)
-          );
-      end
-  else
-      begin
-          wire [17:0] rd_data2;
-          assign RD_DATA2 = {rd_data2[17], rd_data2[15:8], rd_data2[16], rd_data2[7:0]};
-          RS_TDP36K #(
-              // ----------------------------------------------------------Appending 12th bit as dont care bit
-              .MODE_BITS({fifo_type2, {2{3'b010}}, {2{3'b100}}, 1'b1, 1'b0, 1'b0, 1'b0, 1'bx, PROG_EMPTY_THRESH2[10:0], 1'bx, PROG_FULL_THRESH2[10:0], 39'b000000000000000000000000000000000000000, 1'b1})
-              )
-          RS_TDP36K_W9_R18 (
-              .WEN_A1(WR_EN2),
-              .REN_B1(RD_EN2),
-              .CLK_A1(WR_CLK2),
-              .CLK_B1(RD_CLK2),
-              .WDATA_A1({1'bx, WR_DATA2[8], {8{1'bx}}, WR_DATA2[7:0]}),
-              .RDATA_A1({EMPTY2, ALMOST_EMPTY2, PROG_EMPTY2, UNDERFLOW2, FULL2, ALMOST_FULL2, PROG_FULL2, OVERFLOW2}),
-              .RDATA_B1(rd_data2),
-              .FLUSH1(RESET2),
-              .CLK_A2(WR_CLK2),
-              .CLK_B2(RD_CLK2)
-          );
-      end
+if (DATA_READ_WIDTH1 == 5'd18) begin
+    assign RD_DATA1 = {rd_data1[17], rd_data1[15:8], rd_data1[16], rd_data1[7:0]};
+end else begin
+    assign RD_DATA1 = {rd_data1[16], rd_data1[7:0]};
+end
 
-endgenerate
+if (DATA_WRITE_WIDTH1 == 5'd18) begin
+    assign wrt_data1 = {WR_DATA1[17], WR_DATA1[8], WR_DATA1[16:9], WR_DATA1[7:0]};
+end else begin
+    assign wrt_data1 = {1'bx, WR_DATA1[8], 8'dx, WR_DATA1[7:0]};
+end
+
+if (DATA_READ_WIDTH2 == 5'd18) begin
+    assign RD_DATA2 = {rd_data2[17], rd_data2[15:8], rd_data2[16], rd_data2[7:0]};
+end else begin
+    assign RD_DATA2 = {rd_data2[16], rd_data2[7:0]};
+end
+
+if (DATA_WRITE_WIDTH2 == 5'd18) begin
+    assign wrt_data2 = {WR_DATA2[17], WR_DATA2[8], WR_DATA2[16:9], WR_DATA2[7:0]};
+end else begin
+    assign wrt_data2 = {1'bx, WR_DATA2[8], 8'dx, WR_DATA2[7:0]};
+end
+
+RS_TDP36K #(
+    // ----------------------------------------------------------Appending 12th bit as dont care bit
+    .MODE_BITS({fifo_type1, {2{data_width_read1[2:0]}}, {2{data_width_write1[2:0]}}, 1'b1, 1'b0, 1'b0, 1'b0, PROG_EMPTY_THRESH1[10:0], 1'bx, PROG_FULL_THRESH1[10:0], 1'bx, fifo_type2, {2{data_width_read2[2:0]}}, {2{data_width_write2[2:0]}}, 1'b1, 1'b0, 1'b0, 1'b0, PROG_EMPTY_THRESH2[10:0], PROG_FULL_THRESH2[10:0], 1'b1})
+    )
+RS_TDP36K_FIFO_18KX2 (
+    .WEN_A1(WR_EN1),
+    .REN_B1(RD_EN1),
+    .CLK_A1(WR_CLK1),
+    .CLK_B1(RD_CLK1),
+    .WDATA_A1(wrt_data1),
+    .RDATA_A1(fifo1_flags),
+    .RDATA_B1(rd_data1),
+    .FLUSH1(RESET1),
+        
+    .WEN_A2(WR_EN2),
+    .REN_B2(RD_EN2),
+    .WDATA_A2(wrt_data2),
+    .RDATA_A2(fifo2_flags),
+    .RDATA_B2(rd_data2),
+    .FLUSH2(RESET2),
+    .CLK_A2(WR_CLK2),
+    .CLK_B2(RD_CLK2),
+
+    .WEN_B1(1'b0),
+    .REN_A1(1'b0),
+    .BE_A1(2'd0),
+    .BE_B1(2'd0),
+    .ADDR_A1(15'd0),
+    .ADDR_B1(15'd0),
+    .WDATA_B1(18'd0),
+    .WEN_B2(1'b0),
+    .REN_A2(1'b0),
+    .BE_A2(2'd0),
+    .BE_B2(2'd0),
+    .ADDR_A2(14'd0),
+    .ADDR_B2(14'd0),
+    .WDATA_B2(18'd0)
+);
 
 endmodule
