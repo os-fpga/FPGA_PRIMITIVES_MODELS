@@ -3,13 +3,30 @@
 module tb_sync_fifo_R36W36;
 reg clock0, clock1, we1, re1, rst_ptr1;
 reg [35:0] din1;
-wire [35:0] dout1;
+wire [35:0] dout1, dout2;
 integer mismatch = 0;
 wire EMPTY1,EPO1,EWM1,UNDERRUN1,FULL1,FMO1,FWM1,OVERRUN1;
 sync_fifo_R36W36 u1 (.*);
-
-reg [35:0] mem1 [0:1024];
-reg [35:0] a1;
+FIFO36K #(
+    .DATA_WRITE_WIDTH(6'd36),
+    .DATA_READ_WIDTH(6'd36)
+) modelFIFO (
+    .RESET(rst_ptr1),
+    .WR_CLK(clock0),
+    .RD_CLK(clock1),
+    .WR_EN(we1),
+    .RD_EN(re1),
+    .WR_DATA(din1),
+    .RD_DATA(dout2),
+    .EMPTY(),
+    .FULL(),
+    .ALMOST_EMPTY(),
+    .ALMOST_FULL(),
+    .PROG_EMPTY(),
+    .PROG_FULL(),
+    .OVERFLOW(),
+    .UNDERFLOW()
+);
 
 initial begin
     `ifdef GATE
@@ -25,17 +42,15 @@ end
 initial begin
     re1 <= 1'b0;
     we1 <= 1'b1;
-    for (integer i = 1; i <=1025; i = i+1) begin
-        a1 <= $random;
-        din1 <= a1;
-        mem1 [i] <= a1;
+    for (integer i = 1; i <=1024; i = i+1) begin
+        din1 <= $random;
         repeat(1) @ (posedge clock0);
     end
     we1 <= 1'b0;
     re1 <= 1'b1;
     for (integer i=1; i<=1024; i=i+1) begin
-        if (dout1 !== mem1 [i]) begin
-            $display("DOUT1 mismatch. din1: %0d, dout1: %0d, Entry No.: %0d", mem1[i], dout1, i);
+        if (dout1 !== dout2) begin
+            $display("DOUT1 mismatch. din1: %0d, dout1: %0d, Entry No.: %0d", dout2, dout1, i);
             mismatch = mismatch+1;
         end
         repeat (1) @ (posedge clock0);
