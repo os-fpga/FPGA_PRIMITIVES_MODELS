@@ -171,6 +171,7 @@ module RS_TDP36K #(
                     (RMODE_B1_i == 3'b110) ? 6'b100100 :
                     (RMODE_B1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
+                wire asynclock   = (SYNC_FIFO1_i == 1'b0) ? CLK_B1 : 1'b0;
 
                 wire [data_width_write - 1:0] wr_data;
                 if (WMODE_A1_i == 3'b110) begin
@@ -210,7 +211,7 @@ module RS_TDP36K #(
                     .PROG_EMPTY(RDATA_A1[5]),
                     .PROG_FULL(RDATA_A1[1]),
                     .WR_CLK(CLK_A1),
-                    .RD_CLK(CLK_B1),
+                    .RD_CLK(asynclock),
                     .RESET(FLUSH1)
                 );
             end else begin
@@ -391,6 +392,8 @@ module RS_TDP36K #(
                 localparam data_width_read2 =  (RMODE_B2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type1   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
                 localparam fifo_type2   = (SYNC_FIFO2_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS"; 
+                wire asynclock1   = (SYNC_FIFO1_i == 1'b0) ? CLK_B1 : 1'b0;
+                wire asynclock2   = (SYNC_FIFO2_i == 1'b0) ? CLK_B2 : 1'b0;
 
                 wire [data_width_write1 - 1:0] wr_data1;
                 if (WMODE_A1_i == 3'b010) begin
@@ -445,7 +448,7 @@ module RS_TDP36K #(
                     .PROG_EMPTY1(RDATA_A1[5]),
                     .PROG_FULL1(RDATA_A1[1]),
                     .WR_CLK1(CLK_A1),
-                    .RD_CLK1(CLK_B1),
+                    .RD_CLK1(asynclock1),
                     .RESET1(FLUSH1),
                     .WR_DATA2(wr_data2),
                     .RD_DATA2(rd_data2),
@@ -460,7 +463,7 @@ module RS_TDP36K #(
                     .PROG_EMPTY2(RDATA_A2[5]),
                     .PROG_FULL2(RDATA_A2[1]),
                     .WR_CLK2(CLK_A2),
-                    .RD_CLK2(CLK_B2),
+                    .RD_CLK2(asynclock2),
                     .RESET2(FLUSH2)
                 );
             end
@@ -742,6 +745,7 @@ module RS_TDP36K #(
                 localparam data_width_write1 = (WMODE_A1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read1 =  (RMODE_B1_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type1   = (SYNC_FIFO1_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS";
+                wire asynclock1   = (SYNC_FIFO1_i == 1'b0) ? CLK_B1 : 1'b0;
 
                 wire [data_width_write1 - 1:0] wr_data1;
                 if (WMODE_A1_i == 3'b010) begin
@@ -777,7 +781,7 @@ module RS_TDP36K #(
                     .PROG_EMPTY1(RDATA_A1[5]),
                     .PROG_FULL1(RDATA_A1[1]),
                     .WR_CLK1(CLK_A1),
-                    .RD_CLK1(CLK_B1),
+                    .RD_CLK1(asynclock1),
                     .RESET1(FLUSH1)
                 );
 
@@ -1065,6 +1069,7 @@ module RS_TDP36K #(
                 localparam data_width_write2 = (WMODE_A2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam data_width_read2 =  (RMODE_B2_i == 3'b010) ? 5'b10010 : 4'b1001;
                 localparam fifo_type2   = (SYNC_FIFO2_i == 1'b1) ? "SYNCHRONOUS" : "ASYNCHRONOUS"; 
+                wire asynclock2   = (SYNC_FIFO2_i == 1'b0) ? CLK_B2 : 1'b0;
                 
                 wire [data_width_write2 - 1:0] wr_data2;
                 if (WMODE_A2_i == 3'b010) begin
@@ -1099,7 +1104,7 @@ module RS_TDP36K #(
                     .PROG_EMPTY2(RDATA_A2[5]),
                     .PROG_FULL2(RDATA_A2[1]),
                     .WR_CLK2(CLK_A2),
-                    .RD_CLK2(CLK_B2),
+                    .RD_CLK2(asynclock2),
                     .RESET2(FLUSH2)
                 );
             end
