@@ -3,7 +3,7 @@
 // --------------------------------------------------------------------------
 // ---------------------- FIFO36K Primitive ---------------------------------
 // --------------------------------------------------------------------------
-//---------Revision 1: Simplified Model 27/02/24-------------------//
+
 module FIFO36K #(
     parameter   DATA_WRITE_WIDTH    = 6'b100100,           // Supported Data Width: 9, 18 and 36 for translation in hardware
     parameter   DATA_READ_WIDTH     = 6'b100100,           // Supported Data Width: 9, 18 and 36 for translation in hardware
@@ -30,11 +30,11 @@ module FIFO36K #(
 );
 
 initial begin
-    if (!(DATA_WRITE_WIDTH == 6'b100100 || DATA_WRITE_WIDTH == 5'b10010 || DATA_WRITE_WIDTH == 4'b1001)) begin
+    if (!(DATA_WRITE_WIDTH == 6'b100100 || DATA_WRITE_WIDTH == 6'b010010 || DATA_WRITE_WIDTH == 6'b001001)) begin
        $display("FIFO36K instance %m DATA_WRITE_WIDTH set to incorrect value, %d.  Values must be either 9, 18 or 36.", DATA_WRITE_WIDTH);
     #1 $stop;
     end
-    if (!(DATA_READ_WIDTH == 6'b100100 || DATA_READ_WIDTH == 5'b10010 || DATA_READ_WIDTH == 4'b1001)) begin
+    if (!(DATA_READ_WIDTH == 6'b100100 || DATA_READ_WIDTH == 6'b010010 || DATA_READ_WIDTH == 6'b01001)) begin
        $display("FIFO36K instance %m DATA_READ_WIDTH set to incorrect value, %d.  Values must be either 9, 18 or 36.", DATA_READ_WIDTH);
     #1 $stop;
     end
@@ -51,9 +51,9 @@ end
 // Synchronous/Asynchronous FIFO 
 localparam fifo_type           = (FIFO_TYPE == "SYNCHRONOUS")     ? 1'b1      : 1'b0;
 localparam data_width_write    = (DATA_WRITE_WIDTH == 6'd36) ? 3'b110 : 
-                                 (DATA_WRITE_WIDTH == 5'd18) ? 3'b010 : 3'b100;
+                                 (DATA_WRITE_WIDTH == 6'd18) ? 3'b010 : 3'b100;
 localparam data_width_read     = (DATA_READ_WIDTH == 6'd36) ? 3'b110 : 
-                                 (DATA_READ_WIDTH == 5'd18) ? 3'b010 : 3'b100;
+                                 (DATA_READ_WIDTH == 6'd18) ? 3'b010 : 3'b100;
 
 wire [35:0] wrt_data;
 wire [35:0] rd_data;
