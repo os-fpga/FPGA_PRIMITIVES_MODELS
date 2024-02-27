@@ -3,7 +3,7 @@
 // --------------------------------------------------------------------------
 // ---------------------- FIFO18KX2 Primitive -------------------------------
 // --------------------------------------------------------------------------
-// -----------------Revision 1: Simplified Model 27/02/24-------------------//
+
 module FIFO18KX2 #(
     parameter DATA_WRITE_WIDTH1 = 5'b10010,        // Write Data Width of FIFO1: 9 and 18 for translation in hardware
     parameter DATA_READ_WIDTH1 = 5'b10010,         // Read Data Width of FIFO1: 9 and 18 for translation in hardware
@@ -54,11 +54,11 @@ module FIFO18KX2 #(
 );
 
 initial begin
-    if (!(DATA_WRITE_WIDTH1 == 5'b10010 || DATA_WRITE_WIDTH1 == 4'b1001)) begin
+    if (!(DATA_WRITE_WIDTH1 == 5'b10010 || DATA_WRITE_WIDTH1 == 5'b01001)) begin
        $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH1);
     #1 $stop;
     end
-    if (!(DATA_READ_WIDTH1 == 5'b10010 || DATA_READ_WIDTH1 == 4'b1001)) begin
+    if (!(DATA_READ_WIDTH1 == 5'b10010 || DATA_READ_WIDTH1 == 5'b01001)) begin
        $display("FIFO18KX2 instance %m DATA_READ_WIDTH1 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH1);
     #1 $stop;
     end
@@ -71,11 +71,11 @@ initial begin
       end
     endcase
 
-    if (!(DATA_WRITE_WIDTH2 == 5'b10010 || DATA_WRITE_WIDTH2 == 4'b1001)) begin
+    if (!(DATA_WRITE_WIDTH2 == 5'b10010 || DATA_WRITE_WIDTH2 == 5'b01001)) begin
        $display("FIFO18KX2 instance %m DATA_WRITE_WIDTH2 set to incorrected value, %d.  Values must be either 9 or 18.", DATA_WRITE_WIDTH2);
     #1 $stop;
     end
-    if (!(DATA_READ_WIDTH2 == 5'b10010 || DATA_READ_WIDTH2 == 4'b1001)) begin
+    if (!(DATA_READ_WIDTH2 == 5'b10010 || DATA_READ_WIDTH2 == 5'b01001)) begin
        $display("FIFO18KX2 instance %m DATA_READ_WIDTH2 set to incorrect value, %d.  Values must be either 9 or 18.", DATA_READ_WIDTH2);
     #1 $stop;
     end
