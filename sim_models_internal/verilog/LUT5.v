@@ -14,10 +14,8 @@ module LUT5 #(
   output Y // Data Output
 );
 
-  //assign Y = INIT_VALUE[A] ;
-  \$bmux #(.WIDTH(1), .S_WIDTH(5)) mux(.A(INIT_VALUE), .S(A), .Y(Y));
+  assign Y = INIT_VALUE[A] ;
 
 
 endmodule
 `endcelldefine
-
