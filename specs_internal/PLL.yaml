@@ -46,7 +46,7 @@
 name: PLL
 desc: Phase locked loop
 category: periphery
-timescale: 1ps/1ps
+timescale: 1fs/1fs
 
 ports:
    PLL_EN:
