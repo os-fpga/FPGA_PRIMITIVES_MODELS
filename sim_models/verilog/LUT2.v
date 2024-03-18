@@ -14,10 +14,9 @@ module LUT2 #(
   output Y // Data Output
 );
 
-  //assign Y = INIT_VALUE[A] ;
-  \$bmux #(.WIDTH(1), .S_WIDTH(2)) mux(.A(INIT_VALUE), .S(A), .Y(Y));
+  wire [ 1: 0] s1 = A[1] ? INIT_VALUE[ 3: 2] : INIT_VALUE[ 1: 0];
+  assign Y = A[0] ? s1[1] : s1[0];
 
 
 endmodule
 `endcelldefine
-

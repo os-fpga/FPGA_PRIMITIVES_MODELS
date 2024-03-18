@@ -1,4 +1,4 @@
-`timescale 1ps/1ps
+`timescale 1fs/1fs
 `celldefine
 //
 // PLL simulation model
@@ -23,19 +23,18 @@ module PLL #(
   output reg LOCK = 1'b0 // PLL lock signal
 );
 
-
 localparam div_input_clk = (DIVIDE_CLK_IN_BY_2=="TRUE") ? 2 : 1;
 
-localparam clk_in_min_period = (DIVIDE_CLK_IN_BY_2=="TRUE") ? 125000/2 : 125000;
-localparam clk_in_max_period = (DIVIDE_CLK_IN_BY_2=="TRUE") ? 2000/2 : 2000;
+localparam clk_in_max_period = (DIVIDE_CLK_IN_BY_2=="TRUE") ? 125000000/2 : 125000000;
+localparam clk_in_min_period = (DIVIDE_CLK_IN_BY_2=="TRUE") ? 2000000/2 : 2000000;
 
-localparam vco_min_period = 1250;
-localparam vco_max_period = 312;
+localparam vco_max_period = 1250000;
+localparam vco_min_period = 312000;
 
 time clk_in_period = 0;
 time old_clk_in_period = 0;
 time clk_in_start;
-time vco_period = vco_min_period;
+time vco_period = vco_max_period;
 
 reg pll_start = 1'b0;
 reg vco_clk_start = 1'b0;
@@ -51,7 +50,7 @@ always begin
   clk_in_period = 0;
   clk_in_count = 4'h0;
   old_clk_in_count = 4'h0;
-  vco_period = 1250;
+  vco_period = 1250000;
   vco_clk_start = 1'b0;
   clk_out_start = 1'b0;
   div3_count = 1;
@@ -138,11 +137,11 @@ always @(posedge CLK_IN)
     clk_in_start = $realtime;
     if (LOCK)
       clk_in_count = clk_in_count + 1'b1;
-    if (clk_in_period < clk_in_max_period) begin
+    if (clk_in_period < clk_in_min_period) begin
       $display("Warning at time %t: PLL instance %m input clock, CLK_IN, is too fast.", $realtime);
       LOCK = 1'b0;
     end
-    if (clk_in_period > clk_in_min_period) begin
+    if (clk_in_period > clk_in_max_period) begin
       $display("Warning at time %t: PLL instance %m input clock, CLK_IN, is too slow.", $realtime);
       LOCK = 1'b0;
     end
@@ -161,17 +160,27 @@ always
       LOCK = 1'b0;
     end else
       old_clk_in_count = clk_in_count;
-    if (vco_period<vco_max_period) begin
-      $display("\nError at time %t: PLL instance %m VCO clock period %0d ps violates minimum period.\nMust be greater than %0d ps.\nTry increasing PLL_DIV or decreasing PLL_MULT values.\n", $realtime, vco_period, vco_max_period);
+    if (vco_period<vco_min_period) begin
+      $display("\nError at time %t: PLL instance %m VCO clock period %0d fs violates minimum period.\nMust be greater than %0d fs.\nTry increasing PLL_DIV or decreasing PLL_MULT values.\n", $realtime, vco_period, vco_min_period);
       $stop;
-    end else if (vco_period>vco_min_period) begin
-      $display("\nError at time %t: PLL instance %m VCO clock period %0d ps violates maximum period.\nMust be less than %0d ps.\nTry increasing PLL_MULT or decreasing PLL_DIV values.\n", $realtime, vco_period, vco_min_period);
+    end else if (vco_period>vco_max_period) begin
+      $display("\nError at time %t: PLL instance %m VCO clock period %0d fs violates maximum period.\nMust be less than %0d fs.\nTry increasing PLL_MULT or decreasing PLL_DIV values.\n", $realtime, vco_period, vco_max_period);
       $stop;
     end
   end else
     @(posedge LOCK);
 
- initial begin
+  initial begin
+   
+    if (int'(1fs) == 1) begin 
+      $display("");
+    end
+    else begin
+      $display("\n** Error: The timescale for PLL must be set to 1fs/1fs **\n");
+      #1 $stop;
+    end
+  end
+   initial begin
     case(DIVIDE_CLK_IN_BY_2)
       "TRUE" ,
       "FALSE": begin end

@@ -14,8 +14,7 @@ module LUT1 #(
   output Y // Data Output
 );
 
-  //assign Y = INIT_VALUE[A] ;
-  \$bmux #(.WIDTH(1), .S_WIDTH(1)) mux(.A(INIT_VALUE), .S(A), .Y(Y));
+  assign Y = A ? INIT_VALUE[1] : INIT_VALUE[0];
 
 
 endmodule
