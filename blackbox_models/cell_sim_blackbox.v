@@ -267,6 +267,7 @@ module I_BUF #(
   ,   parameter IOSTANDARD = "DEFAULT" // IO Standard
 `endif // RAPIDSILICON_INTERNAL
   ) (
+  (* iopad_external_pin *)
   input logic I,
   input logic EN,
   output logic O
@@ -475,6 +476,7 @@ module O_BUF
 `endif // RAPIDSILICON_INTERNAL
   (
   input logic I,
+  (* iopad_external_pin *)
   output logic O
 );
 endmodule
@@ -497,6 +499,7 @@ module O_BUFT #(
   ) (
   input logic I,
   input logic T,
+  (* iopad_external_pin *)
   output logic O
 );
 endmodule
