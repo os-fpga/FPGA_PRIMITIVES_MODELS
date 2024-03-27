@@ -45,6 +45,7 @@
 # primitive name should match the filename root.
 name: O_DDR
 desc: DDR output register
+category: periphery
 
 ports:
    D[1:0]:

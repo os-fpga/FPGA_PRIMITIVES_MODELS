@@ -54,7 +54,7 @@ ports:
    O:
      dir: output
      desc: Data output (connect to top-level port)
-  
+     bb_attributes: iopad_external_pin  
 
 # set in SDC or by synthesis attribute      
 properties:

@@ -124,22 +124,22 @@ parameters:
       default: "{4096{1'b0}}"
       vector: 4096
     WRITE_WIDTH_A:
-      desc: Write data width on port A (1-36)
+      desc: Write data width on port A (1, 2, 4, 9, 18, 36)
       type: integer
       default: 36
       range: 1 .. 36
     READ_WIDTH_A:
-      desc: Read data width on port A (1-36)
+      desc: Read data width on port A (1, 2, 4, 9, 18, 36)
       type: integer
       default: WRITE_WIDTH_A
       range: 1 .. 36
     WRITE_WIDTH_B:
-      desc: Write data width on port B (1-36)
+      desc: Write data width on port B (1, 2, 4, 9, 18, 36)
       type: integer
       default: WRITE_WIDTH_A
       range: 1 .. 36
     READ_WIDTH_B:
-      desc: Read data width on port B (1-36)
+      desc: Read data width on port B (1, 2, 4, 9, 18, 36)
       type: integer
       default: READ_WIDTH_A
       range: 1 .. 36

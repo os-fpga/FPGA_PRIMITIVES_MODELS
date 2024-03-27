@@ -114,12 +114,12 @@ ports:
 
 parameters:
     DATA_WRITE_WIDTH:
-      desc: FIFO data write width (1-36)
+      desc: FIFO data write width (9, 18, 36)
       type: integer
       default: 36
       range: 1 .. 36
     DATA_READ_WIDTH:
-      desc: FIFO data read width (1-36)
+      desc: FIFO data read width (9, 18, 36)
       type: integer
       default: 36
       range: 1 .. 36

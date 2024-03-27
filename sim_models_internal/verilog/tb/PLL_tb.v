@@ -1,14 +1,14 @@
-`timescale 1ps/1ps
+`timescale 1fs/1fs
 
 module PLL_tb;
 
 // Parameters
-localparam  DIVIDE_CLK_IN_BY_2 = "TRUE";
+localparam  DIVIDE_CLK_IN_BY_2 = "FALSE";
 localparam  PLL_MULT = 80;
 localparam  PLL_DIV = 2;
 localparam  PLL_POST_DIV = 2;
 
-real        CLK_PERIOD = 25000;   // 25000ps =25ns = 40MHz
+real        CLK_PERIOD = 25000000;   //  40MHz
 
 //Ports
 reg   PLL_EN;
@@ -70,11 +70,11 @@ begin
   expected_period=(CLK_PERIOD*PLL_DIV*PLL_POST_DIV*CLK_DIV)/PLL_MULT;
 
   #1;
-  // passing is if less than 10ps difference in period
+  // passing is if less than 10fs difference in period
   if( $abs(clk_out_period-expected_period) < 10)
-    $display("CLOCK OUT TEST PASSED [less than 10ps difference] (actual / expected): %0d ps / %0d ps", clk_out_period, expected_period);
+    $display("CLOCK OUT TEST PASSED [less than 10fs difference] (actual / expected): %0d fs / %0d fs", clk_out_period, expected_period);
   else begin
-    $display("CLOCK OUT TEST FAILED [more than 10ps difference] (actual / expected): %0d ps / %0d ps", clk_out_period, expected_period);
+    $display("CLOCK OUT TEST FAILED [more than 10fs difference] (actual / expected): %0d fs / %0d fs", clk_out_period, expected_period);
     end 
 
   fork
