@@ -10,10 +10,10 @@
 module TDP_RAM36K #(
   parameter [32767:0] INIT = {32768{1'b0}}, // Initial Contents of memory
   parameter [4095:0] INIT_PARITY = {4096{1'b0}}, // Initial Contents of memory
-  parameter WRITE_WIDTH_A = 36, // Write data width on port A (1-36)
-  parameter READ_WIDTH_A = WRITE_WIDTH_A, // Read data width on port A (1-36)
-  parameter WRITE_WIDTH_B = WRITE_WIDTH_A, // Write data width on port B (1-36)
-  parameter READ_WIDTH_B = READ_WIDTH_A // Read data width on port B (1-36)
+  parameter WRITE_WIDTH_A = 36, // Write data width on port A (1, 2, 4, 9, 18, 36)
+  parameter READ_WIDTH_A = WRITE_WIDTH_A, // Read data width on port A (1, 2, 4, 9, 18, 36)
+  parameter WRITE_WIDTH_B = WRITE_WIDTH_A, // Write data width on port B (1, 2, 4, 9, 18, 36)
+  parameter READ_WIDTH_B = READ_WIDTH_A // Read data width on port B (1, 2, 4, 9, 18, 36)
 ) (
   input WEN_A, // Write-enable port A
   input WEN_B, // Write-enable port B
@@ -263,7 +263,7 @@ module TDP_RAM36K #(
     if (RAM_ADDR_WIDTH == A_WRITE_ADDR_WIDTH)
       find_a_write_index = 0;
     else    
-      find_a_write_index = ADDR_A[15-A_WRITE_ADDR_WIDTH:14-RAM_ADDR_WIDTH]; 
+      find_a_write_index = ADDR_A[14-RAM_ADDR_WIDTH:15-A_WRITE_ADDR_WIDTH];
 
   endfunction
 
@@ -273,7 +273,7 @@ module TDP_RAM36K #(
     if (RAM_ADDR_WIDTH == A_READ_ADDR_WIDTH)
       find_a_read_index = 0;
     else    
-      find_a_read_index = ADDR_A[15-A_READ_ADDR_WIDTH:14-RAM_ADDR_WIDTH]; 
+      find_a_read_index = ADDR_A[14-RAM_ADDR_WIDTH:15-A_READ_ADDR_WIDTH];
 
   endfunction
 
@@ -283,7 +283,7 @@ module TDP_RAM36K #(
     if (RAM_ADDR_WIDTH == B_WRITE_ADDR_WIDTH)
       find_b_write_index = 0;
     else    
-      find_b_write_index = ADDR_B[15-B_WRITE_ADDR_WIDTH:14-RAM_ADDR_WIDTH]; 
+      find_b_write_index = ADDR_B[14-RAM_ADDR_WIDTH:15-B_WRITE_ADDR_WIDTH];
 
   endfunction
 
@@ -293,7 +293,7 @@ module TDP_RAM36K #(
     if (RAM_ADDR_WIDTH == B_READ_ADDR_WIDTH)
       find_b_read_index = 0;
     else    
-      find_b_read_index = ADDR_B[15-B_READ_ADDR_WIDTH:14-RAM_ADDR_WIDTH]; 
+      find_b_read_index = ADDR_B[14-RAM_ADDR_WIDTH:15-B_READ_ADDR_WIDTH];
 
   endfunction
 
