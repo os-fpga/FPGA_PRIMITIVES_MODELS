@@ -177,12 +177,12 @@ ports:
 
 parameters:
     DATA_WRITE_WIDTH1:
-      desc: FIFO data write width, FIFO 1 (1-18)
+      desc: FIFO data write width, FIFO 1 (9, 18)
       type: integer
       default: 18
       range: 1 .. 18
     DATA_READ_WIDTH1:
-      desc: FIFO data read width, FIFO 1 (1-18)
+      desc: FIFO data read width, FIFO 1 (9, 18)
       type: integer
       default: 18
       range: 1 .. 18
@@ -201,12 +201,12 @@ parameters:
       default: 11'h7fa
       vector: 11
     DATA_WRITE_WIDTH2:
-      desc: FIFO data write width, FIFO 2 (1-18)
+      desc: FIFO data write width, FIFO 2 (9, 18)
       type: integer
       default: 18
       range: 1 .. 18
     DATA_READ_WIDTH2:
-      desc: FIFO data read width, FIFO 2 (1-18)
+      desc: FIFO data read width, FIFO 2 (9, 18)
       type: integer
       default: 18
       range: 1 .. 18

@@ -170,13 +170,13 @@ endmodule
 `celldefine
 (* blackbox *)
 module FIFO18KX2 #(
-  parameter DATA_WRITE_WIDTH1 = 18, // FIFO data write width, FIFO 1 (1-18)
-  parameter DATA_READ_WIDTH1 = 18, // FIFO data read width, FIFO 1 (1-18)
+  parameter DATA_WRITE_WIDTH1 = 18, // FIFO data write width, FIFO 1 (9, 18)
+  parameter DATA_READ_WIDTH1 = 18, // FIFO data read width, FIFO 1 (9, 18)
   parameter FIFO_TYPE1 = "SYNCHRONOUS", // Synchronous or Asynchronous data transfer, FIFO 1 (SYNCHRONOUS/ASYNCHRONOUS)
   parameter [10:0] PROG_EMPTY_THRESH1 = 11'h004, // 11-bit Programmable empty depth, FIFO 1
   parameter [10:0] PROG_FULL_THRESH1 = 11'h7fa, // 11-bit Programmable full depth, FIFO 1
-  parameter DATA_WRITE_WIDTH2 = 18, // FIFO data write width, FIFO 2 (1-18)
-  parameter DATA_READ_WIDTH2 = 18, // FIFO data read width, FIFO 2 (1-18)
+  parameter DATA_WRITE_WIDTH2 = 18, // FIFO data write width, FIFO 2 (9, 18)
+  parameter DATA_READ_WIDTH2 = 18, // FIFO data read width, FIFO 2 (9, 18)
   parameter FIFO_TYPE2 = "SYNCHRONOUS", // Synchronous or Asynchronous data transfer, FIFO 2 (SYNCHRONOUS/ASYNCHRONOUS)
   parameter [10:0] PROG_EMPTY_THRESH2 = 11'h004, // 11-bit Programmable empty depth, FIFO 2
   parameter [10:0] PROG_FULL_THRESH2 = 11'h7fa // 11-bit Programmable full depth, FIFO 2
@@ -227,8 +227,8 @@ endmodule
 `celldefine
 (* blackbox *)
 module FIFO36K #(
-  parameter DATA_WRITE_WIDTH = 36, // FIFO data write width (1-36)
-  parameter DATA_READ_WIDTH = 36, // FIFO data read width (1-36)
+  parameter DATA_WRITE_WIDTH = 36, // FIFO data write width (9, 18, 36)
+  parameter DATA_READ_WIDTH = 36, // FIFO data read width (9, 18, 36)
   parameter FIFO_TYPE = "SYNCHRONOUS", // Synchronous or Asynchronous data transfer (SYNCHRONOUS/ASYNCHRONOUS)
   parameter [11:0] PROG_EMPTY_THRESH = 12'h004, // 12-bit Programmable empty depth
   parameter [11:0] PROG_FULL_THRESH = 12'hffa // 12-bit Programmable full depth
@@ -254,26 +254,6 @@ module FIFO36K #(
 endmodule
 `endcelldefine
 //
-// I_BUF black box model
-// Input buffer
-//
-// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
-//
-`celldefine
-(* blackbox *)
-module I_BUF #(
-  parameter WEAK_KEEPER = "NONE" // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-  ,   parameter IOSTANDARD = "DEFAULT" // IO Standard
-`endif // RAPIDSILICON_INTERNAL
-  ) (
-  input logic I,
-  input logic EN,
-  output logic O
-);
-endmodule
-`endcelldefine
-//
 // I_BUF_DS black box model
 // input differential buffer
 //
@@ -292,6 +272,27 @@ module I_BUF_DS #(
   input logic I_N,
   input logic EN,
   output reg O
+);
+endmodule
+`endcelldefine
+//
+// I_BUF black box model
+// Input buffer
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module I_BUF #(
+  parameter WEAK_KEEPER = "NONE" // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
+`ifdef RAPIDSILICON_INTERNAL
+  ,   parameter IOSTANDARD = "DEFAULT" // IO Standard
+`endif // RAPIDSILICON_INTERNAL
+  ) (
+  (* iopad_external_pin *)
+  input logic I,
+  input logic EN,
+  output logic O
 );
 endmodule
 `endcelldefine
@@ -458,46 +459,24 @@ module LUT6 #(
 endmodule
 `endcelldefine
 //
-// O_BUF black box model
-// Output buffer
+// O_BUF_DS black box model
+// Output differential buffer
 //
 // Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
-module O_BUF
+module O_BUF_DS
 `ifdef RAPIDSILICON_INTERNAL
   #(
   parameter IOSTANDARD = "DEFAULT", // IO Standard
-  parameter DRIVE_STRENGTH = 2, // Drive strength in mA for LVCMOS standards
-  parameter SLEW_RATE = "SLOW" // Transition rate for LVCMOS standards
+  parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
   )
 `endif // RAPIDSILICON_INTERNAL
   (
   input logic I,
-  output logic O
-);
-endmodule
-`endcelldefine
-//
-// O_BUFT black box model
-// Output tri-state buffer
-//
-// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
-//
-`celldefine
-(* blackbox *)
-module O_BUFT #(
-  parameter WEAK_KEEPER = "NONE" // Enable pull-up/pull-down on output (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-  ,   parameter IOSTANDARD = "DEFAULT", // IO Standard
-  parameter DRIVE_STRENGTH = 2, // Drive strength in mA for LVCMOS standards
-  parameter SLEW_RATE = "SLOW" // Transition rate for LVCMOS standards
-`endif // RAPIDSILICON_INTERNAL
-  ) (
-  input logic I,
-  input logic T,
-  output logic O
+  output logic O_P,
+  output logic O_N
 );
 endmodule
 `endcelldefine
@@ -524,24 +503,48 @@ module O_BUFT_DS #(
 endmodule
 `endcelldefine
 //
-// O_BUF_DS black box model
-// Output differential buffer
+// O_BUFT black box model
+// Output tri-state buffer
 //
 // Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
 `celldefine
 (* blackbox *)
-module O_BUF_DS
+module O_BUFT #(
+  parameter WEAK_KEEPER = "NONE" // Enable pull-up/pull-down on output (NONE/PULLUP/PULLDOWN)
+`ifdef RAPIDSILICON_INTERNAL
+  ,   parameter IOSTANDARD = "DEFAULT", // IO Standard
+  parameter DRIVE_STRENGTH = 2, // Drive strength in mA for LVCMOS standards
+  parameter SLEW_RATE = "SLOW" // Transition rate for LVCMOS standards
+`endif // RAPIDSILICON_INTERNAL
+  ) (
+  input logic I,
+  input logic T,
+  (* iopad_external_pin *)
+  output logic O
+);
+endmodule
+`endcelldefine
+//
+// O_BUF black box model
+// Output buffer
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module O_BUF
 `ifdef RAPIDSILICON_INTERNAL
   #(
   parameter IOSTANDARD = "DEFAULT", // IO Standard
-  parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
+  parameter DRIVE_STRENGTH = 2, // Drive strength in mA for LVCMOS standards
+  parameter SLEW_RATE = "SLOW" // Transition rate for LVCMOS standards
   )
 `endif // RAPIDSILICON_INTERNAL
   (
   input logic I,
-  output logic O_P,
-  output logic O_N
+  (* iopad_external_pin *)
+  output logic O
 );
 endmodule
 `endcelldefine
@@ -584,6 +587,25 @@ module O_DELAY #(
 endmodule
 `endcelldefine
 //
+// O_SERDES_CLK black box model
+// Output Serializer Clock
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module O_SERDES_CLK #(
+  parameter DATA_RATE = "SDR", // Single or double data rate (SDR/DDR)
+  parameter CLOCK_PHASE = 0 // Clock phase (0,90,180,270)
+  ) (
+  input logic CLK_EN,
+  output reg OUTPUT_CLK,
+  input logic PLL_LOCK,
+  input logic PLL_CLK
+);
+endmodule
+`endcelldefine
+//
 // O_SERDES black box model
 // Output Serializer
 //
@@ -604,25 +626,6 @@ module O_SERDES #(
   output logic Q,
   input logic CHANNEL_BOND_SYNC_IN,
   output logic CHANNEL_BOND_SYNC_OUT,
-  input logic PLL_LOCK,
-  input logic PLL_CLK
-);
-endmodule
-`endcelldefine
-//
-// O_SERDES_CLK black box model
-// Output Serializer Clock
-//
-// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
-//
-`celldefine
-(* blackbox *)
-module O_SERDES_CLK #(
-  parameter DATA_RATE = "SDR", // Single or double data rate (SDR/DDR)
-  parameter CLOCK_PHASE = 0 // Clock phase (0,90,180,270)
-  ) (
-  input logic CLK_EN,
-  output reg OUTPUT_CLK,
   input logic PLL_LOCK,
   input logic PLL_CLK
 );
@@ -881,16 +884,16 @@ endmodule
 module TDP_RAM18KX2 #(
   parameter [16383:0] INIT1 = {16384{1'b0}}, // Initial Contents of data memory, RAM 1
   parameter [2047:0] INIT1_PARITY = {2048{1'b0}}, // Initial Contents of parity memory, RAM 1
-  parameter WRITE_WIDTH_A1 = 18, // Write data width on port A, RAM 1 (1-18)
-  parameter WRITE_WIDTH_B1 = 18, // Write data width on port B, RAM 1 (1-18)
-  parameter READ_WIDTH_A1 = 18, // Read data width on port A, RAM 1 (1-18)
-  parameter READ_WIDTH_B1 = 18, // Read data width on port B, RAM 1 (1-18)
+  parameter WRITE_WIDTH_A1 = 18, // Write data width on port A, RAM 1 (1, 2, 4, 9, 18)
+  parameter WRITE_WIDTH_B1 = 18, // Write data width on port B, RAM 1 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_A1 = 18, // Read data width on port A, RAM 1 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_B1 = 18, // Read data width on port B, RAM 1 (1, 2, 4, 9, 18)
   parameter [16383:0] INIT2 = {16384{1'b0}}, // Initial Contents of memory, RAM 2
   parameter [2047:0] INIT2_PARITY = {2048{1'b0}}, // Initial Contents of memory, RAM 2
-  parameter WRITE_WIDTH_A2 = 18, // Write data width on port A, RAM 2 (1-18)
-  parameter WRITE_WIDTH_B2 = 18, // Write data width on port B, RAM 2 (1-18)
-  parameter READ_WIDTH_A2 = 18, // Read data width on port A, RAM 2 (1-18)
-  parameter READ_WIDTH_B2 = 18 // Read data width on port B, RAM 2 (1-18)
+  parameter WRITE_WIDTH_A2 = 18, // Write data width on port A, RAM 2 (1, 2, 4, 9, 18)
+  parameter WRITE_WIDTH_B2 = 18, // Write data width on port B, RAM 2 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_A2 = 18, // Read data width on port A, RAM 2 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_B2 = 18 // Read data width on port B, RAM 2 (1, 2, 4, 9, 18)
   ) (
   input logic WEN_A1,
   input logic WEN_B1,
@@ -944,10 +947,10 @@ endmodule
 module TDP_RAM36K #(
   parameter [32767:0] INIT = {32768{1'b0}}, // Initial Contents of memory
   parameter [4095:0] INIT_PARITY = {4096{1'b0}}, // Initial Contents of memory
-  parameter WRITE_WIDTH_A = 36, // Write data width on port A (1-36)
-  parameter READ_WIDTH_A = WRITE_WIDTH_A, // Read data width on port A (1-36)
-  parameter WRITE_WIDTH_B = WRITE_WIDTH_A, // Write data width on port B (1-36)
-  parameter READ_WIDTH_B = READ_WIDTH_A // Read data width on port B (1-36)
+  parameter WRITE_WIDTH_A = 36, // Write data width on port A (1, 2, 4, 9, 18, 36)
+  parameter READ_WIDTH_A = WRITE_WIDTH_A, // Read data width on port A (1, 2, 4, 9, 18, 36)
+  parameter WRITE_WIDTH_B = WRITE_WIDTH_A, // Write data width on port B (1, 2, 4, 9, 18, 36)
+  parameter READ_WIDTH_B = READ_WIDTH_A // Read data width on port B (1, 2, 4, 9, 18, 36)
   ) (
   input logic WEN_A,
   input logic WEN_B,
@@ -971,243 +974,4 @@ module TDP_RAM36K #(
   output reg [3:0] RPARITY_B
 );
 endmodule
-`endcelldefine
-
-
-//------------------------------------------------------------------------------
-//
-// Copyright (C) 2023 RapidSilicon
-//
-// genesis3 LATChes
-//
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-// Positive level-sensitive latch implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-
-`celldefine
-(* blackbox *)
-module LATCH(D, G, Q);
-  input D;
-  input G;
-  output Q;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Negative level-sensitive latch implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHN(D, G, Q);
-  input D;
-  input G;
-  output Q;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Positive level-sensitive latch with active-high asyncronous reset
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHR(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-//------------------------------------------------------------------------------
-// Positive level-sensitive latch with active-high asyncronous set
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHS(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Negative level-sensitive latch with active-high asyncronous reset
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHNR(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Negative level-sensitive latch with active-high asyncronous set
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHNS(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-
-`celldefine
-(* blackbox *)
-module BRAM2x18_TDP (A1ADDR, A1DATA, A1EN, B1ADDR, B1DATA, B1EN, C1ADDR, C1DATA, C1EN, CLK1, CLK2, CLK3, CLK4, D1ADDR, D1DATA, D1EN, E1ADDR, E1DATA, E1EN, F1ADDR, F1DATA, F1EN, G1ADDR, G1DATA, G1EN, H1ADDR, H1DATA, H1EN);
-    parameter CFG_ABITS = 11;
-    parameter CFG_DBITS = 18;
-    parameter CFG_ENABLE_B = 4;
-    parameter CFG_ENABLE_D = 4;
-    parameter CFG_ENABLE_F = 4;
-    parameter CFG_ENABLE_H = 4;
-
-    parameter CLKPOL2 = 1;
-    parameter CLKPOL3 = 1;
-    parameter [18431:0] INIT0 = 18432'bx;
-    parameter [18431:0] INIT1 = 18432'bx;
-
-    input CLK1;
-    input CLK2;
-    input CLK3;
-    input CLK4;
-
-    input [CFG_ABITS-1:0] A1ADDR;
-    output [CFG_DBITS-1:0] A1DATA;
-    input A1EN;
-
-    input [CFG_ABITS-1:0] B1ADDR;
-    input [CFG_DBITS-1:0] B1DATA;
-    input [CFG_ENABLE_B-1:0] B1EN;
-
-    input [CFG_ABITS-1:0] C1ADDR;
-    output [CFG_DBITS-1:0] C1DATA;
-    input C1EN;
-
-    input [CFG_ABITS-1:0] D1ADDR;
-    input [CFG_DBITS-1:0] D1DATA;
-    input [CFG_ENABLE_D-1:0] D1EN;
-
-    input [CFG_ABITS-1:0] E1ADDR;
-    output [CFG_DBITS-1:0] E1DATA;
-    input E1EN;
-
-    input [CFG_ABITS-1:0] F1ADDR;
-    input [CFG_DBITS-1:0] F1DATA;
-    input [CFG_ENABLE_F-1:0] F1EN;
-
-    input [CFG_ABITS-1:0] G1ADDR;
-    output [CFG_DBITS-1:0] G1DATA;
-    input G1EN;
-
-    input [CFG_ABITS-1:0] H1ADDR;
-    input [CFG_DBITS-1:0] H1DATA;
-    input [CFG_ENABLE_H-1:0] H1EN;
-
-endmodule
-`endcelldefine
-
-`celldefine
-(* blackbox *)
-module BRAM2x18_SDP (A1ADDR, A1DATA, A1EN, B1ADDR, B1DATA, B1EN, C1ADDR, C1DATA, C1EN, CLK1, CLK2, D1ADDR, D1DATA, D1EN);
-    parameter CFG_ABITS = 11;
-    parameter CFG_DBITS = 18;
-    parameter CFG_ENABLE_B = 4;
-    parameter CFG_ENABLE_D = 4;
-
-    parameter CLKPOL2 = 1;
-    parameter CLKPOL3 = 1;
-    parameter [18431:0] INIT0 = 18432'bx;
-    parameter [18431:0] INIT1 = 18432'bx;
-
-
-
-    input CLK1;
-    input CLK2;
-
-    input [CFG_ABITS-1:0] A1ADDR;
-    output [CFG_DBITS-1:0] A1DATA;
-    input A1EN;
-
-    input [CFG_ABITS-1:0] B1ADDR;
-    input [CFG_DBITS-1:0] B1DATA;
-    input [CFG_ENABLE_B-1:0] B1EN;
-
-    input [CFG_ABITS-1:0] C1ADDR;
-    output [CFG_DBITS-1:0] C1DATA;
-    input C1EN;
-
-    input [CFG_ABITS-1:0] D1ADDR;
-    input [CFG_DBITS-1:0] D1DATA;
-    input [CFG_ENABLE_D-1:0] D1EN;
-
-
-
-endmodule
-`endcelldefine
-
-`celldefine
-(* blackbox *)
-module \_$_mem_v2_asymmetric (RD_ADDR, RD_ARST, RD_CLK, RD_DATA, RD_EN, RD_SRST, WR_ADDR, WR_CLK, WR_DATA, WR_EN);
-
-    parameter CFG_ABITS = 10;
-    parameter CFG_DBITS = 36;
-    parameter CFG_ENABLE_B = 4;
-
-    parameter READ_ADDR_WIDTH = 11;
-    parameter READ_DATA_WIDTH = 16;
-    parameter WRITE_ADDR_WIDTH = 10;
-    parameter WRITE_DATA_WIDTH = 32;
-    parameter ABITS = 0;
-    parameter MEMID = 0;
-    parameter [36863:0] INIT = 36864'bx;
-    parameter OFFSET = 0;
-    parameter RD_ARST_VALUE = 0;
-    parameter RD_CE_OVER_SRST = 0;
-    parameter RD_CLK_ENABLE = 0;
-    parameter RD_CLK_POLARITY = 0;
-    parameter RD_COLLISION_X_MASK = 0;
-    parameter RD_INIT_VALUE = 0;
-    parameter RD_PORTS = 0;
-    parameter RD_SRST_VALUE = 0;
-    parameter RD_TRANSPARENCY_MASK = 0;
-    parameter RD_WIDE_CONTINUATION = 0;
-    parameter SIZE = 0;
-    parameter WIDTH = 0;
-    parameter WR_CLK_ENABLE = 0;
-    parameter WR_CLK_POLARITY = 0;
-    parameter WR_PORTS = 0;
-    parameter WR_PRIORITY_MASK = 0;
-    parameter WR_WIDE_CONTINUATION = 0;
-
-
-    input RD_CLK;
-    input WR_CLK;
-    input RD_ARST;
-    input RD_SRST;
-
-    input [CFG_ABITS-1:0] RD_ADDR;
-    output [CFG_DBITS-1:0] RD_DATA;
-    input RD_EN;
-
-    input [CFG_ABITS-1:0] WR_ADDR;
-    input [CFG_DBITS-1:0] WR_DATA;
-    input [CFG_ENABLE_B-1:0] WR_EN;
-
-  endmodule
 `endcelldefine

@@ -51,6 +51,7 @@ ports:
    I:
      dir: input
      desc: Data input (connect to top-level port)
+     bb_attributes: iopad_external_pin
    EN:
      dir: input
      desc: Enable the input

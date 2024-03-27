@@ -45,6 +45,7 @@
 # primitive name should match the filename root.
 name: I_DDR
 desc: DDR input register
+category: periphery
 
 ports:
    D:
