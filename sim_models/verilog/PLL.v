@@ -226,7 +226,7 @@ always
       84 ,
       98: begin end
       default: begin
-        $display("\nError: PLL instance %m has parameter PLL_POST_DIV set to %s.  Valid values are 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 30, 32, 36, 40, 42, 48, 50, 56, 60, 70, 72, 84, 98\n", PLL_POST_DIV);
+        $display("\nError: PLL instance %m has parameter PLL_POST_DIV set to %d.  Valid values are 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 30, 32, 36, 40, 42, 48, 50, 56, 60, 70, 72, 84, 98\n", PLL_POST_DIV);
         #1 $stop ;
       end
     endcase

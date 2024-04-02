@@ -347,26 +347,54 @@ module TDP_RAM36K #(
     $timeformat(-9,0," ns", 5);
 
      initial begin
-
-    if ((WRITE_WIDTH_A < 1) || (WRITE_WIDTH_A > 36)) begin
-       $display("TDP_RAM36K instance %m WRITE_WIDTH_A set to incorrect value, %d.  Values must be between 1 and 36.", WRITE_WIDTH_A);
-    #1 $stop;
-    end
-
-    if ((READ_WIDTH_A < 1) || (READ_WIDTH_A > 36)) begin
-       $display("TDP_RAM36K instance %m READ_WIDTH_A set to incorrect value, %d.  Values must be between 1 and 36.", READ_WIDTH_A);
-    #1 $stop;
-    end
-
-    if ((WRITE_WIDTH_B < 1) || (WRITE_WIDTH_B > 36)) begin
-       $display("TDP_RAM36K instance %m WRITE_WIDTH_B set to incorrect value, %d.  Values must be between 1 and 36.", WRITE_WIDTH_B);
-    #1 $stop;
-    end
-
-    if ((READ_WIDTH_B < 1) || (READ_WIDTH_B > 36)) begin
-       $display("TDP_RAM36K instance %m READ_WIDTH_B set to incorrect value, %d.  Values must be between 1 and 36.", READ_WIDTH_B);
-    #1 $stop;
-    end
+    case(WRITE_WIDTH_A)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18 ,
+      36: begin end
+      default: begin
+        $display("\nError: TDP_RAM36K instance %m has parameter WRITE_WIDTH_A set to %d.  Valid values are 1, 2, 4, 9, 18, 36\n", WRITE_WIDTH_A);
+        #1 $stop ;
+      end
+    endcase
+    case(READ_WIDTH_A)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18 ,
+      36: begin end
+      default: begin
+        $display("\nError: TDP_RAM36K instance %m has parameter READ_WIDTH_A set to %d.  Valid values are 1, 2, 4, 9, 18, 36\n", READ_WIDTH_A);
+        #1 $stop ;
+      end
+    endcase
+    case(WRITE_WIDTH_B)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18 ,
+      36: begin end
+      default: begin
+        $display("\nError: TDP_RAM36K instance %m has parameter WRITE_WIDTH_B set to %d.  Valid values are 1, 2, 4, 9, 18, 36\n", WRITE_WIDTH_B);
+        #1 $stop ;
+      end
+    endcase
+    case(READ_WIDTH_B)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18 ,
+      36: begin end
+      default: begin
+        $display("\nError: TDP_RAM36K instance %m has parameter READ_WIDTH_B set to %d.  Valid values are 1, 2, 4, 9, 18, 36\n", READ_WIDTH_B);
+        #1 $stop ;
+      end
+    endcase
 
   end
 
