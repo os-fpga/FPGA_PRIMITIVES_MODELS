@@ -10,16 +10,16 @@
 module TDP_RAM18KX2 #(
   parameter [16383:0] INIT1 = {16384{1'b0}}, // Initial Contents of data memory, RAM 1
   parameter [2047:0] INIT1_PARITY = {2048{1'b0}}, // Initial Contents of parity memory, RAM 1
-  parameter WRITE_WIDTH_A1 = 18, // Write data width on port A, RAM 1 (1-18)
-  parameter WRITE_WIDTH_B1 = 18, // Write data width on port B, RAM 1 (1-18)
-  parameter READ_WIDTH_A1 = 18, // Read data width on port A, RAM 1 (1-18)
-  parameter READ_WIDTH_B1 = 18, // Read data width on port B, RAM 1 (1-18)
+  parameter WRITE_WIDTH_A1 = 18, // Write data width on port A, RAM 1 (1, 2, 4, 9, 18)
+  parameter WRITE_WIDTH_B1 = 18, // Write data width on port B, RAM 1 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_A1 = 18, // Read data width on port A, RAM 1 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_B1 = 18, // Read data width on port B, RAM 1 (1, 2, 4, 9, 18)
   parameter [16383:0] INIT2 = {16384{1'b0}}, // Initial Contents of memory, RAM 2
   parameter [2047:0] INIT2_PARITY = {2048{1'b0}}, // Initial Contents of memory, RAM 2
-  parameter WRITE_WIDTH_A2 = 18, // Write data width on port A, RAM 2 (1-18)
-  parameter WRITE_WIDTH_B2 = 18, // Write data width on port B, RAM 2 (1-18)
-  parameter READ_WIDTH_A2 = 18, // Read data width on port A, RAM 2 (1-18)
-  parameter READ_WIDTH_B2 = 18 // Read data width on port B, RAM 2 (1-18)
+  parameter WRITE_WIDTH_A2 = 18, // Write data width on port A, RAM 2 (1, 2, 4, 9, 18)
+  parameter WRITE_WIDTH_B2 = 18, // Write data width on port B, RAM 2 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_A2 = 18, // Read data width on port A, RAM 2 (1, 2, 4, 9, 18)
+  parameter READ_WIDTH_B2 = 18 // Read data width on port B, RAM 2 (1, 2, 4, 9, 18)
 ) (
   input WEN_A1, // Write-enable port A, RAM 1
   input WEN_B1, // Write-enable port B, RAM 1
@@ -573,46 +573,94 @@ module TDP_RAM18KX2 #(
 
   initial
     $timeformat(-9,0," ns", 5); initial begin
-
-    if ((WRITE_WIDTH_A1 < 1) || (WRITE_WIDTH_A1 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m WRITE_WIDTH_A1 set to incorrect value, %d.  Values must be between 1 and 18.", WRITE_WIDTH_A1);
-    #1 $stop;
-    end
-
-    if ((WRITE_WIDTH_B1 < 1) || (WRITE_WIDTH_B1 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m WRITE_WIDTH_B1 set to incorrect value, %d.  Values must be between 1 and 18.", WRITE_WIDTH_B1);
-    #1 $stop;
-    end
-
-    if ((READ_WIDTH_A1 < 1) || (READ_WIDTH_A1 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m READ_WIDTH_A1 set to incorrect value, %d.  Values must be between 1 and 18.", READ_WIDTH_A1);
-    #1 $stop;
-    end
-
-    if ((READ_WIDTH_B1 < 1) || (READ_WIDTH_B1 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m READ_WIDTH_B1 set to incorrect value, %d.  Values must be between 1 and 18.", READ_WIDTH_B1);
-    #1 $stop;
-    end
-
-    if ((WRITE_WIDTH_A2 < 1) || (WRITE_WIDTH_A2 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m WRITE_WIDTH_A2 set to incorrect value, %d.  Values must be between 1 and 18.", WRITE_WIDTH_A2);
-    #1 $stop;
-    end
-
-    if ((WRITE_WIDTH_B2 < 1) || (WRITE_WIDTH_B2 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m WRITE_WIDTH_B2 set to incorrect value, %d.  Values must be between 1 and 18.", WRITE_WIDTH_B2);
-    #1 $stop;
-    end
-
-    if ((READ_WIDTH_A2 < 1) || (READ_WIDTH_A2 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m READ_WIDTH_A2 set to incorrect value, %d.  Values must be between 1 and 18.", READ_WIDTH_A2);
-    #1 $stop;
-    end
-
-    if ((READ_WIDTH_B2 < 1) || (READ_WIDTH_B2 > 18)) begin
-       $display("TDP_RAM18KX2 instance %m READ_WIDTH_B2 set to incorrect value, %d.  Values must be between 1 and 18.", READ_WIDTH_B2);
-    #1 $stop;
-    end
+    case(WRITE_WIDTH_A1)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_A1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_A1);
+        #1 $stop ;
+      end
+    endcase
+    case(WRITE_WIDTH_B1)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_B1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_B1);
+        #1 $stop ;
+      end
+    endcase
+    case(READ_WIDTH_A1)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_A1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_A1);
+        #1 $stop ;
+      end
+    endcase
+    case(READ_WIDTH_B1)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_B1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_B1);
+        #1 $stop ;
+      end
+    endcase
+    case(WRITE_WIDTH_A2)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_A2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_A2);
+        #1 $stop ;
+      end
+    endcase
+    case(WRITE_WIDTH_B2)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_B2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_B2);
+        #1 $stop ;
+      end
+    endcase
+    case(READ_WIDTH_A2)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_A2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_A2);
+        #1 $stop ;
+      end
+    endcase
+    case(READ_WIDTH_B2)
+      1 ,
+      2 ,
+      4 ,
+      9 ,
+      18: begin end
+      default: begin
+        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_B2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_B2);
+        #1 $stop ;
+      end
+    endcase
 
   end
 

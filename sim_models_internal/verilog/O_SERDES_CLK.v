@@ -63,7 +63,7 @@ module O_SERDES_CLK #(
       180 ,
       270: begin end
       default: begin
-        $display("\nError: O_SERDES_CLK instance %m has parameter CLOCK_PHASE set to %s.  Valid values are 0, 90, 180, 270\n", CLOCK_PHASE);
+        $display("\nError: O_SERDES_CLK instance %m has parameter CLOCK_PHASE set to %d.  Valid values are 0, 90, 180, 270\n", CLOCK_PHASE);
         #1 $stop ;
       end
     endcase
