@@ -57,9 +57,11 @@ ports:
    O_P:
      dir: output
      desc: Data positive output (connect to top-level port)
+     bb_attributes: iopad_external_pin
    O_N:
      dir: output
      desc: Data negative output (connect to top-level port)
+     bb_attributes: iopad_external_pin
 
 parameters:
    WEAK_KEEPER:
