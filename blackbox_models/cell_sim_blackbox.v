@@ -268,8 +268,11 @@ module I_BUF_DS #(
   parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
 `endif // RAPIDSILICON_INTERNAL
   ) (
+  (* iopad_external_pin *)
   input logic I_P,
+  (* iopad_external_pin *)
   input logic I_N,
+  (* iopad_external_pin *)
   input logic EN,
   output reg O
 );
@@ -475,7 +478,9 @@ module O_BUF_DS
 `endif // RAPIDSILICON_INTERNAL
   (
   input logic I,
+  (* iopad_external_pin *)
   output logic O_P,
+  (* iopad_external_pin *)
   output logic O_N
 );
 endmodule
@@ -497,7 +502,9 @@ module O_BUFT_DS #(
   ) (
   input logic I,
   input logic T,
+  (* iopad_external_pin *)
   output logic O_P,
+  (* iopad_external_pin *)
   output logic O_N
 );
 endmodule
