@@ -117,12 +117,18 @@ parameters:
       desc: FIFO data write width (9, 18, 36)
       type: integer
       default: 36
-      range: 1 .. 36
+      values:
+      - 9
+      - 18
+      - 36
     DATA_READ_WIDTH:
       desc: FIFO data read width (9, 18, 36)
       type: integer
       default: 36
-      range: 1 .. 36
+      values:
+      - 9
+      - 18
+      - 36
     FIFO_TYPE:
       desc: Synchronous or Asynchronous data transfer (SYNCHRONOUS/ASYNCHRONOUS)
       default: SYNCHRONOUS

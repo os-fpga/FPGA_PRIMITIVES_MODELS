@@ -188,22 +188,42 @@ parameters:
       desc: Write data width on port A, RAM 1 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     WRITE_WIDTH_B1:
       desc: Write data width on port B, RAM 1 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     READ_WIDTH_A1:
       desc: Read data width on port A, RAM 1 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     READ_WIDTH_B1:
       desc: Read data width on port B, RAM 1 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     INIT2:
       desc: Initial Contents of memory, RAM 2
       default: "{16384{1'b0}}"
@@ -214,20 +234,41 @@ parameters:
       vector: 2048
     WRITE_WIDTH_A2:
       desc: Write data width on port A, RAM 2 (1, 2, 4, 9, 18)
+      type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     WRITE_WIDTH_B2:
       desc: Write data width on port B, RAM 2 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     READ_WIDTH_A2:
       desc: Read data width on port A, RAM 2 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
     READ_WIDTH_B2:
       desc: Read data width on port B, RAM 2 (1, 2, 4, 9, 18)
       type: integer
       default: 18
-      range: 1 .. 18
+      values:
+      - 1
+      - 2
+      - 4
+      - 9
+      - 18
