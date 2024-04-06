@@ -59,6 +59,7 @@ ports:
    EN:
      dir: input
      desc: Enable the input
+     bb_attributes: iopad_external_pin
    O:
      dir: output
      type: reg
