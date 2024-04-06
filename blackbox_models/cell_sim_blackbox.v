@@ -272,7 +272,6 @@ module I_BUF_DS #(
   input logic I_P,
   (* iopad_external_pin *)
   input logic I_N,
-  (* iopad_external_pin *)
   input logic EN,
   output reg O
 );
