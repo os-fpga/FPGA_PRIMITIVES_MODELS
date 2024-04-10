@@ -73,6 +73,7 @@ ports:
      dir: input
      desc: Clock input
      detailed_desc:  Clock input to component
+     bb_attributes: clkbuf_sink
    O:
      dir: output
      desc: Data output

@@ -60,6 +60,7 @@ ports:
    C:
      dir: input
      desc: Clock
+     bb_attributes: clkbuf_sink
    Q:
      dir: output
      desc: Data output (connect to output port, buffer or O_DELAY)

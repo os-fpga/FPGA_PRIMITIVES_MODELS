@@ -60,6 +60,7 @@ ports:
    C:
      dir: input
      desc: Clock input
+     bb_attributes: clkbuf_sink
    Q[1:0]:
      dir: output
      desc: Data output
