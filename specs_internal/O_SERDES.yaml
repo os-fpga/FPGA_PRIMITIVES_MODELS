@@ -60,6 +60,7 @@ ports:
    CLK_IN: 
      dir: input
      desc: Fabric clock input
+     bb_attributes: clkbuf_sink
    OE_IN: 
      dir: input
      desc: Output tri-state enable input

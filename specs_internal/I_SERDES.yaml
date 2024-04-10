@@ -63,6 +63,7 @@ ports:
    CLK_IN: 
      dir: input
      desc:  Fabric clock input
+     bb_attributes: clkbuf_sink
    CLK_OUT:
      dir: output
      desc: Fabric clock output
