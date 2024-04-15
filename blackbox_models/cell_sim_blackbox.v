@@ -310,6 +310,7 @@ module I_DDR (
   input logic D,
   input logic R,
   input logic E,
+  (* clkbuf_sink *)
   input logic C,
   output reg [1:0] Q
 );
@@ -331,6 +332,7 @@ module I_DELAY #(
   input logic DLY_ADJ,
   input logic DLY_INCDEC,
   output logic [5:0] DLY_TAP_VALUE,
+  (* clkbuf_sink *)
   input logic CLK_IN,
   output logic O
 );
@@ -353,6 +355,7 @@ module I_SERDES #(
   input logic RX_RST,
   input logic BITSLIP_ADJ,
   input logic EN,
+  (* clkbuf_sink *)
   input logic CLK_IN,
   output logic CLK_OUT,
   output logic [WIDTH-1:0] Q,
@@ -566,6 +569,7 @@ module O_DDR (
   input logic [1:0] D,
   input logic R,
   input logic E,
+  (* clkbuf_sink *)
   input logic C,
   output reg Q
 );
@@ -587,6 +591,7 @@ module O_DELAY #(
   input logic DLY_ADJ,
   input logic DLY_INCDEC,
   output logic [5:0] DLY_TAP_VALUE,
+  (* clkbuf_sink *)
   input logic CLK_IN,
   output logic O
 );
@@ -626,6 +631,7 @@ module O_SERDES #(
   input logic [WIDTH-1:0] D,
   input logic RST,
   input logic LOAD_WORD,
+  (* clkbuf_sink *)
   input logic CLK_IN,
   input logic OE_IN,
   output logic OE_OUT,
