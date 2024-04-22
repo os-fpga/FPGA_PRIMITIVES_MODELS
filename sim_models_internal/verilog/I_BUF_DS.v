@@ -8,11 +8,9 @@
 //
 
 module I_BUF_DS #(
-      parameter WEAK_KEEPER = "NONE" // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-    ,  parameter IOSTANDARD = "DEFAULT", // IO Standard
+  parameter WEAK_KEEPER = "NONE", // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
+  parameter IOSTANDARD = "DEFAULT", // IO Standard
   parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
-`endif // RAPIDSILICON_INTERNAL
 ) (
   input I_P, // Data positive input (connect to top-level port)
   input I_N, // Data negative input (connect to top-level port)
@@ -50,9 +48,6 @@ module I_BUF_DS #(
         #1 $stop ;
       end
     endcase
-
-`ifdef RAPIDSILICON_INTERNAL
-
     case(IOSTANDARD)
       "DEFAULT" ,
       "BLVDS_DIFF" ,
@@ -75,7 +70,6 @@ module I_BUF_DS #(
         #1 $stop ;
       end
     endcase
-
     case(DIFFERENTIAL_TERMINATION)
       "TRUE" ,
       "FALSE": begin end
@@ -84,7 +78,6 @@ module I_BUF_DS #(
         #1 $stop ;
       end
     endcase
-`endif // RAPIDSILICON_INTERNAL
 
   end
 
