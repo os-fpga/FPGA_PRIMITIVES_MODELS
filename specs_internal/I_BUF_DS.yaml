@@ -74,9 +74,7 @@ parameters:
         - NONE
         - PULLUP
         - PULLDOWN
-
-# set in SDC or by synthesis attribute      
-properties:
+        
     IOSTANDARD:
       desc: IO Standard
       default: DEFAULT
