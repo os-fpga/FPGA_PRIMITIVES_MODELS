@@ -262,11 +262,9 @@ endmodule
 `celldefine
 (* blackbox *)
 module I_BUF_DS #(
-  parameter WEAK_KEEPER = "NONE" // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-  ,   parameter IOSTANDARD = "DEFAULT", // IO Standard
+  parameter WEAK_KEEPER = "NONE", // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
+  parameter IOSTANDARD = "DEFAULT", // IO Standard
   parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
-`endif // RAPIDSILICON_INTERNAL
   ) (
   (* iopad_external_pin *)
   input logic I_P,
