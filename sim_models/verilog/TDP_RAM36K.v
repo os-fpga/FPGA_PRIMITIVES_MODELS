@@ -73,6 +73,11 @@ module TDP_RAM36K #(
   wire [RAM_ADDR_WIDTH-1:0] b_addr = ADDR_B[14:15-RAM_ADDR_WIDTH];                                   
   
   reg [RAM_DATA_WIDTH-1:0] RAM_DATA [2**RAM_ADDR_WIDTH-1:0];
+
+  reg [RAM_PARITY_WIDTH-1:0] temp_WPARITY_A;
+  reg [RAM_PARITY_WIDTH-1:0] temp_WPARITY_B;
+  reg [RAM_DATA_WIDTH-1:0] temp_WDATA_A;
+  reg [RAM_DATA_WIDTH-1:0] temp_WDATA_B;
   
   generate
     if (RAM_PARITY_WIDTH > 0) begin: parity
@@ -85,21 +90,42 @@ module TDP_RAM36K #(
         f_p = 0;
         for (g_p = 0; g_p < 2**RAM_ADDR_WIDTH; g_p = g_p + 1)
           for (h_p = 0; h_p < RAM_PARITY_WIDTH; h_p = h_p + 1) begin
+            /* verilator lint_off INITIALDLY */
             RAM_PARITY[g_p][h_p] <= INIT_PARITY[f_p];
+            /* verilator lint_off INITIALDLY */
             f_p = f_p + 1;
           end
       end
+
+      always @(temp_WPARITY_A)
+        /* verilator lint_off WIDTH */
+        RAM_PARITY[a_addr][i_p] = temp_WPARITY_A;
+        /* verilator lint_on WIDTH */
 
       always @(posedge CLK_A)
         if (WEN_A) begin
           for (i_p = find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH; i_p < find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH+A_PARITY_WRITE_WIDTH; i_p = i_p + 1) begin
             if (A_PARITY_WRITE_WIDTH > 1) begin
               //if (BE_A[i_p/8] == 1'b1)
-              if (BE_A[i_p%5] == 1'b1)
-                RAM_PARITY[a_addr][i_p] <= WPARITY_A[i_p-(find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH)];
+              if (BE_A[i_p%5] == 1'b1) begin
+                `ifdef SIM_VERILATOR
+                /* verilator lint_off WIDTH */
+                temp_WPARITY_A <= WPARITY_A[i_p-(find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH)];
+                /* verilator lint_on WIDTH */
+                `else
+                  RAM_PARITY[a_addr][i_p] <= WPARITY_A[i_p-(find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH)];
+                `endif
+              end
             end
-            else
+            else begin
+              `ifdef SIM_VERILATOR
+              /* verilator lint_off WIDTH */
+              temp_WPARITY_A <= WPARITY_A[i_p-(find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH)];
+              /* verilator lint_on WIDTH */
+            `else
               RAM_PARITY[a_addr][i_p] <= WPARITY_A[i_p-(find_a_write_index(ADDR_A)*A_PARITY_WRITE_WIDTH)];
+          `endif
+            end
           end
         end      
 
@@ -109,18 +135,37 @@ module TDP_RAM36K #(
             RPARITY_A[j_p-(find_a_read_index(ADDR_A)*A_PARITY_READ_WIDTH)] <= RAM_PARITY[a_addr][j_p];
         end
         else
-          RPARITY_A = 4'bx;  
+          RPARITY_A <= 4'bx;
+
+      always @(temp_WPARITY_B)
+        /* verilator lint_off WIDTH */
+        RAM_PARITY[b_addr][k_p] = temp_WPARITY_B;
+        /* verilator lint_on WIDTH */
 
       always @(posedge CLK_B)
         if (WEN_B) begin
           for (k_p = find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH; k_p < find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH+B_PARITY_WRITE_WIDTH; k_p = k_p + 1) begin
             if (B_PARITY_WRITE_WIDTH > 1) begin
               //if (BE_B[k_p/8] == 1'b1)
-              if (BE_B[k_p%5] == 1'b1)
-                RAM_PARITY[b_addr][k_p] <= WPARITY_B[k_p-(find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH)];
+              if (BE_B[k_p%5] == 1'b1) begin
+                `ifdef SIM_VERILATOR
+                /* verilator lint_off WIDTH */
+                  temp_WPARITY_B <= WPARITY_B[k_p-(find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH)];
+                /* verilator lint_on WIDTH */
+                `else
+                  RAM_PARITY[b_addr][k_p] <= WPARITY_B[k_p-(find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH)];
+                `endif
+              end
             end
-            else
-              RAM_PARITY[b_addr][k_p] <= WPARITY_B[k_p-(find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH)];
+            else begin
+              `ifdef SIM_VERILATOR
+                /* verilator lint_off WIDTH */
+                  temp_WPARITY_B <= WPARITY_B[k_p-(find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH)];
+                /* verilator lint_on WIDTH */
+              `else
+                RAM_PARITY[b_addr][k_p] <= WPARITY_B[k_p-(find_b_write_index(ADDR_B)*B_PARITY_WRITE_WIDTH)];
+              `endif
+            end
           end
         end      
 
@@ -130,7 +175,7 @@ module TDP_RAM36K #(
             RPARITY_B[m_p-(find_b_read_index(ADDR_B)*B_PARITY_READ_WIDTH)] <= RAM_PARITY[b_addr][m_p];
         end
         else
-          RPARITY_B = 4'bx;
+          RPARITY_B <= 4'bx;
 
     end
   endgenerate
@@ -144,6 +189,11 @@ module TDP_RAM36K #(
         f = f + 1;
       end
   end
+
+  always @(temp_WDATA_A)
+    /* verilator lint_off WIDTH */
+    RAM_DATA[a_addr][i] = temp_WDATA_A;
+    /* verilator lint_on WIDTH */
   
  // Base RAM read/write functionality
   always @(posedge CLK_A)
@@ -151,11 +201,25 @@ module TDP_RAM36K #(
       //$display("AADR_A: %b   index: %d", ADDR_A, find_a_write_index(ADDR_A)*8);
       for (i = find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH; i < find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH+A_DATA_WRITE_WIDTH; i = i + 1)
         if (A_DATA_WRITE_WIDTH > 9) begin
-          if (BE_A[i/8] == 1'b1)
-            RAM_DATA[a_addr][i] <= WDATA_A[i-(find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH)];
+          if (BE_A[i/8] == 1'b1) begin
+            `ifdef SIM_VERILATOR
+              /* verilator lint_off WIDTH */
+              temp_WDATA_A <= WDATA_A[i-(find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH)];
+              /* verilator lint_on WIDTH */
+            `else
+              RAM_DATA[a_addr][i] <= WDATA_A[i-(find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH)];
+            `endif
+          end
         end
-        else
-          RAM_DATA[a_addr][i] <= WDATA_A[i-(find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH)];
+        else begin
+          `ifdef SIM_VERILATOR
+              /* verilator lint_off WIDTH */
+              temp_WDATA_A <= WDATA_A[i-(find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH)];
+              /* verilator lint_on WIDTH */
+            `else
+              RAM_DATA[a_addr][i] <= WDATA_A[i-(find_a_write_index(ADDR_A)*A_DATA_WRITE_WIDTH)];
+            `endif
+        end
       collision_a_address = a_addr;
       collision_a_write_flag = 1;
       #collision_window;
@@ -172,17 +236,36 @@ module TDP_RAM36K #(
       collision_a_read_flag = 0;
     end
     else
-      RDATA_A = 32'bx;
+      RDATA_A <= 32'bx;
+
+  always @(temp_WDATA_B)
+  /* verilator lint_off WIDTH */
+  RAM_DATA[b_addr][k] = temp_WDATA_B;
+  /* verilator lint_on WIDTH */
 
   always @(posedge CLK_B)
     if (WEN_B) begin
       for (k = find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH; k < find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH+B_DATA_WRITE_WIDTH; k = k + 1)
       if (B_DATA_WRITE_WIDTH > 9) begin
-        if (BE_B[k/8] == 1'b1)
+        if (BE_B[k/8] == 1'b1) begin
+          `ifdef SIM_VERILATOR
+          /* verilator lint_off WIDTH */
+          temp_WDATA_B <= WDATA_B[k-(find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH)];
+          /* verilator lint_on WIDTH */
+        `else
           RAM_DATA[b_addr][k] <= WDATA_B[k-(find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH)];
+        `endif
+        end
       end
-      else
-        RAM_DATA[b_addr][k] <= WDATA_B[k-(find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH)];
+      else begin
+        `ifdef SIM_VERILATOR
+          /* verilator lint_off WIDTH */
+          temp_WDATA_B <= WDATA_B[k-(find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH)];
+          /* verilator lint_on WIDTH */
+        `else
+          RAM_DATA[b_addr][k] <= WDATA_B[k-(find_b_write_index(ADDR_B)*B_DATA_WRITE_WIDTH)];
+        `endif
+      end
       collision_b_address = b_addr;
       collision_b_write_flag = 1;
       #collision_window;
@@ -200,7 +283,7 @@ module TDP_RAM36K #(
       collision_b_read_flag = 0;
     end
     else
-      RDATA_B = 32'bx;
+      RDATA_B <= 32'bx;
 
 
 /*
@@ -270,8 +353,12 @@ module TDP_RAM36K #(
     
     if (RAM_ADDR_WIDTH == A_WRITE_ADDR_WIDTH)
       find_a_write_index = 0;
-    else    
+    else
+      /* verilator lint_off SELRANGE */
+      /* verilator lint_off WIDTH */
       find_a_write_index = ADDR_A[14-RAM_ADDR_WIDTH:15-A_WRITE_ADDR_WIDTH];
+      /* verilator lint_on SELRANGE */
+      /* verilator lint_on WIDTH */
 
   endfunction
 
@@ -280,8 +367,12 @@ module TDP_RAM36K #(
     
     if (RAM_ADDR_WIDTH == A_READ_ADDR_WIDTH)
       find_a_read_index = 0;
-    else    
+    else
+      /* verilator lint_off SELRANGE */
+      /* verilator lint_off WIDTH */
       find_a_read_index = ADDR_A[14-RAM_ADDR_WIDTH:15-A_READ_ADDR_WIDTH];
+      /* verilator lint_on SELRANGE */
+      /* verilator lint_on WIDTH */
 
   endfunction
 
@@ -290,8 +381,12 @@ module TDP_RAM36K #(
     
     if (RAM_ADDR_WIDTH == B_WRITE_ADDR_WIDTH)
       find_b_write_index = 0;
-    else    
+    else
+      /* verilator lint_off SELRANGE */
+      /* verilator lint_off WIDTH */
       find_b_write_index = ADDR_B[14-RAM_ADDR_WIDTH:15-B_WRITE_ADDR_WIDTH];
+      /* verilator lint_on SELRANGE */
+      /* verilator lint_on WIDTH */
 
   endfunction
 
@@ -300,8 +395,12 @@ module TDP_RAM36K #(
     
     if (RAM_ADDR_WIDTH == B_READ_ADDR_WIDTH)
       find_b_read_index = 0;
-    else    
+    else
+      /* verilator lint_off SELRANGE */
+      /* verilator lint_off WIDTH */
       find_b_read_index = ADDR_B[14-RAM_ADDR_WIDTH:15-B_READ_ADDR_WIDTH];
+      /* verilator lint_on SELRANGE */
+      /* verilator lint_on WIDTH */
 
   endfunction
 
