@@ -47,6 +47,7 @@ name: O_DELAY
 desc: Serdes output
 detailed_desc: Programmable and adjustable 64-TAP delay line on the output path
 category: periphery
+timescale: 1ps/1ps
 
 ports:
    I:
