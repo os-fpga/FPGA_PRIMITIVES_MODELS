@@ -1,4 +1,4 @@
-`timescale 1ns/1ps
+`timescale 1ps/1ps
 `celldefine
 //
 // I_DELAY simulation model
@@ -54,7 +54,7 @@ begin
 end
 
 assign DLY_TAP_VALUE = dly_tap_val;
-assign #(30.0 + (21.56*dly_tap_val)) O = I;			// Adjusted Delay for TT corner
+assign #(30.0ps + (21.56ps*dly_tap_val)) O = I;			// Adjusted Delay for TT corner
 
  initial begin
 
