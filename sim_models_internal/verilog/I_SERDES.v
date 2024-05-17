@@ -296,6 +296,7 @@ reg [1:0] clk270_reg_data_count;
 reg dpa_lock=0;
 reg cdr_clk=0;
 reg dpa_dout=0;
+reg dpa_error=0;
 
 //  dpa fifo signals
 wire dpa_fifo_empty;
@@ -501,21 +502,25 @@ begin
   begin
     cdr_clk=clk_0;
     dpa_lock=1;
+    dpa_error=0;
   end
   else if(clk90_data_count==16)
   begin
     cdr_clk=clk_90;
     dpa_lock=1;
+    dpa_error=0;
   end
   else if(clk180_data_count==16)
   begin
     cdr_clk=clk_180;
     dpa_lock=1;
+    dpa_error=0;
   end
   else if(clk270_data_count==16)
   begin
     cdr_clk=clk_270;
     dpa_lock=1;
+    dpa_error=0;
   end
   else
     dpa_lock=0;
@@ -525,6 +530,7 @@ begin
 end
 
 assign DPA_LOCK = dpa_lock;
+assign DPA_ERROR= dpa_error;
 
 // DPA BLOCK END //
 
