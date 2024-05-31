@@ -94,7 +94,7 @@ module TDP_RAM36K #(
           for (h_p = 0; h_p < RAM_PARITY_WIDTH; h_p = h_p + 1) begin
             /* verilator lint_off INITIALDLY */
             RAM_PARITY[g_p][h_p] <= INIT_PARITY[f_p];
-            /* verilator lint_off INITIALDLY */
+            /* verilator lint_on INITIALDLY */
             f_p = f_p + 1;
           end
       end
