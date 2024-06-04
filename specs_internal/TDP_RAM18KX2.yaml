@@ -177,7 +177,9 @@ ports:
 
 parameters:
     INIT1:
+      desc_above: /* verilator lint_off WIDTHCONCAT */
       desc: Initial Contents of data memory, RAM 1
+      desc_below: /* verilator lint_on WIDTHCONCAT */
       default: "{16384{1'b0}}"
       vector: 16384
     INIT1_PARITY:
@@ -225,7 +227,9 @@ parameters:
       - 9
       - 18
     INIT2:
+      desc_above: /* verilator lint_off WIDTHCONCAT */
       desc: Initial Contents of memory, RAM 2
+      desc_below: /* verilator lint_on WIDTHCONCAT */
       default: "{16384{1'b0}}"
       vector: 16384
     INIT2_PARITY:
