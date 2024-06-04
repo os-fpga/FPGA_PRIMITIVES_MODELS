@@ -116,7 +116,9 @@ ports:
 
 parameters:
     INIT:
+      desc_above: /* verilator lint_off WIDTHCONCAT */ 
       desc: Initial Contents of memory
+      desc_below: /* verilator lint_on WIDTHCONCAT */
       default: "{32768{1'b0}}"
       vector: 32768
     INIT_PARITY:

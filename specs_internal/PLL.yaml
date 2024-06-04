@@ -55,6 +55,7 @@ ports:
    CLK_IN:
      dir: input
      desc: Clock input
+     bb_attributes: clkbuf_sink
    CLK_OUT:
      dir: output
      desc: Output clock, frequency is CLK_IN_FREQ*PLL_MULT/PLL_DIV/PLL_POST_DIV
