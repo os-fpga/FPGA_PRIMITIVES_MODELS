@@ -162,6 +162,20 @@ module DSP38 #(
 endmodule
 `endcelldefine
 //
+// FCLK_BUF black box model
+// Clock buffer for routing logic signal to the global clock
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module FCLK_BUF (
+  input logic I,
+  output logic O
+);
+endmodule
+`endcelldefine
+//
 // FIFO18KX2 black box model
 // Dual 18Kb FIFO
 //
@@ -656,6 +670,7 @@ module PLL #(
   parameter PLL_POST_DIV = 2 // VCO clock post-divider value (2,4,6,8,10,12,14,16,18,20,24,28,30,32,36,40,42,48,50,56,60,70,72,84,98)
   ) (
   input logic PLL_EN,
+  (* clkbuf_sink *)
   input logic CLK_IN,
   output reg CLK_OUT,
   output reg CLK_OUT_DIV2,
