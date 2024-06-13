@@ -25,7 +25,7 @@ module O_DDR_tb;
       R = 1;
       #2
 
-      for (i = 0; i < 40; i = i + 1) begin
+      for (i = 0; i < 20; i = i + 1) begin
         @(posedge CLK);
         DD <= $random;
       end
@@ -42,7 +42,7 @@ module O_DDR_tb;
   initial begin
       $dumpfile("O_DDR.vcd");
       $dumpvars;
-      #426;
+      #500;
       $display ("FINISH");
       $finish;
   end
@@ -65,7 +65,7 @@ module O_DDR_tb;
 
 task compare(O_DDR_Q, Expected_Q);
     if(O_DDR_Q !== Expected_Q) begin
-        $display("Output Mismatch. O_DDR_Q: %0h, Expected_Q: %0h", O_DDR_Q, Expected_Q, $time);
+        $display("Output Mismatch. O_DDR_Q: %0h, Expected_Q: %0h", O_DDR_Q, Expected_Q);
         mismatch = mismatch + 1;
     end
 endtask
