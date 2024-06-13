@@ -15,17 +15,39 @@ module I_DDR (
   output reg [1:0] Q = 2'b00 // Data output
 );
 
+  reg data_pos;
+  reg data_neg;
+
   always @(negedge R)
     Q <= 2'b00;
 
-  always @(C)
-    if (!R)
-      Q <= 2'b00;
-    else if (E) 
-      if (C)
-        Q[0] <= D;
-      else
-        Q[1] <= D;
+  always@(posedge C)
+  begin
+    if(!R)
+      data_pos<=0;
+    else
+      data_pos<=D;
+  end
+
+  always@(negedge C)
+  begin
+    if(!R)
+      data_neg<=0;
+    else
+      data_neg<=D;
+  end
+
+  always @(posedge C) 
+  begin
+    if(!R)
+      Q<=0;
+    else if(E)
+    begin
+      Q[1]<=data_pos;
+      Q[0]<=data_neg;
+    end
+    
+  end
 
 endmodule
 `endcelldefine
