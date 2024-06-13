@@ -178,18 +178,17 @@ def extract_module_params(code):
 
 
 def check_simulation_success(filename):
-    success_strings = ["Test Passed", "Simulation Passed"]
-    print("file_path", filename)
-    success = False
-    with open(filename, 'r') as file:
-        for line in file:
-            if not any(success_string in line for success_string in success_strings):
-                print("Simulation Successful")
-                return True
-            else :
-                print("Simulation Failure")
-                return False
-    print("Simulation not successful")
+  success_strings = ["Test Passed", "Simulation Passed", "Passed"]
+  print("file_path", filename)
+  success = False
+  with open(filename, 'r') as file:
+    for line in file:
+      if any(success_string in line for success_string in success_strings):
+        print("Simulation Successful:", line , "line here\n")
+        success = True
+        break
+  if not success:
+    print("Simulation Failure")
 
 
 
