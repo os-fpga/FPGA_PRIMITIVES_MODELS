@@ -186,9 +186,11 @@ def check_simulation_success(filename):
       if any(success_string in line for success_string in success_strings):
         print("Simulation Successful:", line , "line here\n")
         success = True
+        return True
         break
   if not success:
     print("Simulation Failure")
+    return False
 
 
 
@@ -332,10 +334,10 @@ def diff_copy_parse(src_path, dest_path):
                 if result:
                     print("Simulation ran")
                     sim_status = check_simulation_success(sim_out_file)
-
+                    print("sim_status = ",sim_status)
                     if sim_status:
                         sim_pass_list.append(dest_path + module_name + ".v")
-                        print("-------------------------------success----------------------------------", sim_fail_list)
+                        print("-------------------------------success----------------------------------", sim_pass_list)
                     else:
                         sim_fail_list.append(dest_path + module_name + ".v")
                         print("-------------------------------Failure----------------------------------", sim_fail_list)
@@ -442,7 +444,7 @@ def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,rele
         email_template += "The release does not have the required directory structure to proceed further. "
 
 
-    email_template += "Auto generated email by RS FPGA Primitives CI."
+    email_template += "Auto generated email by FPGA_PRIMTIVES_MODELS CI."
     print(email_template)
 
 
