@@ -160,7 +160,7 @@ tdp_ram36k_inst
 
 `ifdef VCD
 	initial begin
-		$dumpfile("wave.vcd");
+		$dumpfile("TDP_RAM36K.vcd");
 		$dumpvars;
 	end
 `endif
@@ -576,7 +576,7 @@ begin
 			$display("");
 			$display("");	
 			$display("----------------------------------------------");
-      $display("                 TEST_PASSED                  ");
+      	$display("                 Test Passed                  ");
 			$display("----------------------------------------------");
     end
     else   
@@ -606,7 +606,7 @@ begin
 			$display("");
 			$display("");	
       $display("----------------------------------------------");
-      $display("                 TEST_FAILED                  ");
+      $display("                 Test Failed                  ");
       $display("----------------------------------------------");
     end
 end
