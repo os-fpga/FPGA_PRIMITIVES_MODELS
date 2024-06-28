@@ -69,7 +69,7 @@ module O_SERDES #(
 ) (
   input [WIDTH-1:0] D, // D input bus
   input RST, // Active-low, asynchronous reset
-  input LOAD_WORD, // Load word input
+  input DATA_VALID, // Active high data valid signal
   input CLK_IN, // Fabric clock input
   input OE_IN, // Output tri-state enable input
   output OE_OUT, // Output tri-state enable output (conttect to O_BUFT or inferred tri-state signal)
@@ -81,7 +81,6 @@ module O_SERDES #(
 );
 
   
-
 	// GBOX CLK GEN
 	reg core_clk=0;
 	reg word_load_en;
@@ -194,7 +193,7 @@ module O_SERDES #(
 			fifo_read_en <= 1'b1;
 	end
 
-	assign word_load_en_sync = LOAD_WORD && fifo_read_en ;
+	assign word_load_en_sync = DATA_VALID && fifo_read_en && word_load_en ;
 
 
 	// Parallel data register 
