@@ -10,7 +10,7 @@ module O_SERDES_tb;
 	//Ports
 	reg [WIDTH-1:0] D;
 	reg  RST;
-	reg  LOAD_WORD;
+	reg  DATA_VALID;
 	reg  CLK_IN;
 	reg  OE_IN;
 	wire  OE_OUT;
@@ -27,7 +27,7 @@ module O_SERDES_tb;
 	O_SERDES_inst (
 	.D(D),
 	.RST(RST),
-	.LOAD_WORD(LOAD_WORD),
+	.DATA_VALID(DATA_VALID),
 	.CLK_IN(CLK_IN),
 	.OE_IN(OE_IN),
 	.OE_OUT(OE_OUT),
@@ -47,13 +47,14 @@ module O_SERDES_tb;
 		PLL_CLK=1;
 		RST=0;
 		CHANNEL_BOND_SYNC_IN=0;
-		LOAD_WORD=0;
+		DATA_VALID=1;
 		OE_IN=0;
 		D=0;
 		@(negedge CLK_IN);
 		RST=1;
 		CHANNEL_BOND_SYNC_IN=1;
 		PLL_LOCK=1;
+		repeat(260)@(posedge PLL_CLK);
 		D=4'b0101;
 		OE_IN=1;
 		@(negedge CLK_IN);
@@ -70,17 +71,6 @@ module O_SERDES_tb;
 	begin
 		$dumpfile("waves.vcd");
 		$dumpvars;
-	end
-	initial 
-	begin
-		forever 
-		begin
-			@(negedge CLK_IN);
-			LOAD_WORD =1;
-			@(posedge PLL_CLK);
-			LOAD_WORD =0;
-			
-		end
 	end
 
 endmodule

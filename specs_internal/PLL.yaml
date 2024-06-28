@@ -46,7 +46,7 @@
 name: PLL
 desc: Phase locked loop
 category: periphery
-timescale: 1fs/1fs
+timescale: 1ps/10fs
 
 ports:
    PLL_EN:
@@ -58,37 +58,36 @@ ports:
      bb_attributes: clkbuf_sink
    CLK_OUT:
      dir: output
-     desc: Output clock, frequency is CLK_IN_FREQ*PLL_MULT/PLL_DIV/PLL_POST_DIV
-     type: reg
+     desc: Output clock, frequency is (CLK_IN/PLL_DIV)*(PLL_MULT/(PLL_POST_DIV0*PLL_POST_DIV1))
      default: 1'b0
    CLK_OUT_DIV2:
      dir: output
      desc: CLK_OUT divided by 2 output
-     type: reg
      default: 1'b0
    CLK_OUT_DIV3:
      dir: output
      desc: CLK_OUT divided by 3 output
-     type: reg
      default: 1'b0
    CLK_OUT_DIV4:
      dir: output
      desc: CLK_OUT divided by 4 output
-     type: reg
      default: 1'b0
-   SERDES_FAST_CLK:
+   FAST_CLK:
      dir: output
-     desc: Gearbox fast clock output
-     type: reg
+     desc: VCO clock output, frequency is (CLK_IN/PLL_DIV)*(PLL_MULT)
      default: 1'b0
    LOCK:
      dir: output
      desc: PLL lock signal
-     type: reg
      default: 1'b0
 
 # set as Verilog parameter in netlist    
 parameters:
+    DEV_FAMILY:
+      desc: Device Family
+      default: "VIRGO"
+      values:
+        - "VIRGO"
     DIVIDE_CLK_IN_BY_2:
       desc: Enable input divider (TRUE/FALSE)
       default: "FALSE"
@@ -96,42 +95,51 @@ parameters:
         - "TRUE"
         - "FALSE"
     PLL_MULT:
-      desc: VCO clock multiplier value (16-1000)
+      desc: VCO clock multiplier value (16-640)
       type: integer
       default: 16
-      range: 16 .. 1000
+      range: 16 .. 640
     PLL_DIV:
       desc: VCO clock divider value (1-63)
       type: integer
       default: 1
       range: 1 .. 63
-    PLL_POST_DIV:
-      desc: VCO clock post-divider value (2,4,6,8,10,12,14,16,18,20,24,28,30,32,36,40,42,48,50,56,60,70,72,84,98)
+    PLL_MULT_FRAC:
+      desc: Fraction mode not supported
       type: integer
-      default: 2
+      default: 0
       values:
-        - 2
-        - 4
-        - 6
-        - 8
-        - 10
-        - 12
-        - 14
-        - 16
+        - 0
+    PLL_POST_DIV:
+      desc: VCO clock post-divider value (17,18,19,20,21,22,23,34,35,36,37,38,39,51,52,53,54,55,68,69,70,71,85,86,87,102,103,119)
+      type: integer
+      default: 17
+      values:
+        - 17
         - 18
+        - 19
         - 20
-        - 24
-        - 28
-        - 30
-        - 32
+        - 21
+        - 22
+        - 23
+        - 34
+        - 35
         - 36
-        - 40
-        - 42
-        - 48
-        - 50
-        - 56
-        - 60
+        - 37
+        - 38
+        - 39
+        - 51
+        - 52
+        - 53
+        - 54
+        - 55
+        - 68
+        - 69
         - 70
-        - 72
-        - 84
-        - 98
+        - 71
+        - 85
+        - 86
+        - 87
+        - 102
+        - 103
+        - 119
