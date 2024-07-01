@@ -250,7 +250,7 @@ module I_SERDES #(
   parameter DPA_MODE = "NONE" // Select Dynamic Phase Alignment or Clock Data Recovery (NONE/DPA/CDR)
 ) (
   input D, // Data input (connect to input port, buffer or I_DELAY)
-  input RX_RST, // Active-low asycnhronous reset
+  input RST, // Active-low asycnhronous reset
   input BITSLIP_ADJ, // BITSLIP_ADJ input
   input EN, // EN input data (input data is low when driven low)
   input CLK_IN, // Fabric clock input
@@ -380,9 +380,9 @@ end
 // DPA BLOCK //
 
 // clk 0 check
-always@(posedge clk_0 or negedge RX_RST)
+always@(posedge clk_0 or negedge RST)
 begin
-  if(!RX_RST)
+  if(!RST)
   begin
     clk0_data_reg<=0;
     clk0_data_comp<=0;
@@ -409,9 +409,9 @@ begin
 end
 
 // clk 90 check
-always@(posedge clk_90 or negedge RX_RST)
+always@(posedge clk_90 or negedge RST)
 begin
-  if(!RX_RST)
+  if(!RST)
   begin
     clk90_data_reg<=0;
     clk90_data_comp<=0;
@@ -438,9 +438,9 @@ begin
 end
 
 // clk 180 check
-always@(posedge clk_180 or negedge RX_RST)
+always@(posedge clk_180 or negedge RST)
 begin
-  if(!RX_RST)
+  if(!RST)
   begin
     clk180_data_reg<=0;
     clk180_data_comp<=0;
@@ -467,9 +467,9 @@ begin
 end
 
 // clk 270 check
-always@(posedge clk_270 or negedge RX_RST)
+always@(posedge clk_270 or negedge RST)
 begin
-  if(!RX_RST)
+  if(!RST)
   begin
     clk270_data_reg<=0;
     clk270_data_comp<=0;
@@ -538,9 +538,9 @@ assign DPA_ERROR= dpa_error;
 
 // FOR FAST CLOCK
 // count cycles after PLL LOCK
-always@(posedge PLL_CLK or negedge RX_RST)
+always@(posedge PLL_CLK or negedge RST)
 begin
-if(!RX_RST)
+if(!RST)
   pll_lock_count<=0;
 else if(!PLL_LOCK)
   pll_lock_count<=0;
@@ -551,9 +551,9 @@ else if(PLL_LOCK && pll_lock_count<=255)
 end
 
 // Generate Core CLK And Word Load Enable
-always@(posedge PLL_CLK or negedge RX_RST)
+always@(posedge PLL_CLK or negedge RST)
 begin
-if(!RX_RST)
+if(!RST)
 begin
   core_clk<=0;
   core_clk_count<=0;
@@ -577,9 +577,9 @@ end
 // FOR CDR CLOCK
 
 // count cycles after PLL LOCK
-always@(posedge cdr_clk or negedge RX_RST)
+always@(posedge cdr_clk or negedge RST)
 begin
-if(!RX_RST)
+if(!RST)
   cdr_pll_lock_count<=0;
 else if(!PLL_LOCK)
   cdr_pll_lock_count<=0;
@@ -589,9 +589,9 @@ else if(PLL_LOCK && cdr_pll_lock_count<=255)
 end
 
 // Generate CDR Core CLK And Word Load Enable
-always@(posedge cdr_clk or negedge RX_RST)
+always@(posedge cdr_clk or negedge RST)
 begin
-if(!RX_RST)
+if(!RST)
 begin
   cdr_core_clk<=0;
   cdr_core_clk_count<=0;
@@ -626,12 +626,12 @@ afifo # (
 )
 afifo_dpa (
 .wclk(cdr_clk),
-.wr_reset(!RX_RST),
+.wr_reset(!RST),
 .wr(!dpa_fifo_full),
 .wr_data(dpa_dout),
 .wr_full(dpa_fifo_full),
 .rclk(PLL_CLK),
-.rd_reset(!RX_RST),
+.rd_reset(!RST),
 .rd(!dpa_fifo_empty),
 .rd_data(dpa_fifo_dout),
 .rd_empty(dpa_fifo_empty)
@@ -658,9 +658,9 @@ end
 assign bitslip_adj_pulse = (bitslip_adj_1) && (!bitslip_adj_0);
 
 // bitslip counter
-always @(posedge bitslip_des_clk or negedge RX_RST) 
+always @(posedge bitslip_des_clk or negedge RST) 
 begin
-if(!RX_RST)
+if(!RST)
 begin
   bitslip_counter<=0;
   bitslip_shifter_out<=0;
@@ -679,9 +679,9 @@ end
 end
 
 // bit shifter
-always @(posedge bitslip_des_clk or negedge RX_RST) 
+always @(posedge bitslip_des_clk or negedge RST) 
 begin
-if(!RX_RST)
+if(!RST)
   bit_shifter<=0;
 else
   bit_shifter<={bit_shifter[WIDTH-2:0],bitslip_din};
@@ -703,9 +703,9 @@ case(bitslip_counter)
 endcase
 end
 
-always @(posedge bitslip_des_clk or negedge RX_RST)
+always @(posedge bitslip_des_clk or negedge RST)
 begin
-if(!RX_RST)
+if(!RST)
   bitslip_dout<=0;
 else
   bitslip_dout<=bitslip_shifter_out;
@@ -715,9 +715,9 @@ end
 // DE-SERIALIZER //
 
 // SHIFTER+PARALLEL-REGISTER
-always@(posedge bitslip_des_clk or negedge RX_RST)
+always@(posedge bitslip_des_clk or negedge RST)
 begin
-if(!RX_RST)
+if(!RST)
 begin
   des_shifter<=0;
   des_parallel_reg<=0;
@@ -738,12 +738,12 @@ afifo # (
 )
 afifo_inst (
 .wclk(bitslip_des_clk),
-.wr_reset(!RX_RST),
+.wr_reset(!RST),
 .wr(!des_fifo_full && des_word_load_en),
 .wr_data(des_parallel_reg),
 .wr_full(des_fifo_full),
 .rclk(CLK_IN),
-.rd_reset(!RX_RST),
+.rd_reset(!RST),
 .rd(!des_fifo_empty),
 .rd_data(Q),
 .rd_empty(des_fifo_empty)
