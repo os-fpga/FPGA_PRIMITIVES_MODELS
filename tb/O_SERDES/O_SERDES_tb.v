@@ -41,6 +41,46 @@ module O_SERDES_tb;
 	always #0.2  PLL_CLK = ! PLL_CLK ; // 2.5 GHz
 	always #0.8  CLK_IN = ! CLK_IN ;
 
+	integer i, j;
+	integer mismatch = 0;	
+
+	reg [WIDTH-1:0] D_MEM [2:0];
+	reg [WIDTH-1:0] Q_MEM [2:0];
+
+	reg [3:0] Q_int = 'd0;
+	reg [3:0] Q_out = 'd0;
+	reg [1:0] count = 'd0;
+	reg [1:0] count1 = 'd0;
+	reg [1:0] count2 = 'd0;
+	reg [1:0] count3 = 'd0;
+	reg valid_data = 'd0;
+
+	always @(*) begin
+		if (count == 0) begin
+    		Q_out = Q_int;
+			count1 = count1 + 1;
+			valid_data = 1;
+		end
+	end
+
+	always @(posedge PLL_CLK) begin
+		if (valid_data)
+			Q_MEM[count1-1] = Q_out;
+
+		if (OE_IN) begin
+			count2 <= count2 + 1;
+			D_MEM[count3] <= D;
+		end
+
+		if (count2 == 3)
+			count3 <= count3 + 1; 
+		
+		if (OE_OUT) begin
+			count <= count + 1;
+			Q_int <= {Q_int[2:0], Q};
+		end
+	end
+
 	initial 
 	begin
 		CLK_IN=0;
@@ -61,6 +101,22 @@ module O_SERDES_tb;
 		D=$urandom();
 		@(negedge CLK_IN);
 		D=$urandom();
+		@(negedge CLK_IN);
+		OE_IN=0;
+
+		@(posedge valid_data)
+		for (j = 0; j < 3; j = j + 1) begin
+			@(posedge CLK_IN);
+    		if(D_MEM[j] !== Q_MEM[j])
+    		    mismatch = mismatch + 1;
+		end
+
+		if (mismatch == 0) begin
+			$display("Test Passed");
+		end else begin
+			$display("Test Failed");
+		end
+
 		#1000;
 		$finish;
 	end
