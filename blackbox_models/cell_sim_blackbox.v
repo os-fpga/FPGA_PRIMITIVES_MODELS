@@ -364,7 +364,7 @@ module I_SERDES #(
   parameter DPA_MODE = "NONE" // Select Dynamic Phase Alignment or Clock Data Recovery (NONE/DPA/CDR)
   ) (
   input logic D,
-  input logic RX_RST,
+  input logic RST,
   input logic BITSLIP_ADJ,
   input logic EN,
   (* clkbuf_sink *)
@@ -642,7 +642,7 @@ module O_SERDES #(
   ) (
   input logic [WIDTH-1:0] D,
   input logic RST,
-  input logic LOAD_WORD,
+  input logic DATA_VALID,
   (* clkbuf_sink *)
   input logic CLK_IN,
   input logic OE_IN,
@@ -664,20 +664,22 @@ endmodule
 `celldefine
 (* blackbox *)
 module PLL #(
+  parameter DEV_FAMILY = "VIRGO", // Device Family
   parameter DIVIDE_CLK_IN_BY_2 = "FALSE", // Enable input divider (TRUE/FALSE)
-  parameter PLL_MULT = 16, // VCO clock multiplier value (16-1000)
+  parameter PLL_MULT = 16, // VCO clock multiplier value (16-640)
   parameter PLL_DIV = 1, // VCO clock divider value (1-63)
-  parameter PLL_POST_DIV = 2 // VCO clock post-divider value (2,4,6,8,10,12,14,16,18,20,24,28,30,32,36,40,42,48,50,56,60,70,72,84,98)
+  parameter PLL_MULT_FRAC = 0, // Fraction mode not supported
+  parameter PLL_POST_DIV = 17 // VCO clock post-divider value (17,18,19,20,21,22,23,34,35,36,37,38,39,51,52,53,54,55,68,69,70,71,85,86,87,102,103,119)
   ) (
   input logic PLL_EN,
   (* clkbuf_sink *)
   input logic CLK_IN,
-  output reg CLK_OUT,
-  output reg CLK_OUT_DIV2,
-  output reg CLK_OUT_DIV3,
-  output reg CLK_OUT_DIV4,
-  output reg SERDES_FAST_CLK,
-  output reg LOCK
+  output logic CLK_OUT,
+  output logic CLK_OUT_DIV2,
+  output logic CLK_OUT_DIV3,
+  output logic CLK_OUT_DIV4,
+  output logic FAST_CLK,
+  output logic LOCK
 );
 endmodule
 `endcelldefine

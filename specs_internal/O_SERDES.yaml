@@ -54,9 +54,9 @@ ports:
    RST:
      dir: input
      desc: Active-low, asynchronous reset
-   LOAD_WORD:
+   DATA_VALID:
      dir: input
-     desc: Load word input
+     desc: Active high data valid signal
    CLK_IN: 
      dir: input
      desc: Fabric clock input

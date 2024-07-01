@@ -11,7 +11,7 @@ module I_SERDES_tb;
   localparam  phase = 0;
   //Ports
   reg  D;
-  reg  RX_RST;
+  reg  RST;
   reg  BITSLIP_ADJ;
   reg  EN;
   reg  CLK_IN;
@@ -32,7 +32,7 @@ module I_SERDES_tb;
   )
   I_SERDES_inst (
     .D(D),
-    .RX_RST(RX_RST),
+    .RST(RST),
     .BITSLIP_ADJ(BITSLIP_ADJ),
     .EN(EN),
     .CLK_IN(CLK_IN),
@@ -51,13 +51,13 @@ begin
   CLK_IN =0;
 	PLL_CLK =0;
   PLL_LOCK=1;
-	RX_RST=0;
+	RST=0;
   D=0;
   EN=0;
   BITSLIP_ADJ=0;
   delay=(phase==90)?0.1:(phase==180)?0.2:(phase==270)?0.3:0;
   repeat(2)@(posedge PLL_CLK);
-  RX_RST=1;
+  RST=1;
   D=0;
   EN=0;
   repeat(63)

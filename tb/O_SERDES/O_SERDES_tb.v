@@ -10,7 +10,7 @@ module O_SERDES_tb;
 	//Ports
 	reg [WIDTH-1:0] D;
 	reg  RST;
-	reg  LOAD_WORD;
+	reg  DATA_VALID;
 	reg  CLK_IN;
 	reg  OE_IN;
 	wire  OE_OUT;
@@ -20,9 +20,6 @@ module O_SERDES_tb;
 	reg  PLL_LOCK;
 	reg  PLL_CLK;
 
-	reg [WIDTH-1:0] dat = 0;
-	integer error = 0;
-
 	O_SERDES # (
 	.DATA_RATE(DATA_RATE),
 	.WIDTH(WIDTH)
@@ -30,7 +27,7 @@ module O_SERDES_tb;
 	O_SERDES_inst (
 	.D(D),
 	.RST(RST),
-	.LOAD_WORD(LOAD_WORD),
+	.DATA_VALID(DATA_VALID),
 	.CLK_IN(CLK_IN),
 	.OE_IN(OE_IN),
 	.OE_OUT(OE_OUT),
@@ -44,67 +41,82 @@ module O_SERDES_tb;
 	always #0.2  PLL_CLK = ! PLL_CLK ; // 2.5 GHz
 	always #0.8  CLK_IN = ! CLK_IN ;
 
+	integer i, j;
+	integer mismatch = 0;	
+
+	reg [WIDTH-1:0] D_MEM [2:0];
+	reg [WIDTH-1:0] Q_MEM [2:0];
+
+	reg [3:0] Q_int = 'd0;
+	reg [3:0] Q_out = 'd0;
+	reg [1:0] count = 'd0;
+	reg [1:0] count1 = 'd0;
+	reg [1:0] count2 = 'd0;
+	reg [1:0] count3 = 'd0;
+	reg valid_data = 'd0;
+
+	always @(*) begin
+		if (count == 0) begin
+    		Q_out = Q_int;
+			count1 = count1 + 1;
+			valid_data = 1;
+		end
+	end
+
+	always @(posedge PLL_CLK) begin
+		if (valid_data)
+			Q_MEM[count1-1] = Q_out;
+
+		if (OE_IN) begin
+			count2 <= count2 + 1;
+			D_MEM[count3] <= D;
+		end
+
+		if (count2 == 3)
+			count3 <= count3 + 1; 
+		
+		if (OE_OUT) begin
+			count <= count + 1;
+			Q_int <= {Q_int[2:0], Q};
+		end
+	end
+
 	initial 
 	begin
 		CLK_IN=0;
 		PLL_CLK=1;
 		RST=0;
 		CHANNEL_BOND_SYNC_IN=0;
-		LOAD_WORD=0;
+		DATA_VALID=1;
 		OE_IN=0;
 		D=0;
 		@(negedge CLK_IN);
 		RST=1;
 		CHANNEL_BOND_SYNC_IN=1;
 		PLL_LOCK=1;
-
-		// Data 1
+		repeat(260)@(posedge PLL_CLK);
 		D=4'b0101;
 		OE_IN=1;
-		dat = D;
-		repeat(WIDTH)@(negedge LOAD_WORD);
-		repeat(WIDTH)
-		begin
-			@(posedge PLL_CLK);
-			if (dat[WIDTH-1] != Q && OE_OUT != OE_IN)
-				error = error + 1;
-			dat = dat << 1;
-			
-		end
 		@(negedge CLK_IN);
-
-		// Data 2
 		D=$urandom();
+		@(negedge CLK_IN);
+		D=$urandom();
+		@(negedge CLK_IN);
 		OE_IN=0;
-		dat = D;
-		repeat(WIDTH)@(negedge LOAD_WORD);
-		repeat(WIDTH)
-		begin
-			@(posedge PLL_CLK);
-			if (dat[WIDTH-1] != Q  && OE_OUT != OE_IN)
-				error = error + 1;
-			dat = dat << 1;
-		end
-		@(negedge CLK_IN);
 
-		// Data 3
-		D=$urandom();
-		OE_IN=1;
-		dat = D;
-		repeat(WIDTH)@(negedge LOAD_WORD);
-		repeat(WIDTH)
-		begin
-			@(posedge PLL_CLK);
-			if (dat[WIDTH-1] != Q && OE_OUT != OE_IN)
-				error = error + 1;
-			dat = dat << 1;
+		@(posedge valid_data)
+		for (j = 0; j < 3; j = j + 1) begin
+			@(posedge CLK_IN);
+    		if(D_MEM[j] !== Q_MEM[j])
+    		    mismatch = mismatch + 1;
 		end
 
-		// mismatch detection
-		if (error == 0)
-			$display("Simulation Passed");
-		else
-			$display("Simulation Failed");
+		if (mismatch == 0) begin
+			$display("Test Passed");
+		end else begin
+			$display("Test Failed");
+		end
+
 		#1000;
 		$finish;
 	end
@@ -113,16 +125,6 @@ module O_SERDES_tb;
 	begin
 		$dumpfile("O_SERDES.vcd");
 		$dumpvars;
-	end
-	initial 
-	begin
-		forever 
-		begin
-			@(negedge CLK_IN);
-			LOAD_WORD =1;
-			@(posedge PLL_CLK);
-			LOAD_WORD =0;
-		end
 	end
 
 endmodule
