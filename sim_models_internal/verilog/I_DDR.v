@@ -50,6 +50,8 @@ module I_DDR (
       Q[1]<=data_pos;
       Q[0]<=data_neg;
     end
+    else
+      Q<=Q;
     
   end
 

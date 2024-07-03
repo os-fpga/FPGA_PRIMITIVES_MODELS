@@ -140,13 +140,10 @@ module TDP_RAM36K #(
             `endif
           end
         end
-        else begin
-          `ifdef SIM_VERILATOR
-            RPARITY_A = 4'bx;
-          `else
-            RPARITY_A <= 4'bx;
-          `endif
-        end
+        else
+          // verilator lint_off BLKANDNBLK
+          RPARITY_A <= 4'bx;
+          // verilator lint_on BLKANDNBLK
 
       always @(posedge CLK_B)
         if (WEN_B) begin
@@ -185,14 +182,10 @@ module TDP_RAM36K #(
             `endif
           end
         end
-        else begin
-          `ifdef SIM_VERILATOR
-            RPARITY_B = 4'bx;
-          `else
-            RPARITY_B <= 4'bx;
-          `endif
-        end
-
+        else
+          // verilator lint_off BLKANDNBLK
+          RPARITY_B <= 4'bx;
+          // verilator lint_on BLKANDNBLK
     end
   endgenerate
 
@@ -255,13 +248,10 @@ module TDP_RAM36K #(
       #collision_window;
       collision_a_read_flag = 0;
     end
-    else begin
-      `ifdef SIM_VERILATOR
-        RDATA_A = 32'bx;
-      `else
-        RDATA_A <= 32'bx;
-      `endif
-    end
+    else
+      // verilator lint_off BLKANDNBLK
+      RDATA_A <= 32'bx;
+      // verilator lint_on BLKANDNBLK
 
   always @(posedge CLK_B)
     if (WEN_B) begin
@@ -307,13 +297,10 @@ module TDP_RAM36K #(
       #collision_window;
       collision_b_read_flag = 0;
     end
-    else begin
-      `ifdef SIM_VERILATOR
-        RDATA_B = 32'bx;
-      `else
-        RDATA_B <= 32'bx;
-      `endif
-    end
+    else
+      // verilator lint_off BLKANDNBLK
+      RDATA_B <= 32'bx;
+      // verilator lint_on BLKANDNBLK
 
 
 /*
