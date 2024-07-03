@@ -349,12 +349,12 @@ tdp_ram18kx2_inst
   /* verilator lint_on WIDTHCONCAT */
   /* verilator lint_on WIDTH */
 
-  // // Collision Check
-  @(negedge CLK_A1);
-  ADDR_A1 = 'h0;
-  WEN_A1 = 1; WDATA_A1 = 'hFFFF;
-  ADDR_B1 = 'h0;
-  REN_B1 = 1; WDATA_B1 = 'hFFFF;
+//   // // Collision Check
+//   @(negedge CLK_A1);
+//   ADDR_A1 = 'h0;
+//   WEN_A1 = 1; WDATA_A1 = 'hFFFF;
+//   ADDR_B1 = 'h0;
+//   REN_B1 = 1; WDATA_B1 = 'hFFFF;
 
   // // RAM2
 
