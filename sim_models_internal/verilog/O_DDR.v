@@ -55,6 +55,8 @@ module O_DDR (
         Q <= Q0;
       else
         Q <= Q1;
+    else
+      Q <= Q;
   end
   
 endmodule

@@ -373,8 +373,8 @@ module DSP19X2 #(
 
 	assign Z1 = (OUTPUT_REG_EN == "TRUE")?z_out_reg[18:0]:z_out[18:0];
 	assign Z2 = (OUTPUT_REG_EN == "TRUE")?z_out_reg[37:19]:z_out[37:19];
-	assign DLY_B1 = dly_b1;
-	assign DLY_B2 = dly_b2;
+	assign DLY_B1 = (DSP_MODE== "MULTIPLY_ADD_SUB")?dly_b1:9'dx;
+	assign DLY_B2 = (DSP_MODE== "MULTIPLY_ADD_SUB")?dly_b2:9'dx;
 
 
 	// If ACC_FIR is greater than 21, result is invalid
@@ -391,6 +391,20 @@ module DSP19X2 #(
 			$display("WARNING: DSP19x2 instance %m SHIFT_RIGHT input is %d which is greater than 31 which serves no function", SHIFT_RIGHT);
 			#1 $finish ;
 		end
+	
+	always@(*) 
+	begin
+		case(DSP_MODE)
+			"MULTIPLY_ACCUMULATE": begin  
+				if(FEEDBACK>1)
+				begin
+					$display("\nError: DSP19x2 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
+					$stop ;
+				end
+			end
+		endcase
+		
+	end
 
  initial begin
     case(DSP_MODE)
