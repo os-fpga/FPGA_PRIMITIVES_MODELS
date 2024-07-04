@@ -304,10 +304,7 @@ module DSP38 #(
 		case(DSP_MODE)
 			"MULTIPLY_ACCUMULATE": begin  
 				if(FEEDBACK>1)
-				begin
-					$display("\nError: DSP38 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
-    			    $stop ;
-				end
+					$display("\nWARNING: DSP38 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
 			end
 		endcase
 		
