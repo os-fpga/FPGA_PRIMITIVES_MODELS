@@ -64,7 +64,6 @@ ports:
      dir: output
      desc: 18-bit B registered output
      type: reg
-     default: 18'h00000
    CLK:
      dir: input
      desc: Clock
