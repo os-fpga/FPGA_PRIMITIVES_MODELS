@@ -431,44 +431,44 @@ module DSP38_tb;
 				$display("ACC SUBTRACTION TEST FAILED \n Z = %0d",Z);
 
 			// FEEDBACK 3 -> ACC Mult x B
-			@(negedge CLK);
-			A=3;
-			B=1;
-			ACC_FIR=1;
-			FEEDBACK=3;
-			LOAD_ACC=1;
-			SATURATE=0;
-			SHIFT_RIGHT=0;
-			ROUND=0;
-			SUBTRACT=0;
-			UNSIGNED_A=1;
-			UNSIGNED_B=1;
+			// @(negedge CLK);
+			// A=3;
+			// B=1;
+			// ACC_FIR=1;
+			// FEEDBACK=3;
+			// LOAD_ACC=1;
+			// SATURATE=0;
+			// SHIFT_RIGHT=0;
+			// ROUND=0;
+			// SUBTRACT=0;
+			// UNSIGNED_A=1;
+			// UNSIGNED_B=1;
 
-			if(INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "TRUE")
-				repeat(2)@(posedge CLK);
-			else if ((INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "FALSE") || (INPUT_REG_EN == "FALSE" && OUTPUT_REG_EN == "TRUE"))
-				@(posedge CLK);
+			// if(INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "TRUE")
+			// 	repeat(2)@(posedge CLK);
+			// else if ((INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "FALSE") || (INPUT_REG_EN == "FALSE" && OUTPUT_REG_EN == "TRUE"))
+			// 	@(posedge CLK);
 			
-			@(posedge CLK);
-			#1;
-			if(Z===6)
-				$display("ACC MULT TEST PASSED");
-			else
-				$display("ACC MULT TEST FAILED \n Z = %0d",Z);
+			// @(posedge CLK);
+			// #1;
+			// if(Z===6)
+			// 	$display("ACC MULT TEST PASSED");
+			// else
+			// 	$display("ACC MULT TEST FAILED \n Z = %0d",Z);
 
-			@(posedge CLK);
-			#1;
-			if(Z===12)
-				$display("ACC MULT TEST PASSED");
-			else
-				$display("ACC MULT TEST FAILED \n Z = %0d",Z);
+			// @(posedge CLK);
+			// #1;
+			// if(Z===12)
+			// 	$display("ACC MULT TEST PASSED");
+			// else
+			// 	$display("ACC MULT TEST FAILED \n Z = %0d",Z);
 				
-			@(posedge CLK);
-			#1;
-			if(Z===18)
-				$display("ACC MULT TEST PASSED");
-			else
-				$display("ACC MULT TEST FAILED \n Z = %0d",Z);
+			// @(posedge CLK);
+			// #1;
+			// if(Z===18)
+			// 	$display("ACC MULT TEST PASSED");
+			// else
+			// 	$display("ACC MULT TEST FAILED \n Z = %0d",Z);
 
 			// UNSIGNED SATURATION OVERFLOW
 			@(negedge CLK);

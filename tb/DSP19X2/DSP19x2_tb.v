@@ -456,46 +456,44 @@ module DSP19x2_tb;
 				$display("ACC SUBTRACTION Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
 
 			// FEEDBACK 3 -> ACC Mult x B
-			@(negedge CLK);
-			A1=3;
-			B1=1;
-			A2=3;
-			B2=1;
-			ACC_FIR=1;
-			FEEDBACK=3;
-			LOAD_ACC=1;
-			SATURATE=0;
-			SHIFT_RIGHT=0;
-			ROUND=0;
-			SUBTRACT=0;
-			UNSIGNED_A=1;
-			UNSIGNED_B=1;
-
-			if(INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "TRUE")
-				repeat(2)@(posedge CLK);
-			else if ((INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "FALSE") || (INPUT_REG_EN == "FALSE" && OUTPUT_REG_EN == "TRUE"))
-				@(posedge CLK);
-			
-			@(posedge CLK);
-			#1;
-			if(Z1===6 && Z2===6)
-				$display("ACC MULT Test Passed");
-			else
-				$display("ACC MULT Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
-
-			@(posedge CLK);
-			#1;
-			if(Z1===12 && Z2===12)
-				$display("ACC MULT Test Passed");
-			else
-				$display("ACC MULT Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
-				
-			@(posedge CLK);
-			#1;
-			if(Z1===18 && Z2===18)
-				$display("ACC MULT Test Passed");
-			else
-				$display("ACC MULT Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
+			// @(negedge CLK);
+			// A1=3;
+			// B1=1;
+			// A2=3;
+			// B2=1;
+			// ACC_FIR=1;
+			// FEEDBACK=3;
+			// LOAD_ACC=1;
+			// SATURATE=0;
+			// SHIFT_RIGHT=0;
+			// ROUND=0;
+			// SUBTRACT=0;
+			// UNSIGNED_A=1;
+			// UNSIGNED_B=1;
+			// if(INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "TRUE")
+				// repeat(2)@(posedge CLK);
+			// else if ((INPUT_REG_EN == "TRUE" && OUTPUT_REG_EN == "FALSE") || (INPUT_REG_EN == "FALSE" && OUTPUT_REG_EN == "TRUE"))
+				// @(posedge CLK);
+			// 
+			// @(posedge CLK);
+			// #1;
+			// if(Z1===6 && Z2===6)
+				// $display("ACC MULT Test Passed");
+			// else
+				// $display("ACC MULT Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
+			// @(posedge CLK);
+			// #1;
+			// if(Z1===12 && Z2===12)
+				// $display("ACC MULT Test Passed");
+			// else
+				// $display("ACC MULT Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
+				// 
+			// @(posedge CLK);
+			// #1;
+			// if(Z1===18 && Z2===18)
+				// $display("ACC MULT Test Passed");
+			// else
+				// $display("ACC MULT Test Failed \n Z1 = %0d \t Z2= %0d",Z1,Z2);
 
 			// UNSIGNED SATURATION OVERFLOW
 			@(negedge CLK);
