@@ -43,8 +43,8 @@
 #          - <enum_name>
 #
 # primitive name should match the filename root.
-name: O_FAB
-desc: Marker Buffer for fabric to periphery transition
+name: I_FAB
+desc: Marker Buffer for periphery to fabric transition
 category: core_fabric
 
 ports:
