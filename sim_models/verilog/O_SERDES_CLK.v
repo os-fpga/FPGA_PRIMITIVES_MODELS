@@ -53,8 +53,7 @@ module O_SERDES_CLK #(
       "SDR" ,
       "DDR": begin end
       default: begin
-        $display("\nError: O_SERDES_CLK instance %m has parameter DATA_RATE set to %s.  Valid values are SDR, DDR\n", DATA_RATE);
-        #1 $stop ;
+        $fatal(1,"\nError: O_SERDES_CLK instance %m has parameter DATA_RATE set to %s.  Valid values are SDR, DDR\n", DATA_RATE);
       end
     endcase
     case(CLOCK_PHASE)
@@ -63,8 +62,7 @@ module O_SERDES_CLK #(
       180 ,
       270: begin end
       default: begin
-        $display("\nError: O_SERDES_CLK instance %m has parameter CLOCK_PHASE set to %d.  Valid values are 0, 90, 180, 270\n", CLOCK_PHASE);
-        #1 $stop ;
+        $fatal(1,"\nError: O_SERDES_CLK instance %m has parameter CLOCK_PHASE set to %d.  Valid values are 0, 90, 180, 270\n", CLOCK_PHASE);
       end
     endcase
 
