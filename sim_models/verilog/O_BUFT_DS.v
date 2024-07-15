@@ -35,8 +35,7 @@ module O_BUFT_DS #(
       "PULLUP" ,
       "PULLDOWN": begin end
       default: begin
-        $display("\nError: O_BUFT_DS instance %m has parameter WEAK_KEEPER set to %s.  Valid values are NONE, PULLUP, PULLDOWN\n", WEAK_KEEPER);
-        #1 $stop ;
+        $fatal(1,"\nError: O_BUFT_DS instance %m has parameter WEAK_KEEPER set to %s.  Valid values are NONE, PULLUP, PULLDOWN\n", WEAK_KEEPER);
       end
     endcase
 

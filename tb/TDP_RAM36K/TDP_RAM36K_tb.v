@@ -160,7 +160,7 @@ tdp_ram36k_inst
 
 `ifdef VCD
 	initial begin
-		$dumpfile("TDP_RAM36K.vcd");
+		$dumpfile("wave.vcd");
 		$dumpvars;
 	end
 `endif
@@ -576,7 +576,7 @@ begin
 			$display("");
 			$display("");	
 			$display("----------------------------------------------");
-      	$display("                 Test Passed                  ");
+      $display("                 Test Passed                  ");
 			$display("----------------------------------------------");
     end
     else   
@@ -612,7 +612,7 @@ begin
 end
 endtask
 
-task compare(input reg [RAM_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM_ADDR_WIDTH-1:0] addr, input reg parity);
+task compare(input bit [RAM_DATA_WIDTH-1:0] dout, exp_dout, input bit [RAM_ADDR_WIDTH-1:0] addr, input bit parity);
 	if (RAM_PARITY_WIDTH < 1 && parity == 1)
 		exp_dout = 0;
 	if(dout !== exp_dout) begin

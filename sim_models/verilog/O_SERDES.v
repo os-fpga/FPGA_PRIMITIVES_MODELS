@@ -244,14 +244,12 @@ module O_SERDES #(
       "SDR" ,
       "DDR": begin end
       default: begin
-        $display("\nError: O_SERDES instance %m has parameter DATA_RATE set to %s.  Valid values are SDR, DDR\n", DATA_RATE);
-        #1 $stop ;
+        $fatal(1,"\nError: O_SERDES instance %m has parameter DATA_RATE set to %s.  Valid values are SDR, DDR\n", DATA_RATE);
       end
     endcase
 
     if ((WIDTH < 3) || (WIDTH > 10)) begin
-       $display("O_SERDES instance %m WIDTH set to incorrect value, %d.  Values must be between 3 and 10.", WIDTH);
-    #1 $stop;
+       $fatal(1,"O_SERDES instance %m WIDTH set to incorrect value, %d.  Values must be between 3 and 10.", WIDTH);
     end
 
   end

@@ -6,7 +6,7 @@ module O_BUF_tb;
   wire O1, O2;
   reg CLK = 0;
   integer mismatch = 0;
-  localparam IOSTANDARD = "NONE";
+  localparam IOSTANDARD = "DEFAULT";
   localparam DRIVE_STRENGTH = 2;
   localparam SLEW_RATE = "SLOW";
   always #5 CLK = ~CLK;

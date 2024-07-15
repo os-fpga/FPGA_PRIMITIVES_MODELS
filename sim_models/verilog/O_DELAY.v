@@ -59,8 +59,7 @@ assign #(30.0ps + (21.56ps*dly_tap_val)) O = I;				// Adjusted Delay for TT corn
  initial begin
 
     if ((DELAY < 0) || (DELAY > 63)) begin
-       $display("O_DELAY instance %m DELAY set to incorrect value, %d.  Values must be between 0 and 63.", DELAY);
-    #1 $stop;
+       $fatal(1,"O_DELAY instance %m DELAY set to incorrect value, %d.  Values must be between 0 and 63.", DELAY);
     end
 
   end

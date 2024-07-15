@@ -160,12 +160,10 @@ localparam      FAST_LOCK      = 0; // Reduce lock time
 	always @ (posedge CLK_IN) begin
 		if(pllstart_ff2)begin
 			if (ref_period<VCO_MIN_PERIOD) begin
-				$display("\nError at time %t: PLL instance %m REF clock period %0d fs violates minimum period.\nMust be greater than %0d fs.\n", $realtime, ref_period, VCO_MIN_PERIOD);
-				$stop;
+				$fatal(1,"\nError at time %t: PLL instance %m REF clock period %0d fs violates minimum period.\nMust be greater than %0d fs.\n", $realtime, ref_period, VCO_MIN_PERIOD);
 			end
 			else if (ref_period>VCO_MAX_PERIOD) begin
-				$display("\nError at time %t: PLL instance %m REF clock period %0d fs violates maximum period.\nMust be less than %0d fs.\n", $realtime, ref_period, VCO_MAX_PERIOD);
-				$stop;
+				$fatal(1,"\nError at time %t: PLL instance %m REF clock period %0d fs violates maximum period.\nMust be less than %0d fs.\n", $realtime, ref_period, VCO_MAX_PERIOD);
 			end
 		end
 	end
@@ -182,12 +180,10 @@ localparam      FAST_LOCK      = 0; // Reduce lock time
 	always @ (posedge FAST_CLK) begin
 		if(vcostart_ff) begin
 			if (vco_period<VCO_MIN_PERIOD) begin
-				$display("\nError at time %t: PLL instance %m VCO clock period %0d fs violates minimum period.\nMust be greater than %0d fs.\nTry increasing PLL_DIV or decreasing PLL_MULT values.\n", $realtime, vco_period, VCO_MIN_PERIOD);
-				$stop;
+				$fatal(1,"\nError at time %t: PLL instance %m VCO clock period %0d fs violates minimum period.\nMust be greater than %0d fs.\nTry increasing PLL_DIV or decreasing PLL_MULT values.\n", $realtime, vco_period, VCO_MIN_PERIOD);
 			end
 			else if (vco_period>VCO_MAX_PERIOD) begin
-				$display("\nError at time %t: PLL instance %m VCO clock period %0d fs violates maximum period.\nMust be less than %0d fs.\nTry increasing PLL_MULT or decreasing PLL_DIV values.\n", $realtime, vco_period, VCO_MAX_PERIOD);
-				$stop;
+				$fatal(1,"\nError at time %t: PLL instance %m VCO clock period %0d fs violates maximum period.\nMust be less than %0d fs.\nTry increasing PLL_MULT or decreasing PLL_DIV values.\n", $realtime, vco_period, VCO_MAX_PERIOD);
 			end
 		end
 	end
@@ -198,19 +194,16 @@ localparam      FAST_LOCK      = 0; // Reduce lock time
 	always @ (posedge CLK_IN, posedge PLL_EN) begin
 		if(PLL_EN)begin
 			if(PLL_POST_DIV0==0)begin
-				$display("Error at time %t: \n \t PLL instance %m, PLL_POST_DIV0 is equal to zero.\n \t Must be greater than 0", $realtime);
-            $stop;
+				$fatal(1,"Error at time %t: \n \t PLL instance %m, PLL_POST_DIV0 is equal to zero.\n \t Must be greater than 0", $realtime);
 			end
 
 			else if(PLL_POST_DIV1==0)begin
-				$display("Error at time %t: \n \t PLL instance %m, PLL_POST_DIV1 is equal to zero.\n \t Must be greater than 0", $realtime);
-				$stop;
+				$fatal(1,"Error at time %t: \n \t PLL instance %m, PLL_POST_DIV1 is equal to zero.\n \t Must be greater than 0", $realtime);
 			end
 
 
 			else if(PLL_POST_DIV1>PLL_POST_DIV0) begin
-				$display("Error at time %t: PLL_POST_DIV1 > PLL_POST_DIV0\n", $realtime);
-				$stop;
+				$fatal(1,"Error at time %t: PLL_POST_DIV1 > PLL_POST_DIV0\n", $realtime);
 			end
 		end
 	end
@@ -219,33 +212,28 @@ localparam      FAST_LOCK      = 0; // Reduce lock time
     case(DEV_FAMILY)
       "VIRGO": begin end
       default: begin
-        $display("\nError: PLL instance %m has parameter DEV_FAMILY set to %s.  Valid values are VIRGO\n", DEV_FAMILY);
-        #1 $stop ;
+        $fatal(1,"\nError: PLL instance %m has parameter DEV_FAMILY set to %s.  Valid values are VIRGO\n", DEV_FAMILY);
       end
     endcase
     case(DIVIDE_CLK_IN_BY_2)
       "TRUE" ,
       "FALSE": begin end
       default: begin
-        $display("\nError: PLL instance %m has parameter DIVIDE_CLK_IN_BY_2 set to %s.  Valid values are TRUE, FALSE\n", DIVIDE_CLK_IN_BY_2);
-        #1 $stop ;
+        $fatal(1,"\nError: PLL instance %m has parameter DIVIDE_CLK_IN_BY_2 set to %s.  Valid values are TRUE, FALSE\n", DIVIDE_CLK_IN_BY_2);
       end
     endcase
 
     if ((PLL_MULT < 16) || (PLL_MULT > 640)) begin
-       $display("PLL instance %m PLL_MULT set to incorrect value, %d.  Values must be between 16 and 640.", PLL_MULT);
-    #1 $stop;
+       $fatal(1,"PLL instance %m PLL_MULT set to incorrect value, %d.  Values must be between 16 and 640.", PLL_MULT);
     end
 
     if ((PLL_DIV < 1) || (PLL_DIV > 63)) begin
-       $display("PLL instance %m PLL_DIV set to incorrect value, %d.  Values must be between 1 and 63.", PLL_DIV);
-    #1 $stop;
+       $fatal(1,"PLL instance %m PLL_DIV set to incorrect value, %d.  Values must be between 1 and 63.", PLL_DIV);
     end
     case(PLL_MULT_FRAC)
       0: begin end
       default: begin
-        $display("\nError: PLL instance %m has parameter PLL_MULT_FRAC set to %d.  Valid values are 0\n", PLL_MULT_FRAC);
-        #1 $stop ;
+        $fatal(1,"\nError: PLL instance %m has parameter PLL_MULT_FRAC set to %d.  Valid values are 0\n", PLL_MULT_FRAC);
       end
     endcase
     case(PLL_POST_DIV)
@@ -278,8 +266,7 @@ localparam      FAST_LOCK      = 0; // Reduce lock time
       103 ,
       119: begin end
       default: begin
-        $display("\nError: PLL instance %m has parameter PLL_POST_DIV set to %d.  Valid values are 17, 18, 19, 20, 21, 22, 23, 34, 35, 36, 37, 38, 39, 51, 52, 53, 54, 55, 68, 69, 70, 71, 85, 86, 87, 102, 103, 119\n", PLL_POST_DIV);
-        #1 $stop ;
+        $fatal(1,"\nError: PLL instance %m has parameter PLL_POST_DIV set to %d.  Valid values are 17, 18, 19, 20, 21, 22, 23, 34, 35, 36, 37, 38, 39, 51, 52, 53, 54, 55, 68, 69, 70, 71, 85, 86, 87, 102, 103, 119\n", PLL_POST_DIV);
       end
     endcase
 

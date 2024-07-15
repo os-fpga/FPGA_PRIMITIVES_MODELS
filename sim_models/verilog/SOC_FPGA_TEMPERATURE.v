@@ -71,8 +71,7 @@ module SOC_FPGA_TEMPERATURE #(
  initial begin
 
     if ((INITIAL_TEMPERATURE < 0) || (INITIAL_TEMPERATURE > 125)) begin
-       $display("SOC_FPGA_TEMPERATURE instance %m INITIAL_TEMPERATURE set to incorrect value, %d.  Values must be between 0 and 125.", INITIAL_TEMPERATURE);
-    #1 $stop;
+       $fatal(1,"SOC_FPGA_TEMPERATURE instance %m INITIAL_TEMPERATURE set to incorrect value, %d.  Values must be between 0 and 125.", INITIAL_TEMPERATURE);
     end
 
   end

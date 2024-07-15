@@ -2,7 +2,7 @@
 `celldefine
 //
 // O_FAB simulation model
-// Marker Buffer for fabric to periphery transition 
+// Marker Buffer for fabric to periphery transition
 //
 // Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
 //
@@ -12,7 +12,7 @@ module O_FAB (
   output O // Output
 );
 
-   assign O = I ;
+assign O = I ;
 
 endmodule
 `endcelldefine

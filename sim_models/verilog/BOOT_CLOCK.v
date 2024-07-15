@@ -20,8 +20,7 @@ localparam HALF_PERIOD = PERIOD/2.0;
  initial begin
 
     if ((PERIOD < 16.0) || (PERIOD > 30.0)) begin
-       $display("BOOT_CLOCK instance %m PERIOD set to incorrect value, %f.  Values must be between 16.0 and 30.0.", PERIOD);
-    #1 $stop;
+       $fatal(1,"BOOT_CLOCK instance %m PERIOD set to incorrect value, %f.  Values must be between 16.0 and 30.0.", PERIOD);
     end
 
   end
