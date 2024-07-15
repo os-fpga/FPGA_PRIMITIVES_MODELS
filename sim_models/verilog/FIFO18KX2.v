@@ -337,48 +337,42 @@ tdp_ram18kx2_inst
       9 ,
       18: begin end
       default: begin
-        $display("\nError: FIFO18KX2 instance %m has parameter DATA_WRITE_WIDTH1 set to %d.  Valid values are 9, 18\n", DATA_WRITE_WIDTH1);
-        #1 $stop ;
+        $fatal(1,"\nError: FIFO18KX2 instance %m has parameter DATA_WRITE_WIDTH1 set to %d.  Valid values are 9, 18\n", DATA_WRITE_WIDTH1);
       end
     endcase
     case(DATA_READ_WIDTH1)
       9 ,
       18: begin end
       default: begin
-        $display("\nError: FIFO18KX2 instance %m has parameter DATA_READ_WIDTH1 set to %d.  Valid values are 9, 18\n", DATA_READ_WIDTH1);
-        #1 $stop ;
+        $fatal(1,"\nError: FIFO18KX2 instance %m has parameter DATA_READ_WIDTH1 set to %d.  Valid values are 9, 18\n", DATA_READ_WIDTH1);
       end
     endcase
     case(FIFO_TYPE1)
       "SYNCHRONOUS" ,
       "ASYNCHRONOUS": begin end
       default: begin
-        $display("\nError: FIFO18KX2 instance %m has parameter FIFO_TYPE1 set to %s.  Valid values are SYNCHRONOUS, ASYNCHRONOUS\n", FIFO_TYPE1);
-        #1 $stop ;
+        $fatal(1,"\nError: FIFO18KX2 instance %m has parameter FIFO_TYPE1 set to %s.  Valid values are SYNCHRONOUS, ASYNCHRONOUS\n", FIFO_TYPE1);
       end
     endcase
     case(DATA_WRITE_WIDTH2)
       9 ,
       18: begin end
       default: begin
-        $display("\nError: FIFO18KX2 instance %m has parameter DATA_WRITE_WIDTH2 set to %d.  Valid values are 9, 18\n", DATA_WRITE_WIDTH2);
-        #1 $stop ;
+        $fatal(1,"\nError: FIFO18KX2 instance %m has parameter DATA_WRITE_WIDTH2 set to %d.  Valid values are 9, 18\n", DATA_WRITE_WIDTH2);
       end
     endcase
     case(DATA_READ_WIDTH2)
       9 ,
       18: begin end
       default: begin
-        $display("\nError: FIFO18KX2 instance %m has parameter DATA_READ_WIDTH2 set to %d.  Valid values are 9, 18\n", DATA_READ_WIDTH2);
-        #1 $stop ;
+        $fatal(1,"\nError: FIFO18KX2 instance %m has parameter DATA_READ_WIDTH2 set to %d.  Valid values are 9, 18\n", DATA_READ_WIDTH2);
       end
     endcase
     case(FIFO_TYPE2)
       "SYNCHRONOUS" ,
       "ASYNCHRONOUS": begin end
       default: begin
-        $display("\nError: FIFO18KX2 instance %m has parameter FIFO_TYPE2 set to %s.  Valid values are SYNCHRONOUS, ASYNCHRONOUS\n", FIFO_TYPE2);
-        #1 $stop ;
+        $fatal(1,"\nError: FIFO18KX2 instance %m has parameter FIFO_TYPE2 set to %s.  Valid values are SYNCHRONOUS, ASYNCHRONOUS\n", FIFO_TYPE2);
       end
     endcase
 
