@@ -34,8 +34,7 @@ module I_BUF #(
       "PULLUP" ,
       "PULLDOWN": begin end
       default: begin
-        $display("\nError: I_BUF instance %m has parameter WEAK_KEEPER set to %s.  Valid values are NONE, PULLUP, PULLDOWN\n", WEAK_KEEPER);
-        #1 $stop ;
+        $fatal(1,"\nError: I_BUF instance %m has parameter WEAK_KEEPER set to %s.  Valid values are NONE, PULLUP, PULLDOWN\n", WEAK_KEEPER);
       end
     endcase
 
