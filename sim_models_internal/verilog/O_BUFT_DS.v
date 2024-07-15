@@ -39,8 +39,7 @@ module O_BUFT_DS #(
       "PULLUP" ,
       "PULLDOWN": begin end
       default: begin
-        $display("\nError: O_BUFT_DS instance %m has parameter WEAK_KEEPER set to %s.  Valid values are NONE, PULLUP, PULLDOWN\n", WEAK_KEEPER);
-        #1 $stop ;
+        $fatal(1,"\nError: O_BUFT_DS instance %m has parameter WEAK_KEEPER set to %s.  Valid values are NONE, PULLUP, PULLDOWN\n", WEAK_KEEPER);
       end
     endcase
 
@@ -64,8 +63,7 @@ module O_BUFT_DS #(
       "SSTL_18_HP_DIFF" ,
       "SSTL_18_HR_DIFF": begin end
       default: begin
-        $display("\nError: O_BUFT_DS instance %m has parameter IOSTANDARD set to %s.  Valid values are DEFAULT, BLVDS_DIFF, LVDS_HP_DIFF, LVDS_HR_DIFF, LVPECL_25_DIFF, LVPECL_33_DIFF, HSTL_12_DIFF, HSTL_15_DIFF, HSUL_12_DIFF, MIPI_DIFF, POD_12_DIFF, RSDS_DIFF, SLVS_DIFF, SSTL_15_DIFF, SSTL_18_HP_DIFF, SSTL_18_HR_DIFF\n", IOSTANDARD);
-        #1 $stop ;
+        $fatal(1,"\nError: O_BUFT_DS instance %m has parameter IOSTANDARD set to %s.  Valid values are DEFAULT, BLVDS_DIFF, LVDS_HP_DIFF, LVDS_HR_DIFF, LVPECL_25_DIFF, LVPECL_33_DIFF, HSTL_12_DIFF, HSTL_15_DIFF, HSUL_12_DIFF, MIPI_DIFF, POD_12_DIFF, RSDS_DIFF, SLVS_DIFF, SSTL_15_DIFF, SSTL_18_HP_DIFF, SSTL_18_HR_DIFF\n", IOSTANDARD);
       end
     endcase
 
@@ -73,8 +71,7 @@ module O_BUFT_DS #(
       "TRUE" ,
       "FALSE": begin end
       default: begin
-        $display("\nError: O_BUFT_DS instance %m has parameter DIFFERENTIAL_TERMINATION set to %s.  Valid values are TRUE, FALSE\n", DIFFERENTIAL_TERMINATION);
-        #1 $stop ;
+        $fatal(1,"\nError: O_BUFT_DS instance %m has parameter DIFFERENTIAL_TERMINATION set to %s.  Valid values are TRUE, FALSE\n", DIFFERENTIAL_TERMINATION);
       end
     endcase
 `endif // RAPIDSILICON_INTERNAL
