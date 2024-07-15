@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Self-Checking Testbench for TDP_RAM18KX2 simulation model
 // Testbench Not modeled for ASymmetric RAM
 // So, Keep the Write/Read Width Same for Both Ports
@@ -42,20 +43,22 @@ module TDP_RAM18KX2_tb();
 	wire [READ_WIDTH_B2-1:0] RDATA_B2; // Read data port B, RAM 2
 	wire [1:0] RPARITY_B2; // Read parity port B, RAM 2
 
-	parameter [18431:0] INIT1 = {18432{1'b0}}; // Initial Contents of memory, RAM 1
+	/* verilator lint_off WIDTHCONCAT */
+	/* verilator lint_off WIDTH */
+	parameter [16383:0] INIT1 = {16384{1'b0}}; // Initial Contents of memory, RAM 1
 	parameter [2047:0] INIT1_PARITY = {2048{1'b0}}; // Initial Contents of memory
 	parameter WRITE_WIDTH_A1 = 18; // Write data width on port A, RAM 1 (1-18)
 	parameter WRITE_WIDTH_B1 = 18; // Write data width on port B, RAM 1 (1-18)
 	parameter READ_WIDTH_A1 = 18; // Read data width on port A, RAM 1 (1-18)
 	parameter READ_WIDTH_B1 = 18; // Read data width on port B, RAM 1 (1-18)
-	parameter [18431:0] INIT2 = {18432{1'b0}}; // Initial Contents of memory, RAM 2
+	parameter [16383:0] INIT2 = {16384{1'b0}}; // Initial Contents of memory, RAM 2
 	parameter [2047:0] INIT2_PARITY = {2048{1'b0}}; // Initial Contents of memory
 	parameter WRITE_WIDTH_A2 = 9; // Write data width on port A, RAM 2 (1-18)
 	parameter WRITE_WIDTH_B2 = 9; // Write data width on port B, RAM 2 (1-18)
 	parameter READ_WIDTH_A2 = 9; // Read data width on port A, RAM 2 (1-18)
 	parameter READ_WIDTH_B2 = 9; // Read data width on port B, RAM 2 (1-18)
 
-	//Local_RAM1
+//Local_RAM1
   localparam A1_DATA_WRITE_WIDTH = calc_data_width(WRITE_WIDTH_A1);
   localparam A1_WRITE_ADDR_WIDTH = calc_depth(A1_DATA_WRITE_WIDTH);
   localparam A1_DATA_READ_WIDTH = calc_data_width(READ_WIDTH_A1);
@@ -88,7 +91,9 @@ localparam A1_PARITY_WRITE_WIDTH = calc_parity_width(WRITE_WIDTH_A1);
 	reg [RAM1_ADDR_WIDTH-1:0] temp_ram1_addr;
 
 	// Parity Ram
+	/* verilator lint_off LITENDIAN */
 	reg [RAM1_PARITY_WIDTH-1:0] local_parity_ram1 [2**RAM1_ADDR_WIDTH-1:0];
+	/* verilator lint_on LITENDIAN */
 
 	integer f_p, g_p, h_p;
 	integer f, g, h, i, j, k, m;
@@ -98,7 +103,11 @@ localparam A1_PARITY_WRITE_WIDTH = calc_parity_width(WRITE_WIDTH_A1);
 		f_p = 0;
 		for (g_p = 0; g_p < 2**RAM1_ADDR_WIDTH; g_p = g_p + 1)
 			for (h_p = 0; h_p < RAM1_PARITY_WIDTH; h_p = h_p + 1) begin
-				local_parity_ram1[g_p][h_p] <= INIT1_PARITY[f_p];
+				`ifdef SIM_VERILATOR
+					local_parity_ram1[g_p][h_p] = INIT1_PARITY[f_p];
+				`else
+					local_parity_ram1[g_p][h_p] <= INIT1_PARITY[f_p];
+				`endif
 				f_p = f_p + 1;
 			end
 	end
@@ -108,7 +117,11 @@ localparam A1_PARITY_WRITE_WIDTH = calc_parity_width(WRITE_WIDTH_A1);
 			f = 0;
 			for (g = 0; g < 2**RAM1_ADDR_WIDTH; g = g + 1)
 				for (h = 0; h < RAM1_DATA_WIDTH; h = h + 1) begin
-					local_ram1[g][h] <= INIT1[f];
+					`ifdef SIM_VERILATOR
+						local_ram1[g][h] = INIT1[f];
+					`else
+						local_ram1[g][h] <= INIT1[f];
+					`endif
 					f = f + 1;
 				end
 		end
@@ -146,7 +159,9 @@ localparam A1_PARITY_WRITE_WIDTH = calc_parity_width(WRITE_WIDTH_A1);
 	reg [RAM2_ADDR_WIDTH-1:0] temp_ram2_addr;
 
 	// Parity Ram
+	/* verilator lint_off LITENDIAN */
 	reg [RAM2_PARITY_WIDTH-1:0] local_parity_ram2 [2**RAM2_ADDR_WIDTH-1:0];
+	/* verilator lint_on LITENDIAN */
 
 	integer a, b, c, l, n, p, r;
 
@@ -157,7 +172,11 @@ localparam A1_PARITY_WRITE_WIDTH = calc_parity_width(WRITE_WIDTH_A1);
 		f_p2 = 0;
 		for (g_p2 = 0; g_p2 < 2**RAM2_ADDR_WIDTH; g_p2 = g_p2 + 1)
 			for (h_p2 = 0; h_p2 < RAM2_PARITY_WIDTH; h_p2 = h_p2 + 1) begin
-				local_parity_ram2[g_p2][h_p2] <= INIT2_PARITY[f_p2];
+				`ifdef SIM_VERILATOR
+					local_parity_ram2[g_p2][h_p2] = INIT2_PARITY[f_p2];
+				`else
+					local_parity_ram2[g_p2][h_p2] <= INIT2_PARITY[f_p2];
+				`endif
 				f_p2 = f_p2 + 1;
 			end
 	end
@@ -167,7 +186,11 @@ localparam A1_PARITY_WRITE_WIDTH = calc_parity_width(WRITE_WIDTH_A1);
     a = 0;
     for (b = 0; b < 2**RAM2_ADDR_WIDTH; b = b + 1)
       for (c = 0; c < RAM2_DATA_WIDTH; c = c + 1) begin
-        local_ram2[b][c] <= INIT2[a];
+				`ifdef SIM_VERILATOR
+        	local_ram2[b][c] = INIT2[a];
+				`else
+					local_ram2[b][c] <= INIT2[a];
+				`endif
         a = a + 1;
       end
   end
@@ -257,7 +280,7 @@ tdp_ram18kx2_inst
 
 `ifdef VCD
 	initial begin
-		$dumpfile("out/wave.vcd");
+		$dumpfile("wave.vcd");
 		$dumpvars;
 	end
 `endif
@@ -323,13 +346,35 @@ tdp_ram18kx2_inst
 			end
 		end
   join
+  /* verilator lint_on WIDTHCONCAT */
+  /* verilator lint_on WIDTH */
+
+//   // // Collision Check
+//   @(negedge CLK_A1);
+//   ADDR_A1 = 'h0;
+//   WEN_A1 = 1; WDATA_A1 = 'hFFFF;
+//   ADDR_B1 = 'h0;
+//   REN_B1 = 1; WDATA_B1 = 'hFFFF;
+
+  // // RAM2
+
+  // // Collision Check
+  //   @(negedge CLK_A2);
+  //   ADDR_A2 = 'h0;
+  //   WEN_A2 = 1; WDATA_A2 = 'hFFFF;
+  //   ADDR_B2 = 'h0;
+  //   REN_B2 = 1; WDATA_B2 = 'hFFFF;
 
 		test_status(error);
 		#100;
 		$finish();
 
 end
-	
+
+
+  	/* verilator lint_off WIDTH */
+  	/* verilator lint_off SELRANGE */
+  	/* verilator lint_off IGNOREDRETURN */
 	task directed_read_or_write(input reg [RAM_ADDR_WIDTH-1:0] d_addrA, input reg [RAM_ADDR_WIDTH-1:0] d_addrB, input reg [RAM_DATA_WIDTH-1:0] d_dinA, input reg [RAM_DATA_WIDTH-1:0] d_dinB, input reg write, input reg [1:0] portAB);
 	if(write) begin
       if(portAB==2'b00)
@@ -505,7 +550,9 @@ end
     //$display("Addr_A: %0b, Addr_B: %0b, addr_width: %0d, Port: %0h, Time: %0t", ADDR_A1, ADDR_B1, addr_width, portAB,$time);	
   endfunction
 
+	/* verilator lint_off LITENDIAN */
 	function logic [RAM1_DATA_WIDTH-1:0] RAM1_Data_wrt_BE(input reg [RAM1_ADDR_WIDTH-1:0] addr, input reg [RAM1_DATA_WIDTH-1:0] din, input reg [RAM1_PARITY_WIDTH-1:0] parity, input reg [1:0] BE);
+	/* verilator lint_on LITENDIAN */
     logic [RAM1_DATA_WIDTH-1:0] dout;
     if (RAM1_DATA_WIDTH > 9) begin
 			case (BE)
@@ -541,7 +588,9 @@ end
     return dout;
   endfunction
 
+	/* verilator lint_off LITENDIAN */
 	function logic [RAM2_DATA_WIDTH-1:0] RAM2_Data_wrt_BE(input reg [RAM2_ADDR_WIDTH-1:0] addr, input reg [RAM2_DATA_WIDTH-1:0] din, input reg [RAM2_PARITY_WIDTH-1:0] parity, input reg [1:0] BE);
+	/* verilator lint_on LITENDIAN */
     reg [RAM2_DATA_WIDTH-1:0] dout;
     if (RAM2_DATA_WIDTH > 9) begin
 			case (BE)
@@ -576,6 +625,8 @@ end
 		end
     return dout;
   endfunction
+  /* verilator lint_on WIDTH */
+	/* verilator lint_on SELRANGE */
 
 task test_status(input logic [31:0] error);
 begin
@@ -604,7 +655,7 @@ begin
 			$display("");
 			$display("");	
 			$display("----------------------------------------------");
-      		$display("                 Test Passed                  ");
+      $display("                 Test Passed                  ");
 			$display("----------------------------------------------");
     end
     else   
@@ -640,7 +691,7 @@ begin
 end
 endtask
 
-task compare(input reg [RAM1_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM1_ADDR_WIDTH-1:0] addr, input reg parity);
+task compare(input bit [RAM1_DATA_WIDTH-1:0] dout, exp_dout, input bit [RAM1_ADDR_WIDTH-1:0] addr, input bit parity);
 	if (RAM1_PARITY_WIDTH < 1 && parity == 1)
 		exp_dout = 0;
 	if(dout !== exp_dout) begin
@@ -657,7 +708,7 @@ task compare(input reg [RAM1_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM1_ADD
 			$display("Data:: Write/Read MATCHED. Address: %0h, DUT_Out: %0h, Exp_Out: %0h, Time: %0t", addr, dout, exp_dout,$time);
 endtask
 
-task compare_RAM2(input reg [RAM2_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM2_ADDR_WIDTH-1:0] addr, input reg parity);
+task compare_RAM2(input bit [RAM2_DATA_WIDTH-1:0] dout, exp_dout, input bit [RAM2_ADDR_WIDTH-1:0] addr, input bit parity);
 	if (RAM2_PARITY_WIDTH < 1 && parity == 1)
 		exp_dout = 0;
 	if(dout !== exp_dout) begin

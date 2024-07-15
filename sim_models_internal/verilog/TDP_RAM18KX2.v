@@ -168,13 +168,12 @@ module TDP_RAM18KX2 #(
             `endif
           end
         end
-        else begin
-          `ifdef SIM_VERILATOR
-            RPARITY_A1 = 2'bx;
-          `else
+        else
+          `ifndef FIFO
+            // verilator lint_off BLKANDNBLK
             RPARITY_A1 <= 2'bx;
+            // verilator lint_on BLKANDNBLK
           `endif
-        end
 
       always @(posedge CLK_B1)
         if (WEN_B1) begin
@@ -212,13 +211,12 @@ module TDP_RAM18KX2 #(
             `endif
           end
         end
-        else begin
-          `ifdef SIM_VERILATOR
-            RPARITY_B1 = 2'bx;
-          `else    
+        else
+          `ifndef FIFO
+            // verilator lint_off BLKANDNBLK
             RPARITY_B1 <= 2'bx;
+            // verilator lint_on BLKANDNBLK
           `endif
-        end         
     end
   endgenerate
 
@@ -282,13 +280,12 @@ module TDP_RAM18KX2 #(
       #collision_window;
       collision_a_read_flag = 0;
     end
-    else begin
-      `ifdef SIM_VERILATOR
-        RDATA_A1 = 16'bx;
-      `else
+    else
+      `ifndef FIFO
+        // verilator lint_off BLKANDNBLK
         RDATA_A1 <= 16'bx;
+        // verilator lint_on BLKANDNBLK
       `endif
-    end
 
   always @(posedge CLK_B1)
     if (WEN_B1) begin
@@ -336,13 +333,12 @@ module TDP_RAM18KX2 #(
       #collision_window;
       collision_b_read_flag = 0;
     end
-    else begin
-      `ifdef SIM_VERILATOR
-        RDATA_B1 = 16'bx;
-      `else
+    else
+      `ifndef FIFO
+        // verilator lint_off BLKANDNBLK
         RDATA_B1 <= 16'bx;
+        // verilator lint_on BLKANDNBLK
       `endif
-    end
 
   // Collision checking
     always @(posedge collision_a_write_flag) begin
@@ -483,13 +479,12 @@ module TDP_RAM18KX2 #(
             `endif
           end
         end
-        else begin
-          `ifdef SIM_VERILATOR
-            RPARITY_A2 = 2'bx;
-          `else
+        else
+          `ifndef FIFO
+            // verilator lint_off BLKANDNBLK
             RPARITY_A2 <= 2'bx;
+            // verilator lint_on BLKANDNBLK
           `endif
-        end
 
       always @(posedge CLK_B2)
         if (WEN_B2) begin
@@ -527,13 +522,12 @@ module TDP_RAM18KX2 #(
             `endif
           end
         end
-        else begin
-          `ifdef SIM_VERILATOR
-            RPARITY_B2 = 2'bx;
-          `else
+        else
+          `ifndef FIFO
+            // verilator lint_off BLKANDNBLK
             RPARITY_B2 <= 2'bx;
-          `endif    
-        end      
+            // verilator lint_on BLKANDNBLK
+          `endif
     end
   endgenerate
 
@@ -597,13 +591,12 @@ module TDP_RAM18KX2 #(
       #collision_window;
       collision_a2_read_flag = 0;
     end
-    else begin
-      `ifdef SIM_VERILATOR
-        RDATA_A2 = 16'bx;
-      `else
+    else
+      `ifndef FIFO
+        // verilator lint_off BLKANDNBLK
         RDATA_A2 <= 16'bx;
+        // verilator lint_on BLKANDNBLK
       `endif
-    end
 
   always @(posedge CLK_B2)
     if (WEN_B2) begin
@@ -651,13 +644,12 @@ module TDP_RAM18KX2 #(
       #collision_window;
       collision_b2_read_flag = 0;
     end
-    else begin
-      `ifdef SIM_VERILATOR
-        RDATA_B2 = 16'bx;
-      `else
+    else
+      `ifndef FIFO
+        // verilator lint_off BLKANDNBLK
         RDATA_B2 <= 16'bx;
+        // verilator lint_on BLKANDNBLK
       `endif
-    end
 
     // Collision checking
     always @(posedge collision_a2_write_flag) begin
@@ -852,8 +844,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_A1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_A1);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_A1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_A1);
       end
     endcase
     case(WRITE_WIDTH_B1)
@@ -863,8 +854,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_B1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_B1);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_B1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_B1);
       end
     endcase
     case(READ_WIDTH_A1)
@@ -874,8 +864,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_A1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_A1);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_A1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_A1);
       end
     endcase
     case(READ_WIDTH_B1)
@@ -885,8 +874,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_B1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_B1);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_B1 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_B1);
       end
     endcase
     case(WRITE_WIDTH_A2)
@@ -896,8 +884,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_A2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_A2);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_A2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_A2);
       end
     endcase
     case(WRITE_WIDTH_B2)
@@ -907,8 +894,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_B2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_B2);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter WRITE_WIDTH_B2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", WRITE_WIDTH_B2);
       end
     endcase
     case(READ_WIDTH_A2)
@@ -918,8 +904,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_A2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_A2);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_A2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_A2);
       end
     endcase
     case(READ_WIDTH_B2)
@@ -929,8 +914,7 @@ module TDP_RAM18KX2 #(
       9 ,
       18: begin end
       default: begin
-        $display("\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_B2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_B2);
-        #1 $stop ;
+        $fatal(1,"\nError: TDP_RAM18KX2 instance %m has parameter READ_WIDTH_B2 set to %d.  Valid values are 1, 2, 4, 9, 18\n", READ_WIDTH_B2);
       end
     endcase
 

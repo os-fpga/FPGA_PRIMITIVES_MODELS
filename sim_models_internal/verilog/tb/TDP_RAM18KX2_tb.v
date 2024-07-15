@@ -691,7 +691,7 @@ begin
 end
 endtask
 
-task compare(input reg [RAM1_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM1_ADDR_WIDTH-1:0] addr, input reg parity);
+task compare(input bit [RAM1_DATA_WIDTH-1:0] dout, exp_dout, input bit [RAM1_ADDR_WIDTH-1:0] addr, input bit parity);
 	if (RAM1_PARITY_WIDTH < 1 && parity == 1)
 		exp_dout = 0;
 	if(dout !== exp_dout) begin
@@ -708,7 +708,7 @@ task compare(input reg [RAM1_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM1_ADD
 			$display("Data:: Write/Read MATCHED. Address: %0h, DUT_Out: %0h, Exp_Out: %0h, Time: %0t", addr, dout, exp_dout,$time);
 endtask
 
-task compare_RAM2(input reg [RAM2_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM2_ADDR_WIDTH-1:0] addr, input reg parity);
+task compare_RAM2(input bit [RAM2_DATA_WIDTH-1:0] dout, exp_dout, input bit [RAM2_ADDR_WIDTH-1:0] addr, input bit parity);
 	if (RAM2_PARITY_WIDTH < 1 && parity == 1)
 		exp_dout = 0;
 	if(dout !== exp_dout) begin
