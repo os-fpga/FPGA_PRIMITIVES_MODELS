@@ -31,10 +31,10 @@ module TDP_RAM36K_tb();
 	/* verilator lint_off WIDTHCONCAT */
   parameter [4095:0] INIT_PARITY = {4096{1'b0}}; // Initial Contents of memory
 	/* verilator lint_on WIDTHCONCAT */
-  parameter WRITE_WIDTH_A = 36; // Write data width on port A (1-36)
-  parameter READ_WIDTH_A = 	36; // Read data width on port A (1-36)
-  parameter WRITE_WIDTH_B = 36; // Write data width on port B (1-36)
-  parameter READ_WIDTH_B = 	36; // Read data width on port B (1-36)
+  parameter WRITE_WIDTH_A = 18; // Write data width on port A (1-36)
+  parameter READ_WIDTH_A = 	18; // Read data width on port A (1-36)
+  parameter WRITE_WIDTH_B = 18; // Write data width on port B (1-36)
+  parameter READ_WIDTH_B = 	18; // Read data width on port B (1-36)
 
 	//Local_RAM
   localparam A_DATA_WRITE_WIDTH = calc_data_width(WRITE_WIDTH_A);
@@ -160,7 +160,7 @@ tdp_ram36k_inst
 
 `ifdef VCD
 	initial begin
-		$dumpfile("TDP_RAM36K.vcd");
+		$dumpfile("wave.vcd");
 		$dumpvars;
 	end
 `endif
@@ -576,7 +576,7 @@ begin
 			$display("");
 			$display("");	
 			$display("----------------------------------------------");
-      	$display("                 Test Passed                  ");
+      $display("                 Test Passed                  ");
 			$display("----------------------------------------------");
     end
     else   
@@ -612,7 +612,7 @@ begin
 end
 endtask
 
-task compare(input reg [RAM_DATA_WIDTH-1:0] dout, exp_dout, input reg [RAM_ADDR_WIDTH-1:0] addr, input reg parity);
+task compare(input bit [RAM_DATA_WIDTH-1:0] dout, exp_dout, input bit [RAM_ADDR_WIDTH-1:0] addr, input bit parity);
 	if (RAM_PARITY_WIDTH < 1 && parity == 1)
 		exp_dout = 0;
 	if(dout !== exp_dout) begin
