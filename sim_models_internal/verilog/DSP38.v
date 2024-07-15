@@ -297,14 +297,14 @@ module DSP38 #(
 	// If ACC_FIR is greater than 43, result is invalid
 	always @(ACC_FIR)
 		if (ACC_FIR > 43)
-			$display("WARNING: DSP38 instance %m ACC_FIR input is %d which is greater than 43 which serves no function", ACC_FIR);
+			$fatal(1,"\nWARNING: DSP38 instance %m ACC_FIR input is %d which is greater than 43 which serves no function", ACC_FIR);
 
 	always@(*) 
 	begin
 		case(DSP_MODE)
 			"MULTIPLY_ACCUMULATE": begin  
 				if(FEEDBACK>1)
-					$display("\nWARNING: DSP38 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
+					$fatal(1,"\nWARNING: DSP38 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
 			end
 		endcase
 		
@@ -316,24 +316,21 @@ module DSP38 #(
       "MULTIPLY_ADD_SUB" ,
       "MULTIPLY_ACCUMULATE": begin end
       default: begin
-        $display("\nError: DSP38 instance %m has parameter DSP_MODE set to %s.  Valid values are MULTIPLY, MULTIPLY_ADD_SUB, MULTIPLY_ACCUMULATE\n", DSP_MODE);
-        #1 $stop ;
+        $fatal(1,"\nError: DSP38 instance %m has parameter DSP_MODE set to %s.  Valid values are MULTIPLY, MULTIPLY_ADD_SUB, MULTIPLY_ACCUMULATE\n", DSP_MODE);
       end
     endcase
     case(OUTPUT_REG_EN)
       "TRUE" ,
       "FALSE": begin end
       default: begin
-        $display("\nError: DSP38 instance %m has parameter OUTPUT_REG_EN set to %s.  Valid values are TRUE, FALSE\n", OUTPUT_REG_EN);
-        #1 $stop ;
+        $fatal(1,"\nError: DSP38 instance %m has parameter OUTPUT_REG_EN set to %s.  Valid values are TRUE, FALSE\n", OUTPUT_REG_EN);
       end
     endcase
     case(INPUT_REG_EN)
       "TRUE" ,
       "FALSE": begin end
       default: begin
-        $display("\nError: DSP38 instance %m has parameter INPUT_REG_EN set to %s.  Valid values are TRUE, FALSE\n", INPUT_REG_EN);
-        #1 $stop ;
+        $fatal(1,"\nError: DSP38 instance %m has parameter INPUT_REG_EN set to %s.  Valid values are TRUE, FALSE\n", INPUT_REG_EN);
       end
     endcase
 
