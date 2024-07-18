@@ -80,3 +80,7 @@ parameters:
         - 90
         - 180
         - 270
+
+control_signal_map:
+   CLK_EN: f2g_tx_clk_en
+   OUTPUT_CLK: g2i_tx_clk

@@ -106,3 +106,14 @@ parameters:
         - NONE
         - DPA
         - CDR
+
+control_signal_map:
+   RST: f2g_rx_reset_n
+   BITSLIP_ADJ: f2g_rx_bitslip_adj
+   EN: f2g_in_en
+   CLK_IN: f2g_rx_core_clk
+   CLK_OUT: g2f_core_clk
+   Q[WIDTH-1:0]: g2f_rx_in
+   DATA_VALID: g2f_rx_dvalid
+   DPA_LOCK: g2f_rx_dpa_lock
+   DPA_ERROR: g2f_rx_dpa_error
