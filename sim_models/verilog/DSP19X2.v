@@ -381,13 +381,13 @@ module DSP19X2 #(
 	always @(ACC_FIR)
 		if (ACC_FIR > 21)
 		begin
-			$display("WARNING: DSP19x2 instance %m ACC_FIR input is %d which is greater than 21 which serves no function", ACC_FIR);
+			$fatal(1,"WARNING: DSP19x2 instance %m ACC_FIR input is %d which is greater than 21 which serves no function", ACC_FIR);
 		end
 	// If SHIFT_RIGHT is greater than 31, result is invalid
 	always @(SHIFT_RIGHT)
 		if (SHIFT_RIGHT > 31)
 		begin
-			$display("WARNING: DSP19x2 instance %m SHIFT_RIGHT input is %d which is greater than 31 which serves no function", SHIFT_RIGHT);
+			$fatal(1,"WARNING: DSP19x2 instance %m SHIFT_RIGHT input is %d which is greater than 31 which serves no function", SHIFT_RIGHT);
 		end
 	
 	always@(*) 
@@ -395,7 +395,7 @@ module DSP19X2 #(
 		case(DSP_MODE)
 			"MULTIPLY_ACCUMULATE": begin  
 				if(FEEDBACK>1)
-					$display("\nWARNING: DSP19x2 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
+					$fatal(1,"\nWARNING: DSP19x2 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
 			end
 		endcase
 		

@@ -297,14 +297,14 @@ module DSP38 #(
 	// If ACC_FIR is greater than 43, result is invalid
 	always @(ACC_FIR)
 		if (ACC_FIR > 43)
-			$display("\nWARNING: DSP38 instance %m ACC_FIR input is %d which is greater than 43 which serves no function", ACC_FIR);
+			$fatal(1,"\nWARNING: DSP38 instance %m ACC_FIR input is %d which is greater than 43 which serves no function", ACC_FIR);
 
 	always@(*) 
 	begin
 		case(DSP_MODE)
 			"MULTIPLY_ACCUMULATE": begin  
 				if(FEEDBACK>1)
-					$display("\nWARNING: DSP38 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
+					$fatal(1,"\nWARNING: DSP38 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
 			end
 		endcase
 		
