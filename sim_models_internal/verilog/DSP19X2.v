@@ -376,30 +376,31 @@ module DSP19X2 #(
 	assign DLY_B1 = (DSP_MODE== "MULTIPLY_ADD_SUB")?dly_b1:9'dx;
 	assign DLY_B2 = (DSP_MODE== "MULTIPLY_ADD_SUB")?dly_b2:9'dx;
 
-
-	// If ACC_FIR is greater than 21, result is invalid
-	always @(ACC_FIR)
-		if (ACC_FIR > 21)
-		begin
-			$display("WARNING: DSP19x2 instance %m ACC_FIR input is %d which is greater than 21 which serves no function", ACC_FIR);
-		end
-	// If SHIFT_RIGHT is greater than 31, result is invalid
-	always @(SHIFT_RIGHT)
-		if (SHIFT_RIGHT > 31)
-		begin
-			$display("WARNING: DSP19x2 instance %m SHIFT_RIGHT input is %d which is greater than 31 which serves no function", SHIFT_RIGHT);
-		end
-	
-	always@(*) 
-	begin
-		case(DSP_MODE)
-			"MULTIPLY_ACCUMULATE": begin  
-				if(FEEDBACK>1)
-					$display("\nWARNING: DSP19x2 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
+	`ifndef SYNTHESIS
+		// If ACC_FIR is greater than 21, result is invalid
+		always @(ACC_FIR)
+			if (ACC_FIR > 21)
+			begin
+				$fatal(1,"\nERROR: DSP19x2 instance %m ACC_FIR input is %d which is greater than 21 which serves no function", ACC_FIR);
 			end
-		endcase
+		// If SHIFT_RIGHT is greater than 31, result is invalid
+		always @(SHIFT_RIGHT)
+			if (SHIFT_RIGHT > 31)
+			begin
+				$fatal(1,"\nERROR: DSP19x2 instance %m SHIFT_RIGHT input is %d which is greater than 31 which serves no function", SHIFT_RIGHT);
+			end
 		
-	end
+		always@(*) 
+		begin
+			case(DSP_MODE)
+				"MULTIPLY_ACCUMULATE": begin  
+					if(FEEDBACK>1)
+						$fatal(1,"\nERROR: DSP19x2 instance %m has parameter DSP_MODE set to %s and FEEDBACK set to %0d. Valid values of FEEDBACK for this mode are 0,1 \n", DSP_MODE,FEEDBACK);
+				end
+			endcase
+
+		end
+	`endif //  `ifndef SYNTHESIS
 
  initial begin
     case(DSP_MODE)

@@ -4,7 +4,7 @@
 // O_FAB simulation model
 // Marker Buffer for fabric to periphery transition
 //
-// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
 //
 
 module O_FAB (
