@@ -4,7 +4,7 @@
 // I_FAB simulation model
 // Marker Buffer for periphery to fabric transition
 //
-// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+// Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
 //
 
 module I_FAB (
