@@ -368,10 +368,10 @@ def diff_copy_parse(src_path, dest_path):
             dest = dest_path + "tb"
             copy_files(src,dest)        
 
-        if "sim_models_internal" in src_path:
-            src = src_path + "inc"
-            dest = dest_path + "inc"
-            copy_files(src,dest)        
+#        if "sim_models_internal" in src_path:
+#            src = src_path + "inc"
+#            dest = dest_path + "inc"
+#            copy_files(src,dest)        
 
     
 #    print("sim_list", len(sim_fail_list), "parse_list", len(parse_list_fail))
@@ -483,18 +483,24 @@ def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim
     # Specify the file path where you want to save the list
 
     # Open the file in write mode and write the list of strings
+
+    
+    if len(no_tb_list) > 0:
+        with open("no_tb.txt", "w") as file:
+            for string in no_tb_list:
+                file.write(string + " ")
     if len(parse_fail) > 0:
         with open("Port_mismatch.txt", "w") as file:
             for string in parse_fail:
-                file.write(string + "\n")
+                file.write(string + " ")
     if len(new_prim_found) > 0:
         with open("new_prim.txt", "w") as file:
             for string in new_prim_found:
-                file.write(string + "\n")
+                file.write(string + " ")
     if len(fail_list) > 0:
         with open("Fail_prim.txt", "w") as file:
             for string in fail_list:
-                file.write(string + "\n")
+                file.write(string + " ")
     if len(sim_pass_list) > 0:
         with open("Pass_prim.txt", "w") as file:
             for string in sim_pass_list:
