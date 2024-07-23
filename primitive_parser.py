@@ -222,18 +222,21 @@ def is_directory_empty(directory):
 
 def run_simulation_makefile(dest_path, design_name, tb_directory):
  #   tb_directory = f"{dest_path}" + "/" + f"{design_name}/tb"
-    if not is_directory_empty(tb_directory):
-        try:
-            print("tb directory found", design_name, dest_path)
-#            make_command = ["make", f"DESIGN_NAME={design_name}"]
-            make_command = f"make  SRC_DIR={dest_path} DESIGN_NAME={design_name} TB_DIR={tb_directory}" 
-            print("make command here ", make_command)
-            result = subprocess.check_output(make_command, stderr=subprocess.STDOUT, text=True, shell=True)
-            return True
-        except subprocess.CalledProcessError as e:
-            error_message = f"Command failed with error:\n{e.output}"
-            print(error_message)
-            return False
+    if not os.path.isdir(tb_directory):
+        print("TB directory does not exist", tb_directory)
+    else:
+        if not is_directory_empty(tb_directory):
+            try:
+                print("tb directory found", design_name, dest_path)
+#                make_command = ["make", f"DESIGN_NAME={design_name}"]
+                make_command = f"make  SRC_DIR={dest_path} DESIGN_NAME={design_name} TB_DIR={tb_directory}" 
+                print("make command here ", make_command)
+                result = subprocess.check_output(make_command, stderr=subprocess.STDOUT, text=True, shell=True)
+                return True
+            except subprocess.CalledProcessError as e:
+                error_message = f"Command failed with error:\n{e.output}"
+                print(error_message)
+                return False
         
 
 def copy_files(source_dir, destination_dir):
@@ -278,6 +281,7 @@ def diff_copy_parse(src_path, dest_path):
     sim_fail_list = []
     sim_pass_list = []
     old_list = []
+    no_tb_list = []
 
 #    old_prim_set = set(collect_old_primitives(dest_path))
     new_prim_set = set(new_prim_name_list)
@@ -308,14 +312,17 @@ def diff_copy_parse(src_path, dest_path):
         file_path2 = os.path.join(subdirectory , f"{module_name}.v")
         print("file_path1=",file_path1, "file_path2=", file_path2)
 
-        tb_directory = f"{dest_path}/../../tb/{module_name}"
+        tb_directory = f"{dest_path}../../tb/{module_name}"
 
+        print(" ------   tb_directory    ----",   tb_directory)
 #        print("comparison here", ports , params)
 
         copy_module_files(subdirectory, dest_path, module_name)
         print("File copied")
         diff , diff_result = check_git_diff(file_path1, module_name)
         print("---------------Diff-----------------------------", diff)
+
+        
 #        parse ports and parameters
         if diff:
             ports, params = parse_primitves(file_path1,file_path2)
@@ -328,19 +335,23 @@ def diff_copy_parse(src_path, dest_path):
 #            copy_module_files(subdirectory, dest_path, module_name)
 
             sim_out_file = dest_path + "../../" + "sim_results" +  "/" + module_name  + "_sim_out.log"
-            if not is_directory_empty(tb_directory):
-                result = run_simulation_makefile(dest_path, module_name,tb_directory)
-                print("sim_out_file",sim_out_file)
-                if result:
-                    print("Simulation ran")
-                    sim_status = check_simulation_success(sim_out_file)
-                    print("sim_status = ",sim_status)
-                    if sim_status:
-                        sim_pass_list.append(dest_path + module_name + ".v")
-                        print("-------------------------------success----------------------------------", sim_pass_list)
-                    else:
-                        sim_fail_list.append(dest_path + module_name + ".v")
-                        print("-------------------------------Failure----------------------------------", sim_fail_list)
+            if not os.path.isdir(tb_directory):
+                print("TB directory does not exist", tb_directory)
+                no_tb_list.append(dest_path + module_name + ".v")
+            else:
+                if not is_directory_empty(tb_directory):
+                    result = run_simulation_makefile(dest_path, module_name,tb_directory)
+                    print("sim_out_file",sim_out_file)
+                    if result:
+                        print("Simulation ran")
+                        sim_status = check_simulation_success(sim_out_file)
+                        print("sim_status = ",sim_status)
+                        if sim_status:
+                            sim_pass_list.append(dest_path + module_name + ".v")
+                            print("-------------------------------success----------------------------------", sim_pass_list)
+                        else:
+                            sim_fail_list.append(dest_path + module_name + ".v")
+                            print("-------------------------------Failure----------------------------------", sim_fail_list)
         src = src_path + "../../blackbox_models"
         dest = dest_path + "../../blackbox_models"
         copy_files(src,dest)
@@ -365,9 +376,9 @@ def diff_copy_parse(src_path, dest_path):
     
 #    print("sim_list", len(sim_fail_list), "parse_list", len(parse_list_fail))
 
-    return sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result
+    return no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result
 
-def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,release,diff_bb, diff_result,release_path):
+def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,release,diff_bb, diff_result,release_path):
 
     release_num = release
     fail_list = sim_fail_list
@@ -378,6 +389,17 @@ def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,rele
 
     email_content = f"""Hi owner,
     Find below the summary of the release {release_num}:
+    """
+
+    email_content_0 = f"""
+
+    Some primitives from release: {release_num} do not have testbench available.
+
+    Primitive name :
+    {no_tb_list}
+
+    Examine the primitive and take appropriate action.
+
     """
 
     email_content_1 = f"""
@@ -426,6 +448,7 @@ def email_dump(sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,rele
 
     # Define your conditions and corresponding email content
     conditions_content_pairs = [
+        (len(no_tb_list) > 0, email_content_0),
         (len(sim_pass_list) > 0, email_content_4),
         (len(parse_list_fail) > 0, email_content_1),
         (len(new_prim_found) > 0, email_content_2),
@@ -490,10 +513,10 @@ def main():
 
     if (check_release(args.src)):
         print("Release exist")
-        sim_list, sim_pass_list, parse_list ,new_prim_found , diff_bb , diff_result = diff_copy_parse(args.src, args.dest)
+        no_tb_list, sim_list, sim_pass_list, parse_list ,new_prim_found , diff_bb , diff_result = diff_copy_parse(args.src, args.dest)
         sim_pass_list
         print("sim_list", len(sim_list), "sim_pass_list", sim_pass_list,"parse_list", len(parse_list))
-        email_dump(sim_list,parse_list, sim_pass_list,new_prim_found,args.release, diff_bb, diff_result, True)
+        email_dump(no_tb_list, sim_list,parse_list, sim_pass_list,new_prim_found,args.release, diff_bb, diff_result, True)
     else:
         print("Release do not exist")
         email_dump([],[],[],[],args.release, "No diff found in blackbox", False, False)
