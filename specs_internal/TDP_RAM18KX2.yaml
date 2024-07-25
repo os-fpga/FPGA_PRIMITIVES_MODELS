@@ -127,9 +127,11 @@ ports:
    CLK_A2:
      dir: input
      desc: Clock port A, RAM 2
+     bb_attributes: clkbuf_sink
    CLK_B2:
      dir: input
      desc: Clock port B, RAM 2
+     bb_attributes: clkbuf_sink
    BE_A2[1:0]:
      dir: input
      desc: Byte-write enable port A, RAM 2

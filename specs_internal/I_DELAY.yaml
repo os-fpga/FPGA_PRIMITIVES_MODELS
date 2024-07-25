@@ -89,3 +89,8 @@ parameters:
       default: 0
       range: 0 .. 63
 
+control_signal_map:
+    DLY_LOAD: f2g_rx_dly_ld
+    DLY_ADJ: f2g_rx_dly_adj
+    DLY_INCDEC: f2g_rx_dly_inc
+    DLY_TAP_VALUE: g2f_rx_dly_tap

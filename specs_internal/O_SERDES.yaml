@@ -96,3 +96,11 @@ parameters:
       type: integer
       default: 4
       range: 3 .. 10
+
+control_signal_map:
+   RST: f2g_tx_reset_n
+   DATA_VALID: f2g_tx_dvalid
+   CLK_IN: f2g_tx_core_clk
+   OE_IN: f2g_tx_oe
+   OE_OUT: g2i_tx_oe
+   Q: g2i_tx_out

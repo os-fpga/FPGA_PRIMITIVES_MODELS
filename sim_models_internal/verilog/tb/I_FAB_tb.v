@@ -21,22 +21,22 @@ module I_FAB_tb;
     I = 1;
     for(int i=0;i<=63;i++)
 	begin
-    #3;
+        #3;
 		I = $urandom;
-    #1;
+        #1;
 		if(O!==I)
-      error++;
+            error++;
 	end
 
     if(error===0)
-        $display("I_FAB Test Passed");
+        $display("I_FAB TEST PASSED");
     else
-        $error("I_FAB Test Failed");
+        $error("I_FAB TEST FAILED");
             
   end
   initial 
   begin
-      $dumpfile("I_FAB.vcd");
+      $dumpfile("waves.vcd");
       $dumpvars;
   end
 
