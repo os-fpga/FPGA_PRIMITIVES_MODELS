@@ -352,21 +352,23 @@ def diff_copy_parse(src_path, dest_path):
                         else:
                             sim_fail_list.append(dest_path + module_name + ".v")
                             print("-------------------------------Failure----------------------------------", sim_fail_list)
-        src = src_path + "../../blackbox_models"
-        dest = dest_path + "../../blackbox_models"
-        copy_files(src,dest)
-        diff_bb = "  "
-        diff_bb , diff_result = check_git_diff(dest, "cell_sim_blackbox.v")
-        print("---------------Diff of blackbox----------------------", diff)
-        src = src_path + "../../specs_internal"
-        dest = dest_path + "../../specs_internal"
-        copy_files(src,dest)        
+    src = src_path + "../../blackbox_models"
+    dest = dest_path + "../../blackbox_models"
+    print("Blackbox files")
+    copy_files(src,dest) 
+    diff_bb = "  "
+    diff_bb , diff_result = check_git_diff(dest, "cell_sim_blackbox.v")
+    print("---------------Diff of blackbox----------------------", diff)
+    src = src_path + "../../specs_internal"
+    dest = dest_path + "../../specs_internal"
+    print("Specs")
+    copy_files(src,dest)        
 
-    
-        if "sim_models_internal" in src_path:
-            src = src_path + "tb"
-            dest = dest_path + "tb"
-            copy_files(src,dest)        
+    if "sim_models" in src_path:
+        src = src_path + "../tb"
+        dest = dest_path + "../tb"
+        print("Testbench files")
+        copy_files(src,dest)        
 
 #        if "sim_models_internal" in src_path:
 #            src = src_path + "inc"
