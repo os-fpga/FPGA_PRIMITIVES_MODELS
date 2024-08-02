@@ -5,10 +5,6 @@ on:
   repository_dispatch:
     types: [digest_latest_Release]
 
-env:
-    internal_model_path: "sim_models_internal/verilog/*.v sim_models_internal/verilog/*/*.v blackbox_models/*.v  tb/*/*.v   tb/*/*.sv specs_internal/*.yaml"
-    external_model_path: "sim_models/verilog/*.v"  
-
 jobs:
   SIM_Model_Digest_and_test_internal:
     runs-on: ubuntu-latest
@@ -21,6 +17,7 @@ jobs:
         scenarios:
         - pass
         - fail
+        - no_tb
     env:
       MODE: ${{ matrix.scenarios }}
 
@@ -75,12 +72,12 @@ jobs:
       
     - name: find the diff
       run: |
-            python3 primitive_parser.py --src=./../sim_models_internal/verilog/ --dest=./sim_models_internal/verilog/ --release=${{ github.event.client_payload.new_release }}
+            python3 primitive_parser.py --src=./../sim_models/verilog/ --dest=./sim_models/verilog/ --release=${{ github.event.client_payload.new_release }}
 
-    - name: reverse the opposite changes
+    - name: File to push
       id: do_push
       run: |
-        # logic: in case of pass, pass the file list from dump by python script to git add while in fail pass the same list to git checkout
+        # logic: in each case, look for file dump by python script 
         case "${{ matrix.scenarios }}" in
             "pass")
                 echo "updates are from ${{ matrix.scenarios }}"
@@ -95,30 +92,28 @@ jobs:
                 ;;
             "fail")
                 echo "updates are from ${{ matrix.scenarios }}"
-                passfile="Pass_prim.txt"
-                if [ -f "$passfile" ]; then
-                   echo "Pass file found"
-                   all_files=`cat $passfile`
+                failfile="Fail_prim.txt"
+                if [ -f "$failfile" ]; then
+                   echo "Fail file found"
+                   all_files=`cat $failfile`
                    echo $all_files
-                   # revert the changes that are passing so we have all failing files only
-                   git checkout $all_files
-                    if [ $? -eq 0 ]; then
-                        echo "Checkout successful."
-                    else
-                        echo "Checkout failed for file: $passfile"
-                    fi
-                fi
-                echo "path_to_commit=${{ env.internal_model_path}}" >> $GITHUB_ENV
-                any_change=`git status --porcelain ${{ env.internal_model_path}}`
-                if [ ! -z "$any_change" ]
-                then
-                    echo "has_changed=true" >> $GITHUB_OUTPUT
-                fi
+                  echo "path_to_commit=$all_files" >> $GITHUB_ENV
+                  echo "has_changed=true" >> $GITHUB_OUTPUT 
+                ;;
+            "no_tb")
+                echo "updates are from ${{ matrix.scenarios }}"
+                noTBfile="no_tb.txt"
+                if [ -f "$noTBfile" ]; then
+                   echo "no tb file found"
+                   all_files=`cat $noTbfile`
+                   echo $all_files
+                  echo "path_to_commit=$all_files" >> $GITHUB_ENV
+                  echo "has_changed=true" >> $GITHUB_OUTPUT 
                 ;;
             *)
                 echo "Invalid value: ${{ matrix.scenarios }}"
                 ;;
-        esac          
+           esac          
 
     - name: cat email.txt
       if: success() || failure()
@@ -145,8 +140,12 @@ jobs:
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
-                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
+                  #echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
+                  ;;
+              "no_tb")
+                  echo "updates are from ${{ matrix.scenarios }}"
+                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               *)
                   echo "Invalid value: ${{ matrix.scenarios }}"
@@ -177,7 +176,7 @@ jobs:
         name: NadeemYaseen
         commit_message: Added SIM change files from ${{ github.event.client_payload.new_release }}
         files: "${{ env.path_to_commit }}"
-        target_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_internal
+        target_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}
         access_token: ${{ secrets.SIM_MODEL_DOWNLOAD }}
         force: true
 
@@ -186,12 +185,12 @@ jobs:
       if: ${{ matrix.scenarios == 'pass' && steps.do_push.outputs.has_changed == 'true' }}
       uses: repo-sync/pull-request@v2
       with:
-          source_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_internal                                # branch having xmls files
+          source_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}    # branch having xmls files
           destination_branch: "main"                                                                   # name of branch on which PR go
           pr_title: "Pulling SIMs release ${{ github.event.client_payload.new_release }} into main. "               # Title of pull request
           pr_body: "An automated PR to check in New SIMs Release. Click on the link to see regression results ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"                              # Full markdown support, requires pr_title
-          #pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
-          pr_reviewer: "ashrafnisar"
+          pr_reviewer: "bilal458"                                                         # Comma-separated list (no spaces)
+          #pr_reviewer: "ashrafnisar"
           pr_assignee: "NadeemYaseen"                                                  # Comma-separated list (no spaces)
           pr_label: "openfpga_castor_pd_sim"                                             # Comma-separated list (no spaces)
           pr_allow_empty: true                                                            # Creates pull request even if there are no changes
@@ -205,199 +204,14 @@ jobs:
           server_port: ${{secrets.MAIL_SERVERPORT}}
           username: ${{secrets.MAIL_USERNAME}}
           password: ${{secrets.MAIL_PASSWORD}}
-          subject: "${{ env.SUBJECT }} for release ${{ github.event.client_payload.new_release }}. Changes are in branch ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_internal"
+          subject: "${{ env.SUBJECT }} for release ${{ github.event.client_payload.new_release }}. Changes are in branch ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}"
           body:  file://email.txt
           #to: nadeem.yaseen@rapidsilicon.com
           to: "${{ env.email_ids }}"
           from: ${{secrets.MAIL_USERNAME}}
           #attachments: and2_verilog.tar.gz
 
-# --------------------------------------------------------------- #          
 
-  SIM_Model_Digest_and_test_external:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
-    strategy:
-      fail-fast: false
-      matrix:
-        scenarios:
-        - pass
-        - fail
-    env:
-      MODE: ${{ matrix.scenarios }}
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-        persist-credentials: false
-
-    - name: switch to branch
-      run: |
-            git branch -a 
-            BRANCH='${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_external'
-            set +e
-            git ls-remote --exit-code --heads origin $BRANCH >/dev/null 2>&1
-            EXIT_CODE=$?
-            if [[ $EXIT_CODE == '0' ]]; then
-                echo "Git branch '$BRANCH' exists in the remote repository"
-                main_last_commit=`git log -1 --pretty=format:"%H"`
-                git checkout $BRANCH
-                git pull origin $BRANCH
-                git reset --hard $main_last_commit
-            elif [[ $EXIT_CODE == '2' ]]; then
-                echo "Git branch '$BRANCH' does not exist in the remote repository"
-            fi
-
-    - name: Install Simulator
-      run: sudo apt install -y iverilog
-
-    - name: Download Latest Release
-      uses: robinraju/release-downloader@v1.9
-      with:
-        repository: "${{ secrets.SRC_RELEASE_REPO }}"
-        latest: true
-        fileName: "generic-*.tar.gz"
-        token: "${{ secrets.SIM_MODEL_DOWNLOAD }}"
-
-    - name:  Unzip Release
-      run: |
-          cd ..
-          echo "payload: ${{ github.event.client_payload.new_release }}"
-          for file in $(ls -1 $GITHUB_WORKSPACE/*.tar.gz)
-          do
-          echo $file
-          tar -xvf $file
-          done
-          ls -l 
-
-    - name: find the diff
-      run: |
-            python3 primitive_parser.py --src=./../sim_models/verilog/ --dest=./sim_models/verilog/ --release=${{ github.event.client_payload.new_release }}
-
-    - name: reverse the opposite changes
-      id: do_push
-      run: |
-        case "${{ matrix.scenarios }}" in
-            "pass")
-                echo "updates are from ${{ matrix.scenarios }}"
-                passfile="Pass_prim.txt"
-                if [ -f "$passfile" ]; then
-                   echo "Pass file found"
-                   all_files=`cat $passfile`
-                   echo "file to commit in case of pass are $all_files"
-                   echo "path_to_commit=$all_files" >> $GITHUB_ENV
-                   echo "has_changed=true" >> $GITHUB_OUTPUT
-                fi
-                ;;
-            "fail")
-                echo "updates are from ${{ matrix.scenarios }}"
-                passfile="Pass_prim.txt"
-                if [ -f "$passfile" ]; then
-                   echo "Pass file found"
-                   all_files=`cat $passfile`
-                   echo $all_files
-                   git checkout $all_files
-                   if [ $? -eq 0 ]; then
-                        echo "Checkout successful."
-                    else
-                        echo "Checkout failed for file: $passfile"
-                    fi 
-                fi
-                echo "path_to_commit=${{ env.external_model_path }}" >> $GITHUB_ENV
-                any_change=`git status --porcelain ${{ env.external_model_path }}`
-                if [ ! -z "$any_change" ]
-                then
-                    echo "has_changed=true" >> $GITHUB_OUTPUT
-                fi
-                ;;
-            *)
-                echo "Invalid value: ${{ matrix.scenarios }}"
-                ;;
-        esac          
-        
-    - name: cat email.txt
-      if: success() || failure()
-      id: pr_decision
-      run: |           
-           if [ -f email.txt ] 
-           then 
-              cat email.txt
-           else
-              echo "Kindly check your python script as it failed somewhere. Link to fail Github Action is ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> email.txt
-           fi
-
-           if [ -f subject.txt ]
-           then
-              cat subject.txt
-           else
-              echo "${{ github.repository }} Python Script failed to find the diff" >> subject.txt
-           fi
-
-           case "${{ matrix.scenarios }}" in
-              "pass")
-                  echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
-                  ;;
-              "fail")
-                  echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
-                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
-                  ;;
-              *)
-                  echo "Invalid value: ${{ matrix.scenarios }}"
-                  ;;
-            esac   
-
-    - name: show current status
-      run:
-          git status    
-
-    - name: Add and Push
-      if: contains(steps.do_push.outputs.has_changed, 'true')
-      uses: GuillaumeFalourd/git-commit-push@v1.3
-      with:
-        email: pu.engineerg@gmail.com
-        name: NadeemYaseen
-        commit_message: Added SIM change files from ${{ github.event.client_payload.new_release }}
-        files: "${{ env.path_to_commit }}"
-        target_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_external
-        access_token: ${{ secrets.SIM_MODEL_DOWNLOAD }}
-        force: true
-
-      # if all pass then create PR.          
-    - name: Create PR
-      if: ${{ matrix.scenarios == 'pass' && steps.do_push.outputs.has_changed == 'true' }}
-      uses: repo-sync/pull-request@v2
-      with:
-          source_branch: ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_external                                # branch having xmls files
-          destination_branch: "main"                                                                   # name of branch on which PR go
-          pr_title: "Pulling SIMs release ${{ github.event.client_payload.new_release }} into main. "               # Title of pull request
-          pr_body: "An automated PR to check in New SIMs Release. Click on the link to see regression results ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"                              # Full markdown support, requires pr_title
-          #pr_reviewer: "moinijaz"                                                         # Comma-separated list (no spaces)
-          pr_reviewer: "ashrafnisar"
-          pr_assignee: "NadeemYaseen"                                                  # Comma-separated list (no spaces)
-          pr_label: "openfpga_castor_pd_sim"                                             # Comma-separated list (no spaces)
-          pr_allow_empty: true                                                            # Creates pull request even if there are no changes
-          github_token: ${{ secrets.SIM_MODEL_DOWNLOAD }}
-
-    - name: Send Email
-      if: success() || failure()
-      uses: dawidd6/action-send-mail@v3.7.1
-      with:
-          server_address: ${{secrets.MAIL_SERVER}}
-          server_port: ${{secrets.MAIL_SERVERPORT}}
-          username: ${{secrets.MAIL_USERNAME}}
-          password: ${{secrets.MAIL_PASSWORD}}
-          subject: "${{ env.SUBJECT }} for release ${{ github.event.client_payload.new_release }}. Changes are in branch ${{ matrix.scenarios }}_sim_${{ github.event.client_payload.new_release }}_external"
-          body:  file://email.txt
-          #to: nadeem.yaseen@rapidsilicon.com
-          to: "${{ env.email_ids }}"
-          from: ${{secrets.MAIL_USERNAME}}
-          #attachments: and2_verilog.tar.gz   
 
 
 

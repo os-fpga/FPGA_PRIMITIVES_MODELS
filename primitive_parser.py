@@ -80,7 +80,7 @@ def copy_module_files(src_path, dest_path, module_name):
     src_file = os.path.join(src_path, f"{module_name}.v")
     dest_file = os.path.join(dest_path, f"{module_name}.v")
 
-#    print("src_file",src_file ,"dest_file", dest_file)
+    print("src_file",src_file ,"dest_file", dest_file)
 
     shutil.copyfile(src_file, dest_file)
 
@@ -178,11 +178,12 @@ def extract_module_params(code):
 
 
 def check_simulation_success(filename):
-  success_strings = ["Test Passed", "Simulation Passed", "Passed"]
+  success_strings = [ "Passed", "Test Passed", "Simulation Passed"]
   print("file_path", filename)
   success = False
   with open(filename, 'r') as file:
     for line in file:
+#      print(line)
       if any(success_string in line for success_string in success_strings):
         print("Simulation Successful:", line , "line here\n")
         success = True
@@ -288,12 +289,51 @@ def diff_copy_parse(src_path, dest_path):
     old_prim_set = set(old_prim_name_list)
     new_prim_list = list(new_prim_set - old_prim_set)
 
+    diff_prim_set = new_prim_set - old_prim_set
+    diff_prim_list = list(diff_prim_set)
+#    print("\n\n\n\nNew Primitve list\n\n\n\n",new_prim_set, new_name_list,"\n\n\n\n old Primitve list\n\n\n\n", old_prim_set, "\n\n----- ----------\n ----------\n",(new_prim_set-old_prim_set))
+
     prefix_string = dest_path
     postfix_string = ".v"
 
     # Use a list comprehension to modify each element
     new_prim_found = [prefix_string + item + postfix_string for item in new_prim_list]
 #    print("Here are three New primitves @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", new_prim_found, new_prim_set, old_prim_set)
+    src_tb = src_path + "../../blackbox_models"
+    dest_tb = dest_path + "../../blackbox_models"
+
+    for prims in diff_prim_list:
+        src_tb = os.path.join(src_path, "..", "tb", prims+ "_tb.v")
+        dest_tb = os.path.join(dest_path, "..", "..", "tb", prims.upper(), "")
+#        print(", \n\Src path \n\n", src_tb ,", \n\dest path \n\n", dest_tb)
+        os.makedirs(dest_tb, exist_ok=True)
+        shutil.copy(src_tb, dest_tb)
+#        copy_files(src_tb,dest_tb) 
+        tb_directory = f"{dest_path}../../tb/{prims}"
+        copy_module_files(subdirectory, dest_path, prims)
+
+        sim_out_file = dest_path + "../../" + "sim_results" +  "/" + prims  + "_sim_out.log"
+        if not os.path.isdir(tb_directory):
+            print("TB directory does not exist", tb_directory)
+            no_tb_list.append(dest_path + prims + ".v")
+        else:
+            if not is_directory_empty(tb_directory):
+                result = run_simulation_makefile(dest_path, prims,tb_directory)
+                print("Simulation ran for new Primitives: ", prims )
+                if os.path.exists(sim_out_file):
+                    print("sim log file found",sim_out_file )
+                    sim_status = check_simulation_success(sim_out_file)
+                    if sim_status:
+                        sim_pass_list.append(dest_path + prims + ".v")
+                        print("-------------------------------success ----------------------------------", sim_pass_list)
+                    else:
+                        sim_fail_list.append(dest_path + prims + ".v")
+                        print("-------------------------------Failure----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
+                else:
+                    sim_fail_list.append(dest_path + prims + ".v")
+                    print("-------------------------------Simulation Compilation failure----------------------------------")
+
+
 
     for prim_name in old_list:
         old_path1 = os.path.join(dest_path, f"{prim_name}.v")
@@ -301,7 +341,6 @@ def diff_copy_parse(src_path, dest_path):
         old_path2 = os.path.join(subdirectory , f"{prim_name}.v")
         if os.path.exists(old_path2):
             ports, params = parse_primitves(old_path1,old_path2)
-
 
     for module_name in new_prim_name_list:
         tb_directory = f"{dest_path}" + "/" + f"{module_name}/tb"
@@ -322,7 +361,25 @@ def diff_copy_parse(src_path, dest_path):
         diff , diff_result = check_git_diff(file_path1, module_name)
         print("---------------Diff-----------------------------", diff)
 
-        
+        sim_out_file = dest_path + "../../" + "sim_results" +  "/" + module_name  + "_sim_out.log"
+        if not os.path.isdir(tb_directory):
+            print("TB directory does not exist", tb_directory)
+            no_tb_list.append(dest_path + module_name + ".v")
+        else:
+            if not is_directory_empty(tb_directory):
+                result = run_simulation_makefile(dest_path, module_name,tb_directory)
+                print("Simulation ran for Primitive: ", module_name )
+                if os.path.exists(sim_out_file):
+                    print("sim log file found",sim_out_file )
+                    sim_status = check_simulation_success(sim_out_file)
+                    if sim_status:
+                           print("-------------------------------Simulation Success----------------------------------")
+                    else:
+                           print("-------------------------------Simulation Failure----------------------------------")
+                else:
+                    print("-------------------------------Simulation Compilation failure----------------------------------")
+
+
 #        parse ports and parameters
         if diff:
             ports, params = parse_primitves(file_path1,file_path2)
@@ -339,34 +396,39 @@ def diff_copy_parse(src_path, dest_path):
                 print("TB directory does not exist", tb_directory)
                 no_tb_list.append(dest_path + module_name + ".v")
             else:
-                if not is_directory_empty(tb_directory):
-                    result = run_simulation_makefile(dest_path, module_name,tb_directory)
-                    print("sim_out_file",sim_out_file)
-                    if result:
-                        print("Simulation ran")
-                        sim_status = check_simulation_success(sim_out_file)
-                        print("sim_status = ",sim_status)
-                        if sim_status:
-                            sim_pass_list.append(dest_path + module_name + ".v")
-                            print("-------------------------------success----------------------------------", sim_pass_list)
-                        else:
-                            sim_fail_list.append(dest_path + module_name + ".v")
-                            print("-------------------------------Failure----------------------------------", sim_fail_list)
-        src = src_path + "../../blackbox_models"
-        dest = dest_path + "../../blackbox_models"
-        copy_files(src,dest)
-        diff_bb = "  "
-        diff_bb , diff_result = check_git_diff(dest, "cell_sim_blackbox.v")
-        print("---------------Diff of blackbox----------------------", diff)
-        src = src_path + "../../specs_internal"
-        dest = dest_path + "../../specs_internal"
-        copy_files(src,dest)        
+                if sim_status:
+                    sim_pass_list.append(dest_path + module_name + ".v")
+                    print("-------------------------------success----------------------------------", sim_pass_list)
+                else:
+                    sim_fail_list.append(dest_path + module_name + ".v")
+                    print("-------------------------------Failure----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
+#                    result = run_simulation_makefile(dest_path, module_name,tb_directory)
+#                    print("sim_out_file",sim_out_file)
+#                    if result:
+#                        print("Simulation ran")
+#                        sim_status = check_simulation_success(sim_out_file)
+#                        print("sim_status = ",sim_status)
 
-    
-        if "sim_models_internal" in src_path:
-            src = src_path + "tb"
-            dest = dest_path + "tb"
-            copy_files(src,dest)        
+    src = src_path + "../../blackbox_models"
+    dest = dest_path + "../../blackbox_models"
+    print("Blackbox files")
+    copy_files(src,dest) 
+    diff_bb = "  "
+    diff_bb , diff_result = check_git_diff(dest, "cell_sim_blackbox.v")
+    print("---------------Diff of blackbox----------------------", diff)
+    src = src_path + "../../specs_internal"
+    dest = dest_path + "../../specs_internal"
+    print("Specs")
+    copy_files(src,dest)        
+
+    print("-------------------------------Failure list----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
+
+
+    if "sim_models" in src_path:
+        src = src_path + "../tb"
+        dest = dest_path + "../tb"
+        print("Testbench files")
+        copy_files(src,dest)        
 
 #        if "sim_models_internal" in src_path:
 #            src = src_path + "inc"
@@ -432,8 +494,8 @@ def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim
 
     Some primitives from release: {release_num} failed with the existing testbench. Kindly debug the failure and update accordingly.
 
-    Primitive name :
-    {fail_list}
+    SImulation/Compilation failure Primitive name :
+    {sim_fail_list}
     
     Examine the primitive and take appropriate action.
     """
@@ -452,7 +514,7 @@ def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim
         (len(sim_pass_list) > 0, email_content_4),
         (len(parse_list_fail) > 0, email_content_1),
         (len(new_prim_found) > 0, email_content_2),
-        (len(parse_list_fail) > 0, email_content_3)
+        (len(sim_fail_list) > 0, email_content_3)
     ]
     email_template = email_content
     # Use list comprehension to conditionally select content and join it

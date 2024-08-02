@@ -4,7 +4,7 @@
 DESIGN_NAME ?= DSP38
 
 # Directories
-SRC_DIR ?= ./sim_models_internal/verilog
+SRC_DIR ?= ./sim_models/verilog
 TB_DIR ?= ./tb/$(DESIGN_NAME)
 SIM_DIR = sim
 SIM_RESULTS_DIR = sim_results
