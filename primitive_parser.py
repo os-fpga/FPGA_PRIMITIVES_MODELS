@@ -315,7 +315,7 @@ def diff_copy_parse(src_path, dest_path):
         sim_out_file = dest_path + "../../" + "sim_results" +  "/" + prims  + "_sim_out.log"
         if not os.path.isdir(tb_directory):
             print("TB directory does not exist", tb_directory)
-            no_tb_list.append(dest_path + prims + ".v")
+#            no_tb_list.append(dest_path + prims + ".v")
         else:
             if not is_directory_empty(tb_directory):
                 result = run_simulation_makefile(dest_path, prims,tb_directory)
@@ -364,7 +364,7 @@ def diff_copy_parse(src_path, dest_path):
         sim_out_file = dest_path + "../../" + "sim_results" +  "/" + module_name  + "_sim_out.log"
         if not os.path.isdir(tb_directory):
             print("TB directory does not exist", tb_directory)
-            no_tb_list.append(dest_path + module_name + ".v")
+ #           no_tb_list.append(dest_path + module_name + ".v")
         else:
             if not is_directory_empty(tb_directory):
                 result = run_simulation_makefile(dest_path, module_name,tb_directory)
