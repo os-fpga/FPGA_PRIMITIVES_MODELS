@@ -106,6 +106,7 @@ jobs:
                 noTBfile="no_tb.txt"
                 if [ -f "$noTBfile" ]; then
                    echo "no tb file found"
+                   cat $noTBfile
                    all_files=`cat $noTbfile`
                    echo $all_files
                   echo "path_to_commit=$all_files" >> $GITHUB_ENV
