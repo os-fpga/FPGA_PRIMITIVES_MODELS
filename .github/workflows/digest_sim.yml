@@ -6,7 +6,7 @@ on:
     types: [digest_latest_Release]
 
 jobs:
-  SIM_Model_Digest_and_test_internal:
+  SIM_Model_Digest_and_test:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -105,9 +105,8 @@ jobs:
                 echo "updates are from ${{ matrix.scenarios }}"
                 noTBfile="no_tb.txt"
                 if [ -f "$noTBfile" ]; then
-                   echo "no tb file found"
-                   cat $noTBfile
-                   all_files=`cat $noTbfile`
+                   echo "no_tb file found"
+                   all_files=`cat $noTBfile`
                    echo $all_files
                   echo "path_to_commit=$all_files" >> $GITHUB_ENV
                   echo "has_changed=true" >> $GITHUB_OUTPUT
