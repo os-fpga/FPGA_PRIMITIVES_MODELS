@@ -167,7 +167,7 @@ jobs:
           
     - name: show current status
       run:
-          git status    
+          git status --porcelain    
 
     - name: Add and Push
       
