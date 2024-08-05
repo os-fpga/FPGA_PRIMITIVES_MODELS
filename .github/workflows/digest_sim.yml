@@ -98,7 +98,8 @@ jobs:
                    all_files=`cat $failfile`
                    echo $all_files
                   echo "path_to_commit=$all_files" >> $GITHUB_ENV
-                  echo "has_changed=true" >> $GITHUB_OUTPUT 
+                  echo "has_changed=true" >> $GITHUB_OUTPUT
+                fi
                 ;;
             "no_tb")
                 echo "updates are from ${{ matrix.scenarios }}"
@@ -108,7 +109,8 @@ jobs:
                    all_files=`cat $noTbfile`
                    echo $all_files
                   echo "path_to_commit=$all_files" >> $GITHUB_ENV
-                  echo "has_changed=true" >> $GITHUB_OUTPUT 
+                  echo "has_changed=true" >> $GITHUB_OUTPUT
+                fi
                 ;;
             *)
                 echo "Invalid value: ${{ matrix.scenarios }}"
