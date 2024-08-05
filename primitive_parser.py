@@ -307,8 +307,7 @@ def diff_copy_parse(src_path, dest_path):
         dest_tb = os.path.join(dest_path, "..", "..", "tb", prims.upper(), "")
 #        print(", \n\Src path \n\n", src_tb ,", \n\dest path \n\n", dest_tb)
         os.makedirs(dest_tb, exist_ok=True)
-        if os.path.exists(src_tb):
-            shutil.copy(src_tb, dest_tb)
+        shutil.copy(src_tb, dest_tb)
 #        copy_files(src_tb,dest_tb) 
         tb_directory = f"{dest_path}../../tb/{prims}"
         copy_module_files(subdirectory, dest_path, prims)
