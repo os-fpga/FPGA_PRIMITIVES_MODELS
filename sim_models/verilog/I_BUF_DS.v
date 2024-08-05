@@ -37,8 +37,12 @@ module I_BUF_DS #(
     endcase
   end
 
+  specify
+    if (EN == 1'b1)
+    ( I_P, I_N *> O ) = (0, 0);
+  endspecify
 
- initial begin
+   initial begin
     case(WEAK_KEEPER)
       "NONE" ,
       "PULLUP" ,
