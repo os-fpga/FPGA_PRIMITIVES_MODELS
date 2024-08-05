@@ -193,8 +193,8 @@ module DSP38 #(
 						add_sub_in = (unsigned_a_int)? a_int<<acc_fir_int : {{44{a_int[19]}},a_int}<<acc_fir_int;
 					end
 			3'b111:	begin
-        				mult_a <= COEFF_3;
-        				mult_b <= b_int;
+        				mult_a = COEFF_3;
+        				mult_b = b_int;
         				add_sub_in = (unsigned_a_int)? a_int<<acc_fir_int : {{44{a_int[19]}},a_int}<<acc_fir_int;
 					end
     	endcase
