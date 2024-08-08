@@ -299,9 +299,7 @@ endmodule
 (* blackbox *)
 module I_BUF #(
   parameter WEAK_KEEPER = "NONE" // Specify Pull-up/Pull-down on input (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-  ,   parameter IOSTANDARD = "DEFAULT" // IO Standard
-`endif // RAPIDSILICON_INTERNAL
+,  parameter IOSTANDARD = "DEFAULT" // IO Standard
   ) (
   (* iopad_external_pin *)
   input logic I,
@@ -523,10 +521,8 @@ endmodule
 (* blackbox *)
 module O_BUFT_DS #(
   parameter WEAK_KEEPER = "NONE" // Enable pull-up/pull-down on output (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-  ,   parameter IOSTANDARD = "DEFAULT", // IO Standard
+,  parameter IOSTANDARD = "DEFAULT", // IO Standard
   parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
-`endif // RAPIDSILICON_INTERNAL
   ) (
   input logic I,
   input logic T,
@@ -547,11 +543,9 @@ endmodule
 (* blackbox *)
 module O_BUFT #(
   parameter WEAK_KEEPER = "NONE" // Enable pull-up/pull-down on output (NONE/PULLUP/PULLDOWN)
-`ifdef RAPIDSILICON_INTERNAL
-  ,   parameter IOSTANDARD = "DEFAULT", // IO Standard
+,  parameter IOSTANDARD = "DEFAULT", // IO Standard
   parameter DRIVE_STRENGTH = 2, // Drive strength in mA for LVCMOS standards
   parameter SLEW_RATE = "SLOW" // Transition rate for LVCMOS standards
-`endif // RAPIDSILICON_INTERNAL
   ) (
   input logic I,
   input logic T,
@@ -569,13 +563,11 @@ endmodule
 `celldefine
 (* blackbox *)
 module O_BUF
-`ifdef RAPIDSILICON_INTERNAL
   #(
   parameter IOSTANDARD = "DEFAULT", // IO Standard
   parameter DRIVE_STRENGTH = 2, // Drive strength in mA for LVCMOS standards
   parameter SLEW_RATE = "SLOW" // Transition rate for LVCMOS standards
   )
-`endif // RAPIDSILICON_INTERNAL
   (
   input logic I,
   (* iopad_external_pin *)
