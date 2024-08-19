@@ -20,9 +20,12 @@ module O_BUF
 
    assign O = I ;
 
-   specify
-    (I => O) = (0, 0);
-   endspecify initial begin
+  `ifndef SYNTHESIS
+      specify
+       (I => O) = (0, 0);
+      endspecify
+  `endif //  `ifndef SYNTHESIS
+ initial begin
 
     case(IOSTANDARD)
       "DEFAULT" ,

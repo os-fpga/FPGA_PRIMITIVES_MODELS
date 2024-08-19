@@ -14,9 +14,11 @@ module FCLK_BUF (
 
    assign O = I ;
 
-   specify
-    (I => O) = (0, 0);
-   endspecify
+  `ifndef SYNTHESIS
+      specify
+       (I => O) = (0, 0);
+      endspecify
+  `endif //  `ifndef SYNTHESIS
    
 
 endmodule
