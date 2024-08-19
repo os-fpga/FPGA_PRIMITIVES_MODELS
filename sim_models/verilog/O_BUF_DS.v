@@ -21,10 +21,13 @@ module O_BUF_DS
     assign O_P = I;
     assign O_N = ~I;
     
-    specify
-        (I => O_P) = (0, 0);
-        (I => O_N) = (0, 0);
-    endspecify
+    `ifndef SYNTHESIS
+        specify
+            (I => O_P) = (0, 0);
+            (I => O_N) = (0, 0);
+        endspecify
+    `endif //  `ifndef SYNTHESIS
+
 
      initial begin
 
