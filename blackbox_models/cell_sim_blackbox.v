@@ -496,12 +496,10 @@ endmodule
 `celldefine
 (* blackbox *)
 module O_BUF_DS
-`ifdef RAPIDSILICON_INTERNAL
   #(
   parameter IOSTANDARD = "DEFAULT", // IO Standard
   parameter DIFFERENTIAL_TERMINATION = "TRUE" // Enable differential termination
   )
-`endif // RAPIDSILICON_INTERNAL
   (
   input logic I,
   (* iopad_external_pin *)
