@@ -392,6 +392,100 @@ module I_SERDES #(
 endmodule
 `endcelldefine
 //
+// LATCHNR black box model
+// Negative level-sensitive latch with active-high asyncronous reset
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module LATCHNR (
+  input logic D,
+  input logic G,
+  input logic R,
+  output logic Q
+);
+endmodule
+`endcelldefine
+//
+// LATCHNS black box model
+// Negative level-sensitive latch with active-high asyncronous set
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module LATCHNS (
+  input logic D,
+  input logic G,
+  input logic R,
+  output logic Q
+);
+endmodule
+`endcelldefine
+//
+// LATCHN black box model
+// Negative level-sensitive latch
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module LATCHN (
+  input logic D,
+  input logic G,
+  output logic Q
+);
+endmodule
+`endcelldefine
+//
+// LATCHR black box model
+// Positive level-sensitive latch with active-high asyncronous reset
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module LATCHR (
+  input logic D,
+  input logic G,
+  input logic R,
+  output logic Q
+);
+endmodule
+`endcelldefine
+//
+// LATCHS black box model
+// Positive level-sensitive latch with active-high asyncronous set
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module LATCHS (
+  input logic D,
+  input logic G,
+  input logic R,
+  output logic Q
+);
+endmodule
+`endcelldefine
+//
+// LATCH black box model
+// Positive level-sensitive latch
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module LATCH (
+  input logic D,
+  input logic G,
+  output logic Q
+);
+endmodule
+`endcelldefine
+//
 // LUT1 black box model
 // 1-input lookup table (LUT)
 //
@@ -484,6 +578,43 @@ module LUT6 #(
   ) (
   input logic [5:0] A,
   output logic Y
+);
+endmodule
+`endcelldefine
+//
+// MIPI_TX black box model
+// MIPI Transmitter
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module MIPI_TX #(
+  parameter WIDTH = 4, // Width of input data to serializer (3-10)
+  parameter EN_ODLY = "FALSE", // True or False
+  parameter LANE_MODE = "Master", // Master or Slave
+  parameter DELAY = 0 // Fixed TAP delay value (0-63)
+  ) (
+  input logic RST,
+  input logic RX_CLK,
+  input logic PLL_LOCK,
+  (* clkbuf_sink *)
+  input logic CLK_IN,
+  input logic [WIDTH-1:0] HS_TX_DATA,
+  input logic HS_TXD_VALID,
+  input logic HS_EN,
+  input logic TX_LP_DP,
+  input logic TX_LP_DN,
+  input logic LP_EN,
+  input logic TX_ODT_EN,
+  input logic DLY_LOAD,
+  input logic DLY_ADJ,
+  input logic DLY_INCDEC,
+  output logic TX_OE,
+  output logic TX_DP,
+  output logic TX_DN,
+  input logic CHANNEL_BOND_SYNC_IN,
+  output logic CHANNEL_BOND_SYNC_OUT
 );
 endmodule
 `endcelldefine
@@ -1020,99 +1151,5 @@ module TDP_RAM36K #(
   output reg [31:0] RDATA_B,
   output reg [3:0] RPARITY_B
 );
-endmodule
-`endcelldefine
-
-
-//------------------------------------------------------------------------------
-//
-// Copyright (C) 2023 RapidSilicon
-//
-// genesis3 LATChes
-//
-//------------------------------------------------------------------------------
-//------------------------------------------------------------------------------
-// Positive level-sensitive latch implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-
-`celldefine
-(* blackbox *)
-module LATCH(D, G, Q);
-  input D;
-  input G;
-  output Q;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Negative level-sensitive latch implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHN(D, G, Q);
-  input D;
-  input G;
-  output Q;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Positive level-sensitive latch with active-high asyncronous reset
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHR(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-//------------------------------------------------------------------------------
-// Positive level-sensitive latch with active-high asyncronous set
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHS(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Negative level-sensitive latch with active-high asyncronous reset
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHNR(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
-endmodule
-`endcelldefine
-
-//------------------------------------------------------------------------------
-// Negative level-sensitive latch with active-high asyncronous set
-// implemented with feed-back loop LUT
-//------------------------------------------------------------------------------
-`celldefine
-(* blackbox *)
-module LATCHNS(D, G, R, Q);
-  input D;
-  input G;
-  output Q;
-  input R;
-
 endmodule
 `endcelldefine
