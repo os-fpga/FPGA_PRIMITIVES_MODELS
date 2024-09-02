@@ -349,7 +349,7 @@ def diff_copy_parse(src_path, dest_path):
 #            no_tb_list.append(dest_path + prims + ".v")
         else:
             if not is_directory_empty(tb_directory):
-                result = run_simulation_makefile(dest_path, prims,tb_directory)
+                result = run_simulation_makefile(dest_path, prims,tb_directory,new_prim_name_list)
                 print("Simulation ran for new Primitives: ", prims )
                 if os.path.exists(sim_out_file):
                     print("sim log file found",sim_out_file )
