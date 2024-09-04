@@ -4,6 +4,7 @@
 DESIGN_NAME ?= DSP38
 
 # Directories
+FLIST ?= ./sim_models/verilog/$(DESIGN_NAME)
 SRC_DIR ?= ./sim_models/verilog
 TB_DIR ?= ./tb/$(DESIGN_NAME)
 SIM_DIR = sim
@@ -13,6 +14,7 @@ SIM_RESULTS_DIR = sim_results
 SRC_FILES = $(wildcard $(SRC_DIR)/$(DESIGN_NAME).v)
 TB_FILES = $(wildcard $(TB_DIR)/*.v $(TB_DIR)/*.sv)
 COMPILE_ARGS_FILE = $(TB_DIR)/compile_args.txt
+
 
 # Check if COMPILE_ARGS_FILE exists, and set COMPILE_ARGS accordingly
 ifeq ($(wildcard $(COMPILE_ARGS_FILE)),)
@@ -25,7 +27,11 @@ endif
 SIM_EXECUTABLE = $(SIM_DIR)/$(DESIGN_NAME)_sim
 
 # Simulation command
-SIM_COMMAND = iverilog -g2012 -o $(SIM_EXECUTABLE) $(COMPILE_ARGS) $(SRC_FILES) $(TB_FILES)
+#SIM_COMMAND = iverilog -g2012 -o $(SIM_EXECUTABLE) $(COMPILE_ARGS) $(SRC_FILES) $(TB_FILES) 
+
+
+
+SIM_COMMAND = iverilog -g2012 -o $(SIM_EXECUTABLE) $(COMPILE_ARGS) $(TB_FILES)  $(FLIST)
 
 .PHONY: all clean
 
@@ -42,4 +48,6 @@ $(SIM_EXECUTABLE): $(SRC_FILES) $(TB_FILES)
 clean:
 	@echo "Cleaning up..."
 	@rm -rf $(SIM_DIR) $(SIM_RESULTS_DIR)
+
+
 

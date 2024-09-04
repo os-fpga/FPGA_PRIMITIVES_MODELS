@@ -217,20 +217,50 @@ def collect_old_primitives(dest_path):
     return sub_folders
 
 
+
+def append_strings_to_list_elements(list_to_modify, prefix, postfix):
+  """Appends prefix and postfix strings to each element in a list.
+
+  Args:
+    list_to_modify: The list of elements to modify.
+    prefix: The string to append at the beginning of each element.
+    postfix: The string to append at the end of each element.
+
+  Modifies:
+    list_to_modify: The list is modified in-place.
+  """
+
+  for i in range(len(list_to_modify)):
+    list_to_modify[i] = prefix + list_to_modify[i] + postfix
+    
+  separator = " "
+  
+  print( 'Flist created here ',separator.join(list_to_modify))
+# Example usage:
+  return separator.join(list_to_modify)
+
 def is_directory_empty(directory):
     result = not any(os.scandir(directory))
     return not any(os.scandir(directory))
 
-def run_simulation_makefile(dest_path, design_name, tb_directory):
+def run_simulation_makefile(dest_path, design_name, tb_directory, new_prim_name_list):
  #   tb_directory = f"{dest_path}" + "/" + f"{design_name}/tb"
     if not os.path.isdir(tb_directory):
         print("TB directory does not exist", tb_directory)
     else:
         if not is_directory_empty(tb_directory):
             try:
+                list_sim_prim = search_verilog_for_names((dest_path + design_name +".v") , new_prim_name_list)
+                print("---------------\n\n  ", list_sim_prim,"---------------\n\n  ")                
+                prefix = "./sim_models/verilog/"
+                postfix = ".v"
+                joined = append_strings_to_list_elements(list_sim_prim, prefix, postfix)
+                print("\n\n\n\n JOined String = ", joined, "\n\n\n\n\n\n\n")
+
                 print("tb directory found", design_name, dest_path)
 #                make_command = ["make", f"DESIGN_NAME={design_name}"]
-                make_command = f"make  SRC_DIR={dest_path} DESIGN_NAME={design_name} TB_DIR={tb_directory}" 
+#                make_command = f"make  SRC_DIR={dest_path} DESIGN_NAME={design_name} TB_DIR={tb_directory} FLIST={joined}" 
+                make_command = f"make   DESIGN_NAME={design_name} TB_DIR={tb_directory} FLIST={joined}" 
                 print("make command here ", make_command)
                 result = subprocess.check_output(make_command, stderr=subprocess.STDOUT, text=True, shell=True)
                 return True
@@ -319,7 +349,7 @@ def diff_copy_parse(src_path, dest_path):
 #            no_tb_list.append(dest_path + prims + ".v")
         else:
             if not is_directory_empty(tb_directory):
-                result = run_simulation_makefile(dest_path, prims,tb_directory)
+                result = run_simulation_makefile(dest_path, prims,tb_directory,new_prim_name_list)
                 print("Simulation ran for new Primitives: ", prims )
                 if os.path.exists(sim_out_file):
                     print("sim log file found",sim_out_file )
@@ -368,7 +398,7 @@ def diff_copy_parse(src_path, dest_path):
  #           no_tb_list.append(dest_path + module_name + ".v")
         else:
             if not is_directory_empty(tb_directory):
-                result = run_simulation_makefile(dest_path, module_name,tb_directory)
+                result = run_simulation_makefile(dest_path, module_name,tb_directory, new_prim_name_list)
                 print("Simulation ran for Primitive: ", module_name )
                 if os.path.exists(sim_out_file):
                     print("sim log file found",sim_out_file )
@@ -412,6 +442,7 @@ def diff_copy_parse(src_path, dest_path):
 
     src = src_path + "../../blackbox_models"
     dest = dest_path + "../../blackbox_models"
+    bb_Path = dest_path + "../../blackbox_models/cell_sim_blackbox.v"
     print("Blackbox files")
     copy_files(src,dest) 
     diff_bb = "  "
@@ -439,9 +470,49 @@ def diff_copy_parse(src_path, dest_path):
     
 #    print("sim_list", len(sim_fail_list), "parse_list", len(parse_list_fail))
 
-    return no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result
+    return no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result, bb_Path
 
-def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,release,diff_bb, diff_result,release_path):
+
+def process_blckbox( no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, bb_Path):
+
+
+    if not any( no_tb_list or sim_fail_list or parse_list_fail or new_prim_found):
+        sim_pass_list.append(bb_Path)
+    elif not any( no_tb_list or parse_list_fail):
+       sim_fail_list.append(bb_Path)
+    elif not any( sim_fail_list or parse_list_fail):
+        no_tb_list.append(bb_Path)
+
+
+    return sim_pass_list,no_tb_list , sim_fail_list
+
+def search_verilog_for_names(verilog_file, names_to_search):
+    """Searches a Verilog file for a list of names and returns a list of successful matches.
+
+    Args:
+        verilog_file: The path to the Verilog file.
+        names_to_search: A list of names to search for.
+
+    Returns:
+        A list of names that were found in the Verilog file.
+    """
+
+    with open(verilog_file, 'r') as f:
+        verilog_code = f.read()
+
+    successful_matches = []
+    for name in names_to_search:
+        if (name +" ") in verilog_code:
+            successful_matches.append(name)
+
+    return successful_matches
+# Example usage
+verilog_file = "/home/users/bilal.ahmed/testing/29August/release/sim_models/verilog/MIPI_TX.v"
+names_to_search =  ['DFFRE', 'CLK_BUF', 'I_DDR', 'O_BUFT', 'FIFO18KX2', 'SOC_FPGA_INTF_AHB_M', 'SOC_FPGA_INTF_IRQ', 'I_SERDES', 'BOOT_CLOCK', 'I_BUF', 'PLL', 'SOC_FPGA_INTF_AHB_S', 'I_DELAY', 'FCLK_BUF', 'LUT5', 'TDP_RAM36K', 'DSP19X2', 'SOC_FPGA_INTF_DMA', 'I_FAB', 'MIPI_TX', 'I_BUF_DS', 'LUT1', 'O_DDR', 'O_SERDES_CLK', 'O_BUF', 'FIFO36K', 'O_DELAY', 'CARRY', 'SOC_FPGA_INTF_AXI_M0', 'DSP38', 'DFFNRE', 'SOC_FPGA_INTF_JTAG', 'SOC_FPGA_INTF_AXI_M1', 'SOC_FPGA_TEMPERATURE', 'O_SERDES', 'LUT4', 'O_BUF_DS', 'LUT3', 'O_BUFT_DS', 'O_FAB', 'LUT6', 'TDP_RAM18KX2', 'LUT2']
+
+
+
+def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,release,diff_bb, diff_result,release_path, bb_path):
 
     release_num = release
     fail_list = sim_fail_list
@@ -547,6 +618,8 @@ def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim
 
     # Open the file in write mode and write the list of strings
 
+    fail_list, no_tb_list , sim_pass_list = process_blckbox( no_tb_list, sim_fail_list ,sim_pass_list, parse_list_fail, new_prim_found, bb_path)
+
     
     if len(no_tb_list) > 0:
         with open("no_tb.txt", "w") as file:
@@ -582,10 +655,11 @@ def main():
 
     if (check_release(args.src)):
         print("Release exist")
-        no_tb_list, sim_list, sim_pass_list, parse_list ,new_prim_found , diff_bb , diff_result = diff_copy_parse(args.src, args.dest)
+        no_tb_list, sim_list, sim_pass_list, parse_list ,new_prim_found , diff_bb , diff_result , bb_path = diff_copy_parse(args.src, args.dest)
         sim_pass_list
         print("sim_list", len(sim_list), "sim_pass_list", sim_pass_list,"parse_list", len(parse_list))
-        email_dump(no_tb_list, sim_list,parse_list, sim_pass_list,new_prim_found,args.release, diff_bb, diff_result, True)
+
+        email_dump(no_tb_list, sim_list,parse_list, sim_pass_list,new_prim_found,args.release, diff_bb, diff_result, True, bb_path)
     else:
         print("Release do not exist")
         email_dump([],[],[],[],args.release, "No diff found in blackbox", False, False)
