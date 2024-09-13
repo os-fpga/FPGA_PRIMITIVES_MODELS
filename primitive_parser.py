@@ -469,7 +469,6 @@ def diff_copy_parse(src_path, dest_path):
 
     
 #    print("sim_list", len(sim_fail_list), "parse_list", len(parse_list_fail))
-
     return no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result, bb_Path
 
 
@@ -618,9 +617,10 @@ def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim
 
     # Open the file in write mode and write the list of strings
 
-    fail_list, no_tb_list , sim_pass_list = process_blckbox( no_tb_list, sim_fail_list ,sim_pass_list, parse_list_fail, new_prim_found, bb_path)
+    sim_pass_list, no_tb_list , fail_list  = process_blckbox( no_tb_list, sim_fail_list ,sim_pass_list, parse_list_fail, new_prim_found, bb_path)
 
-    
+    print("SIm pass list is here ", sim_pass_list)
+
     if len(no_tb_list) > 0:
         with open("no_tb.txt", "w") as file:
             for string in no_tb_list:
