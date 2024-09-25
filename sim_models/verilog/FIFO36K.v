@@ -31,6 +31,8 @@ module FIFO36K #(
   output reg UNDERFLOW = 1'b0 // FIFO underflow error flag
 );
 
+
+
 if ( FIFO_TYPE == "SYNCHRONOUS" )  begin: SYNCRONOUS
 
   
@@ -231,8 +233,8 @@ assign ram_clk_b = RD_CLK;
 parameter W_PTR_WIDTH = $clog2(fifo_depth_write);
 parameter R_PTR_WIDTH = $clog2(fifo_depth_read);
 
-wire [W_PTR_WIDTH:0] b_wptr_sync, b_wptr_w;
-wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
+wire [W_PTR_WIDTH:0] b_wptr_sync, b_wptr_w, b_wptr_sync_for_a;
+wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w, b_rptr_w1, b_rptr_sync_for_a;
 
 
   TDP_RAM36K #(
@@ -243,10 +245,10 @@ wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
     .WRITE_WIDTH_B(DATA_WIDTH_WRITE), // Write data width on port B (1-36)
     .READ_WIDTH_B(DATA_WIDTH_READ) // Read data width on port B (1-36)
   ) FIFO_RAM_inst (
-    .WEN_A(WR_EN & !OVERFLOW & !FULL), // Write-enable port A
+    .WEN_A(WR_EN ), // Write-enable port A
     .WEN_B(1'b0), // Write-enable port B
     .REN_A(1'b0), // Read-enable port A
-    .REN_B(RD_EN & !UNDERFLOW & !EMPTY), // Read-enable port B
+    .REN_B(RD_EN ), // Read-enable port B
     .CLK_A(WR_CLK), // Clock port A
     .CLK_B(ram_clk_b), // Clock port B 
     .BE_A(4'hf), // Byte-write enable port A
@@ -254,7 +256,7 @@ wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
     // .ADDR_A({fifo_wr_addr, {15-fifo_addr_width{1'b0}}}), // Address port A, align MSBs and connect unused MSBs to logic 0
     .ADDR_A({b_wptr_w,{15-fifo_addr_width_w{1'b0}}}), // Address port A, align MSBs and connect unused MSBs to logic 0
     // .ADDR_B({fifo_rd_addr, {15-fifo_addr_width{1'b0}}}), // Address port B, align MSBs and connect unused MSBs to logic 0
-    .ADDR_B({b_rptr_w,{15-fifo_addr_width_r{1'b0}}}), // Address port B, align MSBs and connect unused MSBs to logic 0
+    .ADDR_B({b_rptr_w1,{15-fifo_addr_width_r{1'b0}}}), // Address port B, align MSBs and connect unused MSBs to logic 0
     .WDATA_A(ram_wr_data), // Write data port A
     .WPARITY_A(ram_wr_parity), // Write parity data port A
     .WDATA_B(32'h00000000), // Write data port B
@@ -274,11 +276,11 @@ wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
     end
 
     if(DATA_WIDTH_READ==18) begin
-      assign RD_DATA = fwft ? fwft_data : {ram_rd_parity[1:0], ram_rd_data[15:0]};    
+      assign RD_DATA = fwft ? fwft_data : {ram_rd_parity[1], ram_rd_data[15:8], ram_rd_parity[0], ram_rd_data[7:0]};    
     end
 
     if(DATA_WIDTH_READ==36) begin
-      assign RD_DATA = fwft ? fwft_data : {ram_rd_parity[3:0], ram_rd_data[31:0]};    
+      assign RD_DATA = fwft ? fwft_data : {ram_rd_parity[3], ram_rd_data[31:24], ram_rd_parity[2], ram_rd_data[23:16], ram_rd_parity[1], ram_rd_data[15:8], ram_rd_parity[0], ram_rd_data[7:0]};    
     end
 
     if(DATA_WIDTH_WRITE==9) begin       
@@ -287,13 +289,13 @@ wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
     end
     
     if(DATA_WIDTH_WRITE==18) begin 
-      assign ram_wr_data = {{32-DATA_WIDTH_WRITE{1'b0}}, WR_DATA[DATA_WIDTH_WRITE-3:0]};
-      assign ram_wr_parity = {2'b00, WR_DATA[DATA_WIDTH_WRITE-1:DATA_WIDTH_WRITE-2]};
+      assign ram_wr_data = {{32-DATA_WIDTH_WRITE{1'b0}}, WR_DATA[16:9],WR_DATA[7:0]};
+      assign ram_wr_parity = {2'b00, WR_DATA[17], WR_DATA[8]};
     end
     
     if(DATA_WIDTH_WRITE==36) begin
-      assign ram_wr_data = {{36-DATA_WIDTH_WRITE{1'b0}}, WR_DATA[DATA_WIDTH_WRITE-5:0]};
-      assign ram_wr_parity = {2'b00, WR_DATA[DATA_WIDTH_WRITE-1:DATA_WIDTH_WRITE-4]};
+      assign ram_wr_data = {WR_DATA[34:27], WR_DATA[25:18],WR_DATA[16:9],WR_DATA[7:0]};
+      assign ram_wr_parity = {WR_DATA[35], WR_DATA[26], WR_DATA[17], WR_DATA[8]};
     end
 
 
@@ -302,18 +304,21 @@ wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
 /*---------Write pointer synchronizer ( 2 FLOPS) logic--------------*/
 
 
-  reg [W_PTR_WIDTH:0] q1,d_out1;
+  reg [W_PTR_WIDTH:0] q1,q1_a,d_out1;
 
   assign b_wptr_sync = d_out1;
+  assign b_wptr_sync_for_a = q1_a;
 
   always@(posedge RD_CLK) begin
     if(RESET) begin
       q1 <= 0;
       d_out1 <= 0;
+      q1_a <=0;
     end
     else begin
       q1 <= b_wptr_w;
       d_out1 <= q1;
+      q1_a <= d_out1;
     end
   end
 
@@ -321,18 +326,22 @@ wire [R_PTR_WIDTH:0] b_rptr_sync, b_rptr_w;
 
 /*--------- Read pointer synchronizer (2 FLOPS ) logic --------------*/
 
-reg [R_PTR_WIDTH:0] q2, d_out2;
+reg [R_PTR_WIDTH:0] q2, q2_a, d_out2;
 
 assign b_rptr_sync = d_out2;
+assign b_rptr_sync_for_a = q2_a;
 
   always@(posedge WR_CLK) begin
     if(RESET) begin
       q2 <= 0;
       d_out2 <= 0;
+      q2_a <=0;
     end
     else begin
+
       q2 <= b_rptr_w;
       d_out2 <= q2;
+      q2_a <= d_out2;
     end
   end
 
@@ -349,7 +358,7 @@ assign b_rptr_sync = d_out2;
 
   wire wfull, al_full, p_full; 
 
-  wire [W_PTR_WIDTH:0] diff_ptr0, diff_ptr2;
+  wire [W_PTR_WIDTH:0] diff_ptr0, diff_ptr2, diff_ptr0_for_a;
 
   assign b_wptr_next = b_wptr+(WR_EN & !FULL);
 
@@ -358,18 +367,30 @@ assign b_rptr_sync = d_out2;
 
   assign diff_ptr0 =(DATA_WIDTH_WRITE>DATA_WIDTH_READ)? /* W>R */ ((((b_wptr_next/SCALING_FACTOR_WPTR  >= (b_rptr_sync/SCALING_FACTOR_RPTR))? (b_wptr_next/SCALING_FACTOR_WPTR-(b_rptr_sync/SCALING_FACTOR_RPTR)): (b_wptr_next/SCALING_FACTOR_WPTR+(1<<(W_PTR_WIDTH+1))-(b_rptr_sync/SCALING_FACTOR_RPTR)))))
 
-  : (  (DATA_WIDTH_READ>DATA_WIDTH_WRITE)? ( /* R>W */ ((((b_wptr_next/SCALING_FACTOR_WPTR  >= (b_rptr_sync/SCALING_FACTOR_RPTR))? (b_wptr_next/SCALING_FACTOR_WPTR-(b_rptr_sync/SCALING_FACTOR_RPTR)): (b_wptr_next/SCALING_FACTOR_WPTR+(1<<(R_PTR_WIDTH+1))-(b_rptr_sync/SCALING_FACTOR_RPTR))))) ) 
+  : (  (DATA_WIDTH_READ>DATA_WIDTH_WRITE)? ( /* R>W */ ((((b_wptr_next*SCALING_FACTOR_RPTR  >= (b_rptr_sync*SCALING_FACTOR_WPTR))? (b_wptr_next*SCALING_FACTOR_RPTR-(b_rptr_sync*SCALING_FACTOR_WPTR)): (b_wptr_next*SCALING_FACTOR_RPTR+(1<<(W_PTR_WIDTH+1))-(b_rptr_sync*SCALING_FACTOR_WPTR))))) ) 
 
   : /* R==W */ ((((b_wptr_next  >= (b_rptr_sync ))? (b_wptr_next - (b_rptr_sync)): (b_wptr_next + (1<<(W_PTR_WIDTH+1))-(b_rptr_sync ))))) );  
 
+
+  assign diff_ptr0_for_a =(DATA_WIDTH_WRITE>DATA_WIDTH_READ)? /* W>R */ ((((b_wptr_next/SCALING_FACTOR_WPTR  >= (b_rptr_sync_for_a/SCALING_FACTOR_RPTR))? (b_wptr_next/SCALING_FACTOR_WPTR-(b_rptr_sync_for_a/SCALING_FACTOR_RPTR)): (b_wptr_next/SCALING_FACTOR_WPTR+(1<<(W_PTR_WIDTH+1))-(b_rptr_sync_for_a/SCALING_FACTOR_RPTR)))))
+
+  : (  (DATA_WIDTH_READ>DATA_WIDTH_WRITE)? ( /* R>W */ ((((b_wptr_next*SCALING_FACTOR_RPTR  >= (b_rptr_sync_for_a*SCALING_FACTOR_WPTR))? (b_wptr_next*SCALING_FACTOR_RPTR-(b_rptr_sync_for_a*SCALING_FACTOR_WPTR)): (b_wptr_next*SCALING_FACTOR_RPTR+(1<<(W_PTR_WIDTH+1))-(b_rptr_sync_for_a*SCALING_FACTOR_WPTR))))) ) 
+
+  : /* R==W */ ((((b_wptr_next  >= (b_rptr_sync_for_a ))? (b_wptr_next - (b_rptr_sync_for_a)): (b_wptr_next + (1<<(W_PTR_WIDTH+1))-(b_rptr_sync_for_a ))))) );  
+
+
   // assign wfull = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0 == (1<<W_PTR_WIDTH)) : (diff_ptr0 == (1<<R_PTR_WIDTH) );
- 
-  assign wfull = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0 == (1<<W_PTR_WIDTH)) : (diff_ptr0 == (1<<R_PTR_WIDTH)   );
+
+  assign wfull = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0 == (1<<W_PTR_WIDTH)) : (diff_ptr0 == (1<<W_PTR_WIDTH)   );
 
 
-  assign al_full = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0 == (1<<W_PTR_WIDTH)-1): (diff_ptr0 == ((1<<R_PTR_WIDTH)-1) );
+  assign al_full = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0 == (1<<W_PTR_WIDTH)-1): (diff_ptr0 == ((1<<W_PTR_WIDTH)-1) );
 
-  assign p_full = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0 >= ((1<<W_PTR_WIDTH)-PROG_FULL_THRESH) ) :  ( (diff_ptr0 >= ((1<<R_PTR_WIDTH)-PROG_FULL_THRESH) ) );
+  assign p_full = (DATA_WIDTH_WRITE>DATA_WIDTH_READ)? (diff_ptr0_for_a >= ((1<<W_PTR_WIDTH)-PROG_FULL_THRESH+1) ) :  ( (diff_ptr0_for_a >= ((1<<W_PTR_WIDTH)-PROG_FULL_THRESH+1) ) );
+
+
+  // assign diff_ptr2 = ((((b_wptr_next*SCALING_FACTOR_WPTR-(b_rptr_sync/SCALING_FACTOR_RPTR)): (b_wptr_next/SCALING_FACTOR_WPTR+(1<<(W_PTR_WIDTH+1))-(b_rptr_sync/SCALING_FACTOR_RPTR)))))
+
 
 
   always@(posedge WR_CLK or posedge RESET) begin
@@ -382,16 +403,19 @@ assign b_rptr_sync = d_out2;
   end
   
   always@(posedge WR_CLK or posedge RESET) begin
+
     if(RESET) begin
       FULL <= 0;
       ALMOST_FULL <= 'b0;
       PROG_FULL <= 0;
     end
+
     else begin
 
-      FULL <= wfull ;
-      ALMOST_FULL <= al_full ; 
-      PROG_FULL <= p_full  ;
+      FULL <= wfull;
+      ALMOST_FULL <= al_full;
+      PROG_FULL <= p_full;
+
     end
   end
 
@@ -401,7 +425,7 @@ assign b_rptr_sync = d_out2;
 
 localparam SCALING_FACTOR_RPTR= (DATA_WIDTH_READ<DATA_WIDTH_WRITE)? (DATA_WIDTH_WRITE/DATA_WIDTH_READ):1;
 
-wire [R_PTR_WIDTH:0] diff_ptr1;
+wire [R_PTR_WIDTH:0] diff_ptr1, diff_ptr1_for_a;
 reg [R_PTR_WIDTH:0] b_rptr_next, b_rptr;
 
 
@@ -409,6 +433,7 @@ always @(*) begin
 
     if(RESET) begin
       b_rptr_next =0;
+      b_rptr <=0;
     end
     if((RD_EN & !EMPTY)) begin
       if (b_rptr_next==(1<<R_PTR_WIDTH+1)) begin  
@@ -420,20 +445,28 @@ always @(*) begin
     end
 end
 
-assign b_rptr_w = b_rptr_next;
+assign b_rptr_w = b_rptr;
 
-assign diff_ptr1 = (DATA_WIDTH_WRITE > DATA_WIDTH_READ)?   ( ((b_wptr_sync/SCALING_FACTOR_WPTR) >= (b_rptr_next/SCALING_FACTOR_RPTR))? (b_wptr_sync/SCALING_FACTOR_WPTR-(b_rptr_next/SCALING_FACTOR_RPTR)): (b_wptr_sync/SCALING_FACTOR_WPTR+(1<<(W_PTR_WIDTH+1))-(b_rptr_next/SCALING_FACTOR_RPTR)))
+assign b_rptr_w1= b_rptr_next;
+
+assign diff_ptr1 = (DATA_WIDTH_WRITE > DATA_WIDTH_READ)?   ( ((b_wptr_sync*SCALING_FACTOR_RPTR) >= (b_rptr_next*SCALING_FACTOR_WPTR))? (b_wptr_sync*SCALING_FACTOR_RPTR-(b_rptr_next*SCALING_FACTOR_WPTR)): ((b_wptr_sync*SCALING_FACTOR_RPTR)+(1<<(R_PTR_WIDTH+1))-(b_rptr_next*SCALING_FACTOR_RPTR)/SCALING_FACTOR_RPTR))
  
  : ( (DATA_WIDTH_READ > DATA_WIDTH_WRITE)?  (((b_wptr_sync/SCALING_FACTOR_WPTR) >= (b_rptr_next/SCALING_FACTOR_RPTR))? (b_wptr_sync/SCALING_FACTOR_WPTR-(b_rptr_next/SCALING_FACTOR_RPTR)): (b_wptr_sync/SCALING_FACTOR_WPTR+(1<<(R_PTR_WIDTH+1))-(b_rptr_next/SCALING_FACTOR_RPTR)))  
  
  : (((b_wptr_sync) >= (b_rptr_next))? (b_wptr_sync-(b_rptr_next)): (b_wptr_sync+(1<<(W_PTR_WIDTH+1))-(b_rptr_next))) )   ;
+
+assign diff_ptr1_for_a = (DATA_WIDTH_WRITE > DATA_WIDTH_READ)?   ( ((b_wptr_sync_for_a*SCALING_FACTOR_RPTR) >= (b_rptr_next*SCALING_FACTOR_WPTR))? (b_wptr_sync_for_a*SCALING_FACTOR_RPTR-(b_rptr_next*SCALING_FACTOR_WPTR)): ((b_wptr_sync_for_a*SCALING_FACTOR_RPTR)+(1<<(R_PTR_WIDTH+1))-(b_rptr_next*SCALING_FACTOR_RPTR)/SCALING_FACTOR_RPTR))
+ 
+ : ( (DATA_WIDTH_READ > DATA_WIDTH_WRITE)?  (((b_wptr_sync_for_a/SCALING_FACTOR_WPTR) >= (b_rptr_next/SCALING_FACTOR_RPTR))? (b_wptr_sync_for_a/SCALING_FACTOR_WPTR-(b_rptr_next/SCALING_FACTOR_RPTR)): (b_wptr_sync_for_a/SCALING_FACTOR_WPTR+(1<<(R_PTR_WIDTH+1))-(b_rptr_next/SCALING_FACTOR_RPTR)))  
+ 
+ : (((b_wptr_sync_for_a) >= (b_rptr_next))? (b_wptr_sync_for_a-(b_rptr_next)): (b_wptr_sync_for_a+(1<<(W_PTR_WIDTH+1))-(b_rptr_next))) )   ;
 
 
 assign rempty= (diff_ptr1==0)?1:0;
 
 assign al_empty = (diff_ptr1 ==1)? 1:0;
 
-assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH )? 1:0;
+assign p_empty = (diff_ptr1_for_a ==PROG_EMPTY_THRESH-1 || diff_ptr1_for_a <=PROG_EMPTY_THRESH-1 )? 1:0;
 
 
   always@(posedge RD_CLK or posedge RESET) begin
@@ -458,7 +491,19 @@ assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH
 
         
       EMPTY <= rempty;
-      ALMOST_EMPTY <= al_empty;
+      
+      if(DATA_WIDTH_READ==9) begin
+        if(b_rptr==4095 & WR_EN==0) begin
+          ALMOST_EMPTY <=0;
+        end
+        else begin
+          ALMOST_EMPTY <= al_empty;
+        end
+      end
+      else begin
+        ALMOST_EMPTY <= al_empty;      
+      end
+
       PROG_EMPTY <= p_empty;    
       
     end 
@@ -478,13 +523,13 @@ assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH
                 fwft_data <= WR_DATA;
               end
               else if (DATA_WIDTH_WRITE==36 && DATA_WIDTH_READ==9) begin
-                fwft_data <= {{WR_DATA[32]},{WR_DATA[7:0]}} ;  // DEVELOP LOGIC FOR OTHER WIDTH AS WELL
+                fwft_data <= {{WR_DATA[8]},{WR_DATA[7:0]}} ;  // DEVELOP LOGIC FOR OTHER WIDTH AS WELL
               end
               else if (DATA_WIDTH_WRITE==36 && DATA_WIDTH_READ==18) begin
-                fwft_data <= {{WR_DATA[33:32]},{WR_DATA[15:0]}} ;  // DEVELOP LOGIC FOR OTHER WIDTH AS WELL
+                fwft_data <= {{WR_DATA[17]},{WR_DATA[16:9]}, {WR_DATA[8]}, {WR_DATA[7:0]}} ;  // DEVELOP LOGIC FOR OTHER WIDTH AS WELL
               end
               else if (DATA_WIDTH_WRITE==18 && DATA_WIDTH_READ==9) begin
-                fwft_data <= {{WR_DATA[16]},{WR_DATA[7:0]}} ;  // DEVELOP LOGIC FOR OTHER WIDTH AS WELL
+                fwft_data <= {{WR_DATA[8]},{WR_DATA[7:0]}} ;  // DEVELOP LOGIC FOR OTHER WIDTH AS WELL
               end
 
             end
@@ -503,10 +548,10 @@ assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH
 
               if(b_wptr_next==1 || b_wptr_next==4097 ) begin
                 fwft_data [7:0] <= WR_DATA[7:0] ;
-                fwft_data [16] <= WR_DATA[8] ;
+                fwft_data [8] <= WR_DATA[8] ;
               end
               if(b_wptr_next==2 || b_wptr_next==4098 ) begin
-                fwft_data [15:8] <= WR_DATA[7:0];
+                fwft_data [16:9] <= WR_DATA[7:0];
                 fwft_data [17] <= WR_DATA[8];
               end     
         end
@@ -524,18 +569,18 @@ assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH
 
               if(b_wptr_next==1 || b_wptr_next==4097) begin
                 fwft_data [7:0] <= WR_DATA[7:0];
-                fwft_data [32] <= WR_DATA[8];
+                fwft_data [8] <= WR_DATA[8];
               end
               if(b_wptr_next==2 || b_wptr_next==4098) begin
-                fwft_data [15:8] <= WR_DATA[7:0];
-                fwft_data [33] <= WR_DATA[8];
+                fwft_data [16:9] <= WR_DATA[7:0];
+                fwft_data [17] <= WR_DATA[8];
               end     
               if(b_wptr_next==3 || b_wptr_next==4099) begin
-                fwft_data [23:16] <= WR_DATA[7:0] ;
-                fwft_data [34] <= WR_DATA[8];
+                fwft_data [25:18] <= WR_DATA[7:0] ;
+                fwft_data [26] <= WR_DATA[8];
               end
               if(b_wptr_next==4 || b_wptr_next==4100) begin
-                fwft_data [31:24] <= WR_DATA[7:0] ;
+                fwft_data [34:27] <= WR_DATA[7:0] ;
                 fwft_data [35] <= WR_DATA[8];
               end   
 
@@ -553,15 +598,19 @@ assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH
               fwft <= (EMPTY && WR_EN && !fwft)? 1 : fwft;
 
               if(b_wptr_next==1 || b_wptr_next==4097  ) begin
-                fwft_data [15:0] <= WR_DATA[15:0];
-                fwft_data [32] <= WR_DATA[16];
-                fwft_data [33] <= WR_DATA[17];
+                // fwft_data [7:0] <= WR_DATA[7:0];
+                // fwft_data [16:9] <= WR_DATA[16:9];
+                // fwft_data [8] <= WR_DATA[8];
+                // fwft_data [17] <= WR_DATA[17];
+                fwft_data[17:0] <= WR_DATA;
 
               end
               if(b_wptr_next==2 || b_wptr_next==4098 ) begin
-                fwft_data [31:16] <= WR_DATA[15:0];
-                fwft_data [34] <= WR_DATA[16];
-                fwft_data [35] <= WR_DATA[17];
+                // fwft_data [25:18] <= WR_DATA[7:0];
+                // fwft_data [34:27] <= WR_DATA[16:9];
+                // fwft_data [26] <= WR_DATA[8];
+                // fwft_data [35] <= WR_DATA[17];
+                fwft_data[35:18] <= WR_DATA;
               end       
         end
 
@@ -616,7 +665,24 @@ assign p_empty = (diff_ptr1 ==PROG_EMPTY_THRESH || diff_ptr1 <=PROG_EMPTY_THRESH
       end
     end
 
-end : ASYNCRONOUS
+
+always @(*) begin    
+    if (OVERFLOW) begin
+        @(posedge WR_CLK) begin
+        $fatal(1,"\n Error: OVERFLOW Happend, RESET THE FIFO FIRST \n", OVERFLOW );             
+        end 
+     end
+end
+
+always @(*) begin    
+    if (UNDERFLOW) begin
+        @(posedge RD_CLK) begin
+        $fatal(1,"\n Error: UNDERFLOW Happend, RESET THE FIFO FIRST \n", UNDERFLOW );             
+        end 
+     end
+end
+
+end : ASYNCRONOUS 
  initial begin
     case(DATA_WRITE_WIDTH)
       9 ,
