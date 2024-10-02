@@ -365,6 +365,11 @@ def diff_copy_parse(src_path, dest_path):
                     sim_status = False
                     print("-------------------------------Simulation Compilation failure----------------------------------")
 
+    if "sim_models" in src_path:
+        src = src_path + "../tb"
+        dest = dest_path + "../../tb"
+        print("Testbench files")
+        copy_files(src,dest)        
 
 
     for prim_name in old_list:
@@ -458,11 +463,6 @@ def diff_copy_parse(src_path, dest_path):
     print("-------------------------------Failure list----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
 
 
-    if "sim_models" in src_path:
-        src = src_path + "../tb"
-        dest = dest_path + "../../tb"
-        print("Testbench files")
-        copy_files(src,dest)        
 
 #        if "sim_models_internal" in src_path:
 #            src = src_path + "inc"
