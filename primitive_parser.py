@@ -460,7 +460,7 @@ def diff_copy_parse(src_path, dest_path):
 
     if "sim_models" in src_path:
         src = src_path + "../tb"
-        dest = dest_path + "../tb"
+        dest = dest_path + "../../tb"
         print("Testbench files")
         copy_files(src,dest)        
 
