@@ -314,6 +314,16 @@ def diff_copy_parse(src_path, dest_path):
     old_list = []
     no_tb_list = []
 
+    for prims in new_prim_name_list:
+        src_tb = os.path.join(src_path, "..", "tb", prims+ "_tb.v")
+        dest_tb = os.path.join(dest_path, "..", "..", "tb", prims.upper(), "")
+#        print(", \n\Src path \n\n", src_tb ,", \n\dest path \n\n", dest_tb)
+        os.makedirs(dest_tb, exist_ok=True)
+        if os.path.exists(src_tb):
+            shutil.copy(src_tb, dest_tb)
+
+
+
 #    old_prim_set = set(collect_old_primitives(dest_path))
     new_prim_set = set(new_prim_name_list)
     old_prim_set = set(old_prim_name_list)
@@ -367,7 +377,7 @@ def diff_copy_parse(src_path, dest_path):
 
     if "sim_models" in src_path:
         src = src_path + "../tb"
-        dest = dest_path + "../../tb"
+        dest = dest_path + "../tb"
         print("Testbench files")
         copy_files(src,dest)        
 
