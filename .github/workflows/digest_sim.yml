@@ -142,8 +142,8 @@ jobs:
                   ;;
               "fail")
                   echo "updates are from ${{ matrix.scenarios }}"
-                  echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
-                  #echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
+                  #echo "email_ids=${{ secrets.EMAIL_IDS }}" >> $GITHUB_ENV
+                  echo "email_ids=${{ secrets.ONLY_EMAIL_ID }}" >> $GITHUB_ENV
                   ;;
               "no_tb")
                   echo "updates are from ${{ matrix.scenarios }}"

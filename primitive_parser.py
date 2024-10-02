@@ -362,6 +362,7 @@ def diff_copy_parse(src_path, dest_path):
                         print("-------------------------------Failure----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
                 else:
                     sim_fail_list.append(dest_path + prims + ".v")
+                    sim_status = False
                     print("-------------------------------Simulation Compilation failure----------------------------------")
 
 
@@ -408,6 +409,7 @@ def diff_copy_parse(src_path, dest_path):
                     else:
                            print("-------------------------------Simulation Failure----------------------------------")
                 else:
+                    sim_status = False
                     print("-------------------------------Simulation Compilation failure----------------------------------")
 
 
