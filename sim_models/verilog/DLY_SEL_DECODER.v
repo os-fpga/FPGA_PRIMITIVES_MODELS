@@ -1,13 +1,13 @@
 `timescale 1ps/1ps
 `celldefine
 //
-// DLY_SEL_DCODER simulation model
+// DLY_SEL_DECODER simulation model
 // Address Decoder
 //
 // Copyright (c) 2023 Rapid Silicon, Inc.  All rights reserved.
 //
 
-module DLY_SEL_DCODER (
+module DLY_SEL_DECODER (
   input DLY_LOAD, // Delay load input
   input DLY_ADJ, // Delay adjust input
   input DLY_INCDEC, // Delay increment / decrement input
