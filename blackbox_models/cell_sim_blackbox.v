@@ -94,7 +94,26 @@ module DLY_SEL_DCODER (
   input logic DLY_ADJ,
   input logic DLY_INCDEC,
   input logic [4:0] DLY_ADDR,
-  output reg [2:0] DLY_CNTRL[31:0]
+  output reg [2:0] DLY0_CNTRL,
+  output reg [2:0] DLY1_CNTRL,
+  output reg [2:0] DLY2_CNTRL,
+  output reg [2:0] DLY3_CNTRL,
+  output reg [2:0] DLY4_CNTRL,
+  output reg [2:0] DLY5_CNTRL,
+  output reg [2:0] DLY6_CNTRL,
+  output reg [2:0] DLY7_CNTRL,
+  output reg [2:0] DLY8_CNTRL,
+  output reg [2:0] DLY9_CNTRL,
+  output reg [2:0] DLY10_CNTRL,
+  output reg [2:0] DLY11_CNTRL,
+  output reg [2:0] DLY12_CNTRL,
+  output reg [2:0] DLY13_CNTRL,
+  output reg [2:0] DLY14_CNTRL,
+  output reg [2:0] DLY15_CNTRL,
+  output reg [2:0] DLY16_CNTRL,
+  output reg [2:0] DLY17_CNTRL,
+  output reg [2:0] DLY18_CNTRL,
+  output reg [2:0] DLY19_CNTRL
 );
 endmodule
 `endcelldefine
@@ -107,9 +126,28 @@ endmodule
 `celldefine
 (* blackbox *)
 module DLY_VALUE_MUX (
-  input logic [5:0] DLY_TAP_VAL_ARRAY[19:0],
+  input logic [5:0] DLY_TAP0_VAL,
+  input logic [5:0] DLY_TAP1_VAL,
+  input logic [5:0] DLY_TAP2_VAL,
+  input logic [5:0] DLY_TAP3_VAL,
+  input logic [5:0] DLY_TAP4_VAL,
+  input logic [5:0] DLY_TAP5_VAL,
+  input logic [5:0] DLY_TAP6_VAL,
+  input logic [5:0] DLY_TAP7_VAL,
+  input logic [5:0] DLY_TAP8_VAL,
+  input logic [5:0] DLY_TAP9_VAL,
+  input logic [5:0] DLY_TAP10_VAL,
+  input logic [5:0] DLY_TAP11_VAL,
+  input logic [5:0] DLY_TAP12_VAL,
+  input logic [5:0] DLY_TAP13_VAL,
+  input logic [5:0] DLY_TAP14_VAL,
+  input logic [5:0] DLY_TAP15_VAL,
+  input logic [5:0] DLY_TAP16_VAL,
+  input logic [5:0] DLY_TAP17_VAL,
+  input logic [5:0] DLY_TAP18_VAL,
+  input logic [5:0] DLY_TAP19_VAL,
   input logic [4:0] DLY_ADDR,
-  output logic [5:0] DLY_TAP_VALUE
+  output reg [5:0] DLY_TAP_VALUE
 );
 endmodule
 `endcelldefine
