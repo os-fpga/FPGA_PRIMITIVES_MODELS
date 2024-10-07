@@ -1,5 +1,5 @@
 
-module DLY_SEL_DCODER_tb;
+module DLY_SEL_DECODER_tb;
 
   // Parameters
 
