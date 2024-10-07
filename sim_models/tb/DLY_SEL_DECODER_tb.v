@@ -28,11 +28,6 @@ module DLY_SEL_DECODER_tb;
   wire [2:0] DLY17_CNTRL;
   wire [2:0] DLY18_CNTRL;
   wire [2:0] DLY19_CNTRL;
-<<<<<<< HEAD
-=======
-
-	integer error=0;
->>>>>>> 505331e58b8bc815c4d764074c09ee8d1cbe367e
 
 	integer error=0;
 
