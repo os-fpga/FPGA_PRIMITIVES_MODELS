@@ -1,5 +1,5 @@
 
-module DLY_SEL_DCODER_tb;
+module DLY_SEL_DECODER_tb;
 
   // Parameters
 
@@ -31,7 +31,7 @@ module DLY_SEL_DCODER_tb;
 
 	integer error=0;
 
-  DLY_SEL_DCODER  DLY_SEL_DCODER_inst (
+  DLY_SEL_DECODER  DLY_SEL_DECODER_inst (
     .DLY_LOAD(DLY_LOAD),
     .DLY_ADJ(DLY_ADJ),
     .DLY_INCDEC(DLY_INCDEC),
