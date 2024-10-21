@@ -107,7 +107,7 @@ wire [17:0] fifo2_flags;
 
 assign OVERFLOW1 = fifo1_flags[0];
 assign PROG_FULL1 = fifo1_flags[1];
-assign ALMOST_EMPTY1 = fifo1_flags[2];
+assign ALMOST_FULL1 = fifo1_flags[2];
 assign FULL1 = fifo1_flags[3];
 assign UNDERFLOW1 = fifo1_flags[4];
 assign PROG_EMPTY1 = fifo1_flags[5];
@@ -116,7 +116,7 @@ assign EMPTY1 = fifo1_flags[7];
 
 assign OVERFLOW2 = fifo2_flags[0];
 assign PROG_FULL2 = fifo2_flags[1];
-assign ALMOST_EMPTY2 = fifo2_flags[2];
+assign ALMOST_FULL2 = fifo2_flags[2];
 assign FULL2 = fifo2_flags[3];
 assign UNDERFLOW2 = fifo2_flags[4];
 assign PROG_EMPTY2 = fifo2_flags[5];

@@ -62,7 +62,7 @@ wire [17:0] unused_rdataA2;
 
 assign OVERFLOW = fifo_flags[0];
 assign PROG_FULL = fifo_flags[1];
-assign ALMOST_EMPTY = fifo_flags[2];
+assign ALMOST_FULL = fifo_flags[2];
 assign FULL = fifo_flags[3];
 assign UNDERFLOW = fifo_flags[4];
 assign PROG_EMPTY = fifo_flags[5];
