@@ -1,0 +1,118 @@
+# Periphery Primitives Parameters and Properties (P4)
+#
+# This file contains the list of Verilog parameters and SDC properties that are
+# allowed for periphery primitives.
+#
+# See https://rapidsilicon.atlassian.net/wiki/spaces/RS/pages/214368265/Periphery+Primitive+Parameters+and+Properties+Definitions+P4DEF for more details
+#
+# The name needs to match the filename root
+# name: <primitive name>
+# desc: <optional description>
+#
+# ports:
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#
+# # set as Verilog parameter
+# parameters:
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>  
+#
+# # set in SDC or by synthesis attribute
+# properties:
+#    <property_name>:
+#        desc: <description>
+#        values: 
+#          - <enum_name>
+#          - <enum_name>
+#    <property_name>:
+#        desc: <description>
+#          - <enum_name>
+#          - <enum_name>
+#
+# primitive name should match the filename root.
+name: DLY_VALUE_MUX
+desc: Multiplexer
+category: periphery
+timescale: 1ps/1ps
+
+ports:
+   DLY_TAP0_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP1_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP2_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP3_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP4_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP5_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP6_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP7_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP8_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP9_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP10_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP11_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP12_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP13_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP14_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP15_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP16_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP17_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP18_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_TAP19_VAL[5:0]:
+     dir: input
+     desc: Delay Tap Value Input Port
+   DLY_ADDR[4:0]:
+     dir: input
+     desc: Input Address
+   DLY_TAP_VALUE[5:0]:
+     dir: output
+     desc: Delay Tap Value Output Port
+     type: reg

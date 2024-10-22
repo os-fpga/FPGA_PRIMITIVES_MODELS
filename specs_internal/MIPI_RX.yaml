@@ -1,0 +1,128 @@
+# Periphery Primitives Parameters and Properties (P4)
+#
+# This file contains the list of Verilog parameters and SDC properties that are
+# allowed for periphery primitives.
+#
+# See https://rapidsilicon.atlassian.net/wiki/spaces/RS/pages/214368265/Periphery+Primitive+Parameters+and+Properties+Definitions+P4DEF for more details
+#
+# The name needs to match the filename root
+# name: <primitive name>
+# desc: <optional description>
+#
+# ports:
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#
+# # set as Verilog parameter
+# parameters:
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>  
+#
+# # set in SDC or by synthesis attribute
+# properties:
+#    <property_name>:
+#        desc: <description>
+#        values: 
+#          - <enum_name>
+#          - <enum_name>
+#    <property_name>:
+#        desc: <description>
+#          - <enum_name>
+#          - <enum_name>
+#
+# primitive name should match the filename root.
+name: MIPI_RX
+desc: MIPI Receiver
+category: periphery
+
+ports:
+   RST:
+     dir: input
+     desc: Active-low, asynchronous reset
+   RX_CLK:
+     dir: input
+     desc: MIPI RX_IO clock input, PLL_CLK
+   PLL_LOCK:
+     dir: input
+     desc: PLL lock input
+   CLK_IN: 
+     dir: input
+     desc: Fabric core clock input
+     bb_attributes: clkbuf_sink
+   RX_DP:
+     dir: input
+     desc: MIPI RX Data Positive input From I_BUF
+   RX_DN:
+     dir: input
+     desc: MIPI RX Data Negative input from I_BUF
+   HS_EN:
+     dir: input
+     desc: EN HS Data input (From Fabric). Active high signal. This is a common signal between MIPI RX/TX interface. 
+   LP_EN:
+     dir: input
+     desc: EN LP Data input (From Fabric). This is a common signal between MIPI RX/TX interface.
+   RX_TERM_EN:
+     dir: input
+     desc: EN Differential Termination
+   BITSLIP_ADJ:
+     dir: input
+     desc: BITSLIP_ADJ input from Fabric
+   DLY_LOAD:
+     dir: input
+     desc: Delay load input, from Fabric 
+   DLY_ADJ:
+     dir: input
+     desc: Delay adjust input, from Fabric
+   DLY_INCDEC:
+     dir: input
+     desc: Delay increment / decrement input, from Fabric
+   DLY_TAP_VALUE[5:0]:
+     dir: output
+     desc: Delay tap value output to fabric
+   HS_RX_DATA[WIDTH-1:0]:
+     dir: output
+     desc: HS RX Data output to Fabric
+   HS_RXD_VALID:
+     dir: output
+     desc: HS RX Parallel DATA is VALID
+   RX_OE:
+     dir: output
+     desc: IBUF OE signal for MIPI I_BUF
+   LP_RX_DP:
+     dir: output
+     desc: LP RX Data positive output to the Fabric
+   LP_RX_DN:
+     dir: output
+     desc: LP RX Data negative output to the Fabric
+
+# set as Verilog parameter in netlist    
+parameters:
+    WIDTH:
+      desc: Width of input data to serializer (3-10)
+      type: integer
+      default: 4
+      range: 3 .. 10
+    EN_IDLY:
+      desc: True or False
+      default: "FALSE"
+      values:
+        - "TRUE"
+        - "FALSE"
+    DELAY:
+      desc: Fixed TAP delay value (0-63)
+      type: integer
+      default: 0
+      range: 0 .. 63
+

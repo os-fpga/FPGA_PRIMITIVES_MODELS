@@ -1,0 +1,144 @@
+# Periphery Primitives Parameters and Properties (P4)
+#
+# This file contains the list of Verilog parameters and SDC properties that are
+# allowed for periphery primitives.
+#
+# See https://rapidsilicon.atlassian.net/wiki/spaces/RS/pages/214368265/Periphery+Primitive+Parameters+and+Properties+Definitions+P4DEF for more details
+#
+# The name needs to match the filename root
+# name: <primitive name>
+# desc: <optional description>
+#
+# ports:
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#   <portname>:
+#       dir: <input, output, inout>
+#       desc: <optional description>
+#
+# # set as Verilog parameter
+# parameters:
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>
+#    <parameter_name>:
+#        desc: <description>
+#        values:
+#          - <enum_name>
+#          - <enum_name>  
+#
+# # set in SDC or by synthesis attribute
+# properties:
+#    <property_name>:
+#        desc: <description>
+#        values: 
+#          - <enum_name>
+#          - <enum_name>
+#    <property_name>:
+#        desc: <description>
+#          - <enum_name>
+#          - <enum_name>
+#
+# primitive name should match the filename root.
+name: DLY_SEL_DECODER
+desc: Address Decoder
+category: periphery
+timescale: 1ps/1ps
+
+ports:
+   DLY_LOAD:
+     dir: input
+     desc: Delay load input
+   DLY_ADJ:
+     dir: input
+     desc: Delay adjust input
+   DLY_INCDEC:
+     dir: input
+     desc: Delay increment / decrement input
+   DLY_ADDR[4:0]:
+     dir: input
+     desc: Input Address
+   DLY0_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY1_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY2_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY3_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY4_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY5_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY6_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY7_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY8_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY9_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY10_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY11_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY12_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY13_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY14_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY15_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY16_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY17_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY18_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+   DLY19_CNTRL[2:0]:
+     dir: output
+     desc: Output Bus
+     type: reg
+     
