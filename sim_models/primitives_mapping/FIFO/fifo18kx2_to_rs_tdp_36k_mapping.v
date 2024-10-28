@@ -104,6 +104,7 @@ wire [17:0] wrt_data2;
 wire [17:0] rd_data2;
 wire [17:0] fifo1_flags;
 wire [17:0] fifo2_flags;
+wire rd_clk1, rd_clk2;
 
 assign OVERFLOW1 = fifo1_flags[0];
 assign PROG_FULL1 = fifo1_flags[1];
@@ -122,6 +123,8 @@ assign UNDERFLOW2 = fifo2_flags[4];
 assign PROG_EMPTY2 = fifo2_flags[5];
 assign ALMOST_EMPTY2 = fifo2_flags[6];
 assign EMPTY2 = fifo2_flags[7];
+assign rd_clk1 = (FIFO_TYPE1 == "SYNCHRONOUS") ? WR_CLK1 : RD_CLK1;
+assign rd_clk2 = (FIFO_TYPE2 == "SYNCHRONOUS") ? WR_CLK2 : RD_CLK2;
 
 if (DATA_READ_WIDTH1 == 5'd18) begin
     assign RD_DATA1 = {rd_data1[17], rd_data1[15:8], rd_data1[16], rd_data1[7:0]};
@@ -155,7 +158,7 @@ RS_TDP36K_FIFO_18KX2 (
     .WEN_A1(WR_EN1),
     .REN_B1(RD_EN1),
     .CLK_A1(WR_CLK1),
-    .CLK_B1(RD_CLK1),
+    .CLK_B1(rd_clk1),
     .WDATA_A1(wrt_data1),
     .RDATA_A1(fifo1_flags),
     .RDATA_B1(rd_data1),
@@ -168,7 +171,7 @@ RS_TDP36K_FIFO_18KX2 (
     .RDATA_B2(rd_data2),
     .FLUSH2(RESET2),
     .CLK_A2(WR_CLK2),
-    .CLK_B2(RD_CLK2),
+    .CLK_B2(rd_clk2),
 
     .WEN_B1(1'b0),
     .REN_A1(1'b0),
