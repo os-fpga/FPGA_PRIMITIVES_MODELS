@@ -59,6 +59,7 @@ wire [35:0] wrt_data;
 wire [35:0] rd_data;
 wire [17:0] fifo_flags;
 wire [17:0] unused_rdataA2;
+wire rd_clk;
 
 assign OVERFLOW = fifo_flags[0];
 assign PROG_FULL = fifo_flags[1];
@@ -68,6 +69,7 @@ assign UNDERFLOW = fifo_flags[4];
 assign PROG_EMPTY = fifo_flags[5];
 assign ALMOST_EMPTY = fifo_flags[6];
 assign EMPTY = fifo_flags[7];
+assign rd_clk = (FIFO_TYPE == "SYNCHRONOUS") ? WR_CLK : RD_CLK;
 
 if (DATA_READ_WIDTH == 6'd36) begin
     assign RD_DATA = {rd_data[35], rd_data[33:26], rd_data[34], rd_data[25:18], rd_data[17], rd_data[15:8], rd_data[16], rd_data[7:0]};
@@ -93,7 +95,7 @@ end
         .WEN_A1(WR_EN),
         .REN_B1(RD_EN),
         .CLK_A1(WR_CLK),
-        .CLK_B1(RD_CLK),
+        .CLK_B1(rd_clk),
         .WDATA_A1(wrt_data[17:0]),
         .WDATA_A2(wrt_data[35:18]),
         .RDATA_A1(fifo_flags),
@@ -101,7 +103,7 @@ end
         .RDATA_B2(rd_data[35:18]),
         .FLUSH1(RESET),
         .CLK_A2(WR_CLK),
-        .CLK_B2(RD_CLK),
+        .CLK_B2(rd_clk),
 
         .WEN_B1(1'b0),
         .REN_A1(1'b0),
