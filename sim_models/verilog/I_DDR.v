@@ -55,5 +55,45 @@ module I_DDR (
     
   end
 
+  `ifndef SYNTHESIS  
+    `ifdef TIMED_SIM
+     specparam T1 = 0.2;
+     specparam T2 = 0.3;
+     specparam T3 = 5;
+     specparam T4 = 0.3;
+     specparam T5 = 0.3;
+
+      specify
+
+
+       (C => Q) = (T3);
+       (negedge R => (Q[0] +: 0)) = (T1, T2);
+       (negedge R => (Q[1] +: 0)) = (T1, T2);
+
+       (posedge C => (Q[1]+:D)) = (T1, T2);
+       (negedge C => (Q[0]+:D)) = (T1, T2);
+
+
+
+       $setuphold (negedge C, negedge E  , T4, T5, notifier2);
+       $setuphold (negedge C, negedge D  , T4, T5, notifier2);
+       $setuphold (negedge C, negedge R  , T4, T5, notifier2);
+       $setuphold (negedge C, posedge E  , T4, T5, notifier2);
+       $setuphold (negedge C, posedge D  , T4, T5, notifier2);
+       $setuphold (negedge C, posedge R  , T4, T5, notifier2);
+       $setuphold (posedge C, negedge E  , T4, T5, notifier1);
+       $setuphold (posedge C, negedge D  , T4, T5, notifier1);
+       $setuphold (posedge C, negedge R  , T4, T5, notifier1);
+       $setuphold (posedge C, posedge E  , T4, T5, notifier1);
+       $setuphold (posedge C, posedge D  , T4, T5, notifier1);
+       $setuphold (posedge C, posedge R  , T4, T5, notifier1);
+
+
+      endspecify
+
+    `endif // `ifdef TIMED_SIM  
+  `endif //  `ifndef SYNTHESIS
+
+
 endmodule
 `endcelldefine

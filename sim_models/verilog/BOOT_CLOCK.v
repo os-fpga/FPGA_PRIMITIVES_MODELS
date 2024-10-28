@@ -12,11 +12,13 @@ module BOOT_CLOCK #(
 ) (
   output reg O = 1'b0 // Clock output
 );
-localparam HALF_PERIOD = PERIOD/2.0;
+  
+  localparam HALF_PERIOD = PERIOD/2.0;
 
 			   
   always
     #HALF_PERIOD O <= ~O;
+
  initial begin
 
     if ((PERIOD < 16.0) || (PERIOD > 30.0)) begin
