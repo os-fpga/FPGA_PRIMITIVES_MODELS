@@ -753,6 +753,67 @@ assign DATA_VALID=!des_fifo_empty;
 
 // DE-SERIALIZER END//
 
+
+
+`ifndef SYNTHESIS  
+ `ifdef TIMED_SIM
+   specparam T1 = 0.2;
+   specparam T2 = 0.3;
+   specparam T3 = 5;
+   specparam T4 = 0.3;
+   specparam T5 = 0.3;
+
+    specify
+
+
+     (CLK_IN *> Q) = (T3);
+     (CLK_IN *> DATA_VALID) = (T3);
+     (CLK_IN *> DPA_LOCK) = (T3);
+     (CLK_IN *> DPA_ERROR) = (T3);
+     (CLK_IN *> CLK_OUT) = (T3);
+
+     (PLL_CLK *> Q) = (T3);
+     (PLL_CLK *> DATA_VALID) = (T3);
+     (PLL_CLK *> DPA_LOCK) = (T3);
+     (PLL_CLK *> DPA_ERROR) = (T3);
+     (PLL_CLK *> CLK_OUT) = (T3);
+
+     (negedge RST *> (Q +: 0)) = (T1, T2);
+     (negedge RST => (DATA_VALID +: 0)) = (T1, T2);
+     (negedge RST => (DPA_LOCK +: 0)) = (T1, T2);
+     (negedge RST => (DPA_ERROR +: 0)) = (T1, T2);
+
+     (posedge CLK_IN *> (Q +: 0)) = (T1, T2);
+     (posedge CLK_IN => (DATA_VALID +: 0)) = (T1, T2);
+     (posedge CLK_IN => (DPA_LOCK +: 0)) = (T1, T2);
+     (posedge CLK_IN => (DPA_ERROR +: 0)) = (T1, T2);
+
+     (posedge PLL_CLK *> (Q +: 0)) = (T1, T2);
+     (posedge PLL_CLK => (DATA_VALID +: 0)) = (T1, T2);
+     (posedge PLL_CLK => (DPA_LOCK +: 0)) = (T1, T2);
+     (posedge PLL_CLK => (DPA_ERROR +: 0)) = (T1, T2);
+
+
+
+     $setuphold (negedge CLK_IN, negedge D  , T4, T5, notifier2);
+     $setuphold (negedge CLK_IN, posedge D  , T4, T5, notifier2);
+     $setuphold (negedge CLK_IN, negedge BITSLIP_ADJ  , T4, T5, notifier2);
+     $setuphold (negedge CLK_IN, posedge BITSLIP_ADJ  , T4, T5, notifier2);
+     $setuphold (negedge CLK_IN, negedge EN  , T4, T5, notifier2);
+     $setuphold (negedge CLK_IN, posedge EN  , T4, T5, notifier2);
+
+     $setuphold (negedge PLL_CLK, negedge D  , T4, T5, notifier2);
+     $setuphold (negedge PLL_CLK, posedge D  , T4, T5, notifier2);
+     $setuphold (negedge PLL_CLK, negedge BITSLIP_ADJ  , T4, T5, notifier2);
+     $setuphold (negedge PLL_CLK, posedge BITSLIP_ADJ  , T4, T5, notifier2);
+     $setuphold (negedge PLL_CLK, negedge EN  , T4, T5, notifier2);
+     $setuphold (negedge PLL_CLK, posedge EN  , T4, T5, notifier2);     
+
+    endspecify
+
+  `endif // `ifdef TIMED_SIM  
+`endif //  `ifndef SYNTHESIS
+
  initial begin
     case(DATA_RATE)
       "SDR" ,

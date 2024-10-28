@@ -14,12 +14,16 @@ module FCLK_BUF (
 
    assign O = I ;
 
-  `ifndef SYNTHESIS
+   `ifndef SYNTHESIS  
+    `ifdef TIMED_SIM
+    
+     specparam T1 = 0.3;
       specify
-       (I => O) = (0, 0);
+        (I => O) = T1;
       endspecify
-  `endif //  `ifndef SYNTHESIS
-   
-
+     
+    `endif // `ifdef TIMED_SIM  
+   `endif //  `ifndef SYNTHESIS
+ 
 endmodule
 `endcelldefine

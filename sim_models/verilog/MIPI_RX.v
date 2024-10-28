@@ -77,18 +77,13 @@ module MIPI_RX #(
 	assign rx_dp_delay = (EN_IDLY=="FALSE")? RX_DP:i_delay_out;
   assign rx_dn_delay = (EN_IDLY=="FALSE")? RX_DN:~i_delay_out;
   
-	assign rx_dp = RX_TERM_EN?1'bz:RX_OE?rx_dp_delay:'b0;
-	assign rx_dn = RX_TERM_EN?1'bz:RX_OE?rx_dn_delay:'b0;
+	// assign rx_dp = RX_TERM_EN?1'bz:RX_OE?rx_dp_delay:'b0;
+	// assign rx_dn = RX_TERM_EN?1'bz:RX_OE?rx_dn_delay:'b0;
+  assign rx_dp = RX_OE?rx_dp_delay:'b0;
+	assign rx_dn = RX_OE?rx_dn_delay:'b0;
 
   assign LP_RX_DP = rx_dp;
   assign LP_RX_DN = rx_dn;
-
-
-	always@(*)
-  begin
-    if(LP_EN && HS_EN)
-      $fatal(1,"\nERROR: MIPI RX instance %m LP_EN and HS_EN can't be hight at same time");
-  end
 
  initial begin
 
