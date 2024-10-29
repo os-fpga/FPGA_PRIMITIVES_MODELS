@@ -31,6 +31,17 @@ module O_BUFT_DS #(
   assign O_P = T ? I  : 'hz;
   assign O_N = T ? ~I : 'hz;
 
+  `ifndef SYNTHESIS  
+    `ifdef TIMED_SIM
+
+      specify
+        (I => O_P) = (0.8, 0.8);
+        (I => O_N) = (0.8, 0.8);
+      endspecify
+
+    `endif // `ifdef TIMED_SIM  
+  `endif //  `ifndef SYNTHESIS
+
    initial begin
     case(WEAK_KEEPER)
       "NONE" ,

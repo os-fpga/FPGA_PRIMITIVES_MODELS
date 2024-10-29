@@ -37,12 +37,17 @@ module I_BUF_DS #(
     endcase
   end
 
-  `ifndef SYNTHESIS
+`ifndef SYNTHESIS  
+  `ifdef TIMED_SIM
     specify
+      specparam T1 = 0.5;
+
       if (EN == 1'b1)
-      ( I_P, I_N *> O ) = (0, 0);
+      ( I_P, I_N *> O ) = (T1);
+
     endspecify
-  `endif //  `ifndef SYNTHESIS
+  `endif // `ifdef TIMED_SIM  
+`endif //  `ifndef SYNTHESIS
 
    initial begin
     case(WEAK_KEEPER)

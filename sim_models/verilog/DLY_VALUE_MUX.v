@@ -59,5 +59,56 @@ begin
     endcase
 end
 
+
+
+
+`ifndef SYNTHESIS  
+ `ifdef TIMED_SIM
+   specparam T1 = 0.4;
+
+    specify
+      if (DLY_ADDR == 5'd0)
+      (DLY_TAP0_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd1)
+      (DLY_TAP1_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd2)
+      (DLY_TAP2_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd3)
+      (DLY_TAP3_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd4)
+      (DLY_TAP4_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd5)
+      (DLY_TAP5_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd6)
+      (DLY_TAP6_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd7)
+      (DLY_TAP7_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd8)
+      (DLY_TAP8_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd9)
+      (DLY_TAP9_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd10)
+      (DLY_TAP10_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd12)
+      (DLY_TAP12_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd13)
+      (DLY_TAP13_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd14)
+      (DLY_TAP14_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd15)
+      (DLY_TAP15_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd16)
+      (DLY_TAP16_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd17)
+      (DLY_TAP17_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd18)
+      (DLY_TAP18_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd19)
+      (DLY_TAP19_VAL => DLY_TAP_VALUE)   = T1;
+    endspecify
+
+  `endif // `ifdef TIMED_SIM  
+`endif //  `ifndef SYNTHESIS
+
 endmodule
 `endcelldefine

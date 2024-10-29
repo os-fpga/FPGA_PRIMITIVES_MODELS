@@ -15,20 +15,28 @@ module CARRY (
   output COUT // Carry out
 );
 
-  assign {COUT, O} = {P ? CIN : G, P ^ CIN};
+assign {COUT, O} = {P ? CIN : G, P ^ CIN};
 
-  `ifndef SYNTHESIS
+`ifndef SYNTHESIS  
+ `ifdef TIMED_SIM
+ 
+   specparam T1 = 0.3;
+   specparam T2 = 0.4;
+
+
     specify
-
+    
       if (P == 1'b1)
-      (CIN => COUT) = (0, 0);
+      (CIN => COUT) = (T1, T2);
       if (P == 1'b0)
-      (G => COUT) = (0, 0);
+      (G => COUT) = (T1, T2);
 
-      ( P, CIN *> O ) = (0, 0);
+      ( P, CIN *> O ) = (T1, T2);
 
     endspecify
-  `endif //  `ifndef SYNTHESIS
 
+  `endif // `ifdef TIMED_SIM  
+`endif //  `ifndef SYNTHESIS
+    
 endmodule
 `endcelldefine

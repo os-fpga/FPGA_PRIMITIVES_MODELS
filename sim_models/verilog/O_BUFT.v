@@ -28,7 +28,18 @@ module O_BUFT #(
 
   assign O = T ? I : 1'bz; 
 
-   initial begin
+  `ifndef SYNTHESIS  
+    `ifdef TIMED_SIM
+      specparam T1 = 0.5;
+
+        specify
+          (I => O) = (T1);
+          (T => O) = (T1);
+
+        endspecify
+    `endif // `ifdef TIMED_SIM  
+  `endif //  `ifndef SYNTHESIS
+       initial begin
     case(WEAK_KEEPER)
       "NONE" ,
       "PULLUP" ,
