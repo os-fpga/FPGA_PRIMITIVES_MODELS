@@ -239,7 +239,60 @@ module O_SERDES #(
 
 	assign Q = data_shift_reg[WIDTH - 1];
 
-	 initial begin
+	
+
+`ifndef SYNTHESIS  
+	`ifdef TIMED_SIM
+	  specparam T1 = 0.2;
+	  specparam T2 = 0.3;
+	  specparam T3 = 5;
+	  specparam T4 = 0.3;
+	  specparam T5 = 0.3;
+   
+	   specify
+   
+   
+		(CLK_IN *> Q) = (T3);
+		(CLK_IN *> OE_OUT) = (T3);
+   
+		(PLL_CLK *> Q) = (T3);
+		(PLL_CLK *> OE_OUT) = (T3);
+		(PLL_CLK *> CHANNEL_BOND_SYNC_OUT) = (T3);
+   
+		(negedge RST *> (Q +: 0)) = (T1, T2);
+		(negedge RST => (OE_OUT +: 0)) = (T1, T2);
+		(negedge RST => (CHANNEL_BOND_SYNC_OUT +: 0)) = (T1, T2);
+   
+		(posedge CLK_IN *> (Q +: 0)) = (T1, T2);
+		(posedge CLK_IN => (OE_OUT +: 0)) = (T1, T2);
+   
+		(posedge PLL_CLK *> (Q +: 0)) = (T1, T2);
+		(posedge PLL_CLK => (OE_OUT +: 0)) = (T1, T2);
+		(posedge PLL_CLK => (CHANNEL_BOND_SYNC_OUT +: 0)) = (T1, T2);
+   
+   
+   
+		$setuphold (negedge CLK_IN, negedge D  , T4, T5, notifier2);
+		$setuphold (negedge CLK_IN, posedge D  , T4, T5, notifier2);
+		$setuphold (negedge CLK_IN, negedge DATA_VALID  , T4, T5, notifier2);
+		$setuphold (negedge CLK_IN, posedge DATA_VALID  , T4, T5, notifier2);
+		$setuphold (negedge CLK_IN, negedge OE_IN  , T4, T5, notifier2);
+		$setuphold (negedge CLK_IN, posedge OE_IN  , T4, T5, notifier2);
+   
+		$setuphold (negedge PLL_CLK, negedge D  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, posedge D  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, negedge DATA_VALID  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, posedge DATA_VALID  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, negedge OE_IN  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, posedge OE_IN  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, negedge CHANNEL_BOND_SYNC_IN  , T4, T5, notifier2);
+		$setuphold (negedge PLL_CLK, posedge CHANNEL_BOND_SYNC_IN  , T4, T5, notifier2);
+   
+	   endspecify
+   
+	 `endif // `ifdef TIMED_SIM  
+   `endif //  `ifndef SYNTHESIS
+    initial begin
     case(DATA_RATE)
       "SDR" ,
       "DDR": begin end

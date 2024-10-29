@@ -208,6 +208,32 @@ localparam      FAST_LOCK      = 0; // Reduce lock time
 		end
 	end
 
+  
+`ifndef SYNTHESIS  
+	`ifdef TIMED_SIM
+	  specparam T1 = 5;
+	  specparam T2 = 0.5;
+  
+		specify
+  
+				  (CLK_IN => CLK_OUT)      = (T1);
+				  (CLK_IN => CLK_OUT_DIV2) = (T1);
+				  (CLK_IN => CLK_OUT_DIV3) = (T1);
+				  (CLK_IN => CLK_OUT_DIV4) = (T1);
+				  (CLK_IN => FAST_CLK)     = (T1);
+  
+				  (negedge CLK_IN => (LOCKED +: 0)) = (T1);
+				  (negedge PLL_EN => (LOCKED +: 0)) = (T1);
+				  (posedge CLK_IN => (LOCKED +: 0)) = (T1);
+				  (posedge PLL_EN => (LOCKED +: 0)) = (T1);
+  
+				  $setuphold (posedge CLK_IN, negedge PLL_EN, T2, notifier);
+				  $setuphold (posedge CLK_IN, posedge PLL_EN, T2, notifier);
+				  $setuphold (negedge CLK_IN, negedge PLL_EN, T2, notifier);
+				  $setuphold (negedge CLK_IN, posedge PLL_EN, T2, notifier);
+		endspecify
+	`endif // `ifdef TIMED_SIM  
+`endif //  `ifndef SYNTHESIS
    initial begin
     case(DEV_FAMILY)
       "VIRGO": begin end

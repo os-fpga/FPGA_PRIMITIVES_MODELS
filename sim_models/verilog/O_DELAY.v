@@ -56,6 +56,42 @@ end
 assign DLY_TAP_VALUE = dly_tap_val;
 assign #(30.0ps + (21.56ps*dly_tap_val)) O = I;				// Adjusted Delay for TT corner
 
+
+`ifndef SYNTHESIS  
+ `ifdef TIMED_SIM
+   specparam T1 = 0.2;
+   specparam T2 = 0.3;
+   specparam T3 = 5;
+   specparam T4 = 5;
+
+    specify
+
+
+     (CLK_IN *> DLY_TAP_VALUE) = (T3);
+     (CLK_IN => O) = (T4);
+
+
+     $setuphold (posedge CLK_IN, posedge I  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, negedge I  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, posedge I  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, negedge I  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, posedge DLY_LOAD  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, negedge DLY_LOAD  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, posedge DLY_LOAD  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, negedge DLY_LOAD  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, posedge DLY_ADJ  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, negedge DLY_ADJ  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, posedge DLY_ADJ  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, negedge DLY_ADJ  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, posedge DLY_INCDEC  , T1, T2, notifier1);
+     $setuphold (posedge CLK_IN, negedge DLY_INCDEC  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, posedge DLY_INCDEC  , T1, T2, notifier1);
+     $setuphold (negedge CLK_IN, negedge DLY_INCDEC  , T1, T2, notifier1);
+
+    endspecify
+
+  `endif // `ifdef TIMED_SIM  
+`endif //  `ifndef SYNTHESIS
  initial begin
 
     if ((DELAY < 0) || (DELAY > 63)) begin
