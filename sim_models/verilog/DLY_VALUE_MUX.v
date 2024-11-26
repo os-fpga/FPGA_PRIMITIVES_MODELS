@@ -89,6 +89,8 @@ end
       (DLY_TAP9_VAL => DLY_TAP_VALUE)   = T1;
       if (DLY_ADDR == 5'd10)
       (DLY_TAP10_VAL => DLY_TAP_VALUE)   = T1;
+      if (DLY_ADDR == 5'd11)
+      (DLY_TAP11_VAL => DLY_TAP_VALUE)   = T1;
       if (DLY_ADDR == 5'd12)
       (DLY_TAP12_VAL => DLY_TAP_VALUE)   = T1;
       if (DLY_ADDR == 5'd13)
