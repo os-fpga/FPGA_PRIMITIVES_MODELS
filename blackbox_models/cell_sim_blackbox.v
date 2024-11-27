@@ -14,6 +14,23 @@ module BOOT_CLOCK #(
 endmodule
 `endcelldefine
 //
+// CARRY_BREAK black box model
+// CARRY_BREAK describes an implementation of the regular CARRY module where we break the COUT -> next CIN link
+//
+// Copyright (c) 2024 Rapid Silicon, Inc.  All rights reserved.
+//
+`celldefine
+(* blackbox *)
+module CARRY_BREAK (
+  input logic P,
+  input logic G,
+  input logic CIN,
+  output logic O,
+  output logic COUT
+);
+endmodule
+`endcelldefine
+//
 // CARRY black box model
 // FLE carry logic
 //
