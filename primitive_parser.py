@@ -178,7 +178,7 @@ def extract_module_params(code):
 
 
 def check_simulation_success(filename):
-  success_strings = [ "Passed", "Test Passed", "Simulation Passed"]
+  success_strings = [ "Passed", "PASSED","Test Passed", "Simulation Passed" , "TESTS STATUS: PASSED"]
   print("file_path", filename)
   success = False
   with open(filename, 'r') as file:
