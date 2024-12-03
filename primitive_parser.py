@@ -6,7 +6,7 @@ import os
 import shutil
 
 
-
+# This function makes sure that a release exist or not
 def check_release(directory_path):
     if not os.path.exists(directory_path):
         print(f"Error: Path '{directory_path}' does not exist in the release.")
@@ -14,7 +14,7 @@ def check_release(directory_path):
     else:
         return True
 
-
+# This function is used to extract file paths of all primitves
 def extract_file_paths(directory_path):
 
 #    directory_path = "/home/users/bilal.ahmed/interconnect/primitves/sw_sim-0.5.6/device_modeling/models_internal/verilog"
@@ -26,6 +26,7 @@ def extract_file_paths(directory_path):
     return model_list
 
 
+#This function is used to extract names of primitives
 def extract_names(model_list):
     prim_verilog_list = [path.split('/')[-1] for path in model_list]
 
@@ -37,6 +38,7 @@ def extract_names(model_list):
     return prim_name_list
 
 
+# THis function is used to extract names of primitves that are not present in the Repo and are present in release
 def different_primitves(src, model_list):    
     directory_path = src
 #    print("------------------9999999999999------------------",directory_path)
@@ -56,6 +58,8 @@ def different_primitves(src, model_list):
     print("------result ------------------", result)
     return list(result)
 
+
+#this function is used to check that either the primitive has been changed or not
 def check_git_diff(filepath, module_name):
 #    diff_result = subprocess.check_output(["git", "diff", "--name-status", f"'./{module_name}*.v'", filepath], text=True, shell=True)
     diff_result = subprocess.check_output(["git", "diff", filepath], text=True)
@@ -70,6 +74,7 @@ def check_git_diff(filepath, module_name):
     return diff_Status,diff_result
 
 
+#this function is used to copy files from release to repo
 def copy_module_files(src_path, dest_path, module_name):
 
 #    print("copy_dest_Path", dest_path)
@@ -84,7 +89,7 @@ def copy_module_files(src_path, dest_path, module_name):
 
     shutil.copyfile(src_file, dest_file)
 
-
+#This function is used to parse the primitves to see if any new ports have been added or not
 def parse_primitves(file_path1,file_path2):
     
     module_a_code = extract_module_code(file_path1)
@@ -144,6 +149,7 @@ def extract_module_code(file_path):
         content = verilog_file.read()
     return content
 
+#used to extract module ports
 def extract_module_ports(code):
 
     port_pattern = r'\b(input|output|inout|)\b\s+(?!wire|reg)\s*(\[.*?\])?\s*(\w+)\s*(,|\);)'
@@ -154,6 +160,9 @@ def extract_module_ports(code):
     for port_direction, port_range, port_name, _ in ports_module:
         port_list.append(port_name)
     return port_list
+
+
+#used to extract module Parameters
 
 def extract_module_params(code):
 
@@ -176,7 +185,7 @@ def extract_module_params(code):
     print(parameter_list)
     return parameter_list
 
-
+# this function is used to see if the primitve has passed or failed
 def check_simulation_success(filename):
   success_strings = [ "Passed", "PASSED","Test Passed", "Simulation Passed" , "TESTS STATUS: PASSED"]
   print("file_path", filename)
@@ -239,10 +248,13 @@ def append_strings_to_list_elements(list_to_modify, prefix, postfix):
 # Example usage:
   return separator.join(list_to_modify)
 
+
+#checks if a directory is empty or not
 def is_directory_empty(directory):
     result = not any(os.scandir(directory))
     return not any(os.scandir(directory))
 
+#this function is responsible to run simulation using makefile
 def run_simulation_makefile(dest_path, design_name, tb_directory, new_prim_name_list):
  #   tb_directory = f"{dest_path}" + "/" + f"{design_name}/tb"
     if not os.path.isdir(tb_directory):
@@ -287,6 +299,8 @@ def copy_files(source_dir, destination_dir):
     except Exception as e:
         print(f"Error copying files: {e}")
  
+
+#this is the main function where all sub functions are called and we figure out which primitves have changed and which fail or pass
 
 def diff_copy_parse(src_path, dest_path):
 
@@ -484,6 +498,8 @@ def diff_copy_parse(src_path, dest_path):
     return no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result, bb_Path
 
 
+#check if blackbox to be included in PR for Pass or Sim fail
+
 def process_blckbox( no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, bb_Path):
 
 
@@ -496,6 +512,7 @@ def process_blckbox( no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, n
 
 
     return sim_pass_list,no_tb_list , sim_fail_list
+
 
 def search_verilog_for_names(verilog_file, names_to_search):
     """Searches a Verilog file for a list of names and returns a list of successful matches.
@@ -522,7 +539,7 @@ verilog_file = "/home/users/bilal.ahmed/testing/29August/release/sim_models/veri
 names_to_search =  ['DFFRE', 'CLK_BUF', 'I_DDR', 'O_BUFT', 'FIFO18KX2', 'SOC_FPGA_INTF_AHB_M', 'SOC_FPGA_INTF_IRQ', 'I_SERDES', 'BOOT_CLOCK', 'I_BUF', 'PLL', 'SOC_FPGA_INTF_AHB_S', 'I_DELAY', 'FCLK_BUF', 'LUT5', 'TDP_RAM36K', 'DSP19X2', 'SOC_FPGA_INTF_DMA', 'I_FAB', 'MIPI_TX', 'I_BUF_DS', 'LUT1', 'O_DDR', 'O_SERDES_CLK', 'O_BUF', 'FIFO36K', 'O_DELAY', 'CARRY', 'SOC_FPGA_INTF_AXI_M0', 'DSP38', 'DFFNRE', 'SOC_FPGA_INTF_JTAG', 'SOC_FPGA_INTF_AXI_M1', 'SOC_FPGA_TEMPERATURE', 'O_SERDES', 'LUT4', 'O_BUF_DS', 'LUT3', 'O_BUFT_DS', 'O_FAB', 'LUT6', 'TDP_RAM18KX2', 'LUT2']
 
 
-
+#generates email for the release
 def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,release,diff_bb, diff_result,release_path, bb_path):
 
     release_num = release
