@@ -25,7 +25,7 @@
 module PLL_tb();
 
     //signal declaration
-	logic PLL_EN       ; // PLL Enable
+	logic PLL_EN       ;// PLL Enable
 	logic CLK_IN       ; // Clock input
 	logic CLK_OUT      ; // Output clock, frequency is (CLK_IN/PLL_DIV)*(PLL_MULT/(PLL_POST_DIV0*PLL_POST_DIV1))
 	logic CLK_OUT_DIV2 ; // CLK_OUT divided by 2 output
@@ -75,9 +75,9 @@ module PLL_tb();
         frequency_checker();
         repeat(300)@(posedge CLK_OUT_DIV4);
         if(error==0)
-          $display("CLK DIV STATUS: Test Passed");
+          $display("CLK DIV TESTS STATUS: PASSED");
         else 
-          $display("CLK DIV STATUS: Test Failed");
+          $display("CLK DIV TESTS STATUS: FAILED");
         $finish;
     end
 
@@ -161,7 +161,7 @@ module PLL_tb();
     endtask
 
     initial begin
-        $dumpfile("PLL.vcd");      // Specify the name of the dump file
+        $dumpfile("waveform.fst"); // Specify the name of the dump file
         $dumpvars(0, PLL_tb);      // Dump all variables in the testbench
     end
 

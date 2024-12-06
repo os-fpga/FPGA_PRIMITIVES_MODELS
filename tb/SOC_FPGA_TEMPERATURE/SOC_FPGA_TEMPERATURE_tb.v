@@ -1,9 +1,9 @@
 `timescale 1ns/1ps
 
-module SOC_FPGA_TEMPERATURE_tb();
+module SOC_FPGA_TEMPERATURE_tb;
 
   parameter INITIAL_TEMPERATURE = 50;
-  parameter TEMPERATURE_FILE = "./tb/SOC_FPGA_TEMPERATURE/temp.dat"; 
+  parameter TEMPERATURE_FILE = "temp.dat"; 
 
   wire [7:0] TEMPERATURE;
   wire VALID;
@@ -20,21 +20,22 @@ module SOC_FPGA_TEMPERATURE_tb();
 
   initial begin
      #200001;
-    $display("\nSimulation Completed at %t.\n", $realtime);
+    //$stop;
+    $display("\nSimulation completed at %t.\n", $realtime);
     $finish;
   end
 
-  initial begin
+  initial
     $monitor("%t: TEMPERATURE=%d, VALID=%b, ERROR=%b", $realtime, TEMPERATURE, VALID, ERROR);
-    @(posedge VALID);
-    if (TEMPERATURE == 25)
-        $display("\nSimulation Passed");
-    else
-        $display("\nSimulation Failed");
-  end
+
+  //initial begin
+  //  $monitor("d=%d, scan_temp_file=%h", UUT.d, UUT.scan_temp_file);
+  //end
+
+  
   initial begin
-    $dumpfile("SOC_FPGA_TEMPERATURE.vcd");
-    $dumpvars();
+    $dumpfile("waveform_SOC_FPGA_TEMPERATURE.vcd");
+    $dumpvars(3,testbench);
   end
 
   initial

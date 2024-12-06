@@ -655,7 +655,7 @@ begin
 			$display("");
 			$display("");	
 			$display("----------------------------------------------");
-      $display("                 Test Passed                  ");
+      $display("                 TEST_PASSED                  ");
 			$display("----------------------------------------------");
     end
     else   
@@ -685,7 +685,7 @@ begin
 			$display("");
 			$display("");	
       $display("----------------------------------------------");
-      $display("                 Test Failed                  ");
+      $display("                 TEST_FAILED                  ");
       $display("----------------------------------------------");
     end
 end

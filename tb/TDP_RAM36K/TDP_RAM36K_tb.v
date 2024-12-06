@@ -31,10 +31,10 @@ module TDP_RAM36K_tb();
 	/* verilator lint_off WIDTHCONCAT */
   parameter [4095:0] INIT_PARITY = {4096{1'b0}}; // Initial Contents of memory
 	/* verilator lint_on WIDTHCONCAT */
-  parameter WRITE_WIDTH_A = 36; // Write data width on port A (1-36)
-  parameter READ_WIDTH_A = 	36; // Read data width on port A (1-36)
-  parameter WRITE_WIDTH_B = 36; // Write data width on port B (1-36)
-  parameter READ_WIDTH_B = 	36; // Read data width on port B (1-36)
+  parameter WRITE_WIDTH_A = 18; // Write data width on port A (1-36)
+  parameter READ_WIDTH_A = 	18; // Read data width on port A (1-36)
+  parameter WRITE_WIDTH_B = 18; // Write data width on port B (1-36)
+  parameter READ_WIDTH_B = 	18; // Read data width on port B (1-36)
 
 	//Local_RAM
   localparam A_DATA_WRITE_WIDTH = calc_data_width(WRITE_WIDTH_A);
@@ -576,7 +576,7 @@ begin
 			$display("");
 			$display("");	
 			$display("----------------------------------------------");
-      $display("                 Test Passed                  ");
+      $display("                 TEST_PASSED                  ");
 			$display("----------------------------------------------");
     end
     else   
@@ -606,7 +606,7 @@ begin
 			$display("");
 			$display("");	
       $display("----------------------------------------------");
-      $display("                 Test Failed                  ");
+      $display("                 TEST_FAILED                  ");
       $display("----------------------------------------------");
     end
 end

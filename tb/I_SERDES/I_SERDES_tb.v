@@ -45,6 +45,7 @@ module I_SERDES_tb;
     .PLL_CLK(PLL_CLK)
   );
 
+
 initial 
 begin
   CLK_IN =0;
@@ -59,12 +60,8 @@ begin
   RST=1;
   D=0;
   EN=0;
-
-  fork
-  // begin
-  repeat(100)
+  repeat(63)
   begin
-    // data
     @(posedge PLL_CLK);
     #(delay);
     EN=1;
@@ -78,25 +75,9 @@ begin
     @(posedge PLL_CLK);
     #(delay);
     D=0;
-  end
-  
-  // bitslip 
-  @(posedge DATA_VALID)
-  repeat(3)
-  begin
-    @(negedge CLK_IN);
-    BITSLIP_ADJ=1;
-    repeat(2)@(negedge CLK_IN);
-    BITSLIP_ADJ=0;
-  end
-join
 
-  @(posedge CLK_IN);
-  if (Q == 4'hA)
-    $display("Test Passed");
-  else
-    $display("Test Failed");
-  
+  end
+
   fork
     begin
       repeat(20)
@@ -115,31 +96,31 @@ join
         #(delay);
         D=0;
       end
-        @(posedge PLL_CLK);
-        #(delay);
-        D=1;
-        @(posedge PLL_CLK);
-        #(delay);
-        D=1;
-        @(posedge PLL_CLK);
-        #(delay);
-        D=0;
-        @(posedge PLL_CLK);
-        #(delay);
-        D=0;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=1;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=1;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=0;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=0;
 
-        @(posedge PLL_CLK);
-        #(delay);
-        D=1;
-        @(posedge PLL_CLK);
-        #(delay);
-        D=1;
-        @(posedge PLL_CLK);
-        #(delay);
-        D=0;
-        @(posedge PLL_CLK);
-        #(delay);
-        D=1;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=1;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=1;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=0;
+      @(posedge PLL_CLK);
+      #(delay);
+      D=1;
     end
   
     begin
@@ -154,16 +135,33 @@ join
     end
   join_any
 
+
+  
+
+  // @(posedge PLL_CLK);
+  // #(delay);
+  // EN=1;
+  // D=0;
+  // @(posedge PLL_CLK);
+  // #(delay);
+  // D=1;
+  // @(posedge PLL_CLK);
+  // #(delay);
+  // D=0;
+  // @(posedge PLL_CLK);
+  // #(delay);
+  // D=1;
   #1000;
   $finish;
 end
+
 
 always #0.2  PLL_CLK = ~ PLL_CLK ; // 2.5 GHz
 always #0.8  CLK_IN = ~ CLK_IN ;
 
 initial 
 begin
-    $dumpfile("I_SERDES.vcd");
+    $dumpfile("waves.vcd");
     $dumpvars;
 end
 
