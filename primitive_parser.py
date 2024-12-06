@@ -41,7 +41,6 @@ def extract_names(model_list):
 # THis function is used to extract names of primitves that are not present in the Repo and are present in release
 def different_primitves(src, model_list):    
     directory_path = src
-#    print("------------------9999999999999------------------",directory_path)
     # Initialize an empty list to store folder names
     dest_prim_names = []
 
@@ -114,7 +113,6 @@ def parse_primitves(file_path1,file_path2):
     ports_module_b =  set(port_list_b)
     params_module_b = set(param_list_b)
 
-#    print("\n---------------------------Comparison here--------------------------------------------\n")
 
     myset1 = {'CLK', 'UNSIGNED_A', 'A', 'Z', 'SATURATE_ENABLE', 'ROUND', 'RESET', 'DLY_B', 'TRUE', 'MULTIPLY', 'UNSIGNED_B', 'SUBTRACT', 'ACC_FIR', 'LOAD_ACC', 'FEEDBACK', 'B', 'SHIFT_RIGHT'}
     myset2 = {'CLK', 'UNSIGNED_A', 'A', 'Z', 'SATURATE_ENABLE', 'ROUND', 'RESET', 'DLY_B', 'TRUE', 'MULTIPLY', 'UNSIGNED_B', 'SUBTRACT', 'ACC_FIR', 'LOAD_ACC', 'FEEDBACK', 'B', 'SHIFT_RIGHT'}
@@ -194,7 +192,7 @@ def check_simulation_success(filename):
     for line in file:
 #      print(line)
       if any(success_string in line for success_string in success_strings):
-        print("Simulation Successful:", line , "line here\n")
+        print("Simulation Successful:", line , "\n")
         success = True
         return True
         break
@@ -222,7 +220,7 @@ def collect_old_primitives(dest_path):
     sub_folders.remove('sim')
     sub_folders.remove('compile_dir')
     sub_folders.remove('sim_results')
-    print("----------------------------look_here++++++++++++++++++++++++++++++++",sub_folders)
+    print("----------------------------sub_folders+++++++++++++++++++++++++++++++",sub_folders)
     return sub_folders
 
 
@@ -244,7 +242,7 @@ def append_strings_to_list_elements(list_to_modify, prefix, postfix):
     
   separator = " "
   
-  print( 'Flist created here ',separator.join(list_to_modify))
+  print( 'Flist created for simulation ',separator.join(list_to_modify))
 # Example usage:
   return separator.join(list_to_modify)
 
@@ -267,13 +265,13 @@ def run_simulation_makefile(dest_path, design_name, tb_directory, new_prim_name_
                 prefix = "./sim_models/verilog/"
                 postfix = ".v"
                 joined = append_strings_to_list_elements(list_sim_prim, prefix, postfix)
-                print("\n\n\n\n JOined String = ", joined, "\n\n\n\n\n\n\n")
+                print("\n\n\n\n JOined String = ", joined, type(joined),"\n\n\n\n\n\n\n")
 
                 print("tb directory found", design_name, dest_path)
 #                make_command = ["make", f"DESIGN_NAME={design_name}"]
 #                make_command = f"make  SRC_DIR={dest_path} DESIGN_NAME={design_name} TB_DIR={tb_directory} FLIST={joined}" 
-                make_command = f"make   DESIGN_NAME={design_name} TB_DIR={tb_directory} FLIST={joined}" 
-                print("make command here ", make_command)
+                make_command = f'make   DESIGN_NAME={design_name} TB_DIR={tb_directory} FLIST="{joined}"' 
+                print("make command structure ", make_command)
                 result = subprocess.check_output(make_command, stderr=subprocess.STDOUT, text=True, shell=True)
                 return True
             except subprocess.CalledProcessError as e:
@@ -352,25 +350,21 @@ def diff_copy_parse(src_path, dest_path):
 
     # Use a list comprehension to modify each element
     new_prim_found = [prefix_string + item + postfix_string for item in new_prim_list]
-#    print("Here are three New primitves @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@", new_prim_found, new_prim_set, old_prim_set)
     src_tb = src_path + "../../blackbox_models"
     dest_tb = dest_path + "../../blackbox_models"
 
     for prims in diff_prim_list:
         src_tb = os.path.join(src_path, "..", "tb", prims+ "_tb.v")
         dest_tb = os.path.join(dest_path, "..", "..", "tb", prims.upper(), "")
-#        print(", \n\Src path \n\n", src_tb ,", \n\dest path \n\n", dest_tb)
         os.makedirs(dest_tb, exist_ok=True)
         if os.path.exists(src_tb):
             shutil.copy(src_tb, dest_tb)
-#        copy_files(src_tb,dest_tb) 
         tb_directory = f"{dest_path}../../tb/{prims}"
         copy_module_files(subdirectory, dest_path, prims)
 
         sim_out_file = dest_path + "../../" + "sim_results" +  "/" + prims  + "_sim_out.log"
         if not os.path.isdir(tb_directory):
             print("TB directory does not exist", tb_directory)
-#            no_tb_list.append(dest_path + prims + ".v")
         else:
             if not is_directory_empty(tb_directory):
                 result = run_simulation_makefile(dest_path, prims,tb_directory,new_prim_name_list)
@@ -451,7 +445,6 @@ def diff_copy_parse(src_path, dest_path):
                 print("mismatch found for=", module_name)
 #            print("------------------parse_list_fail---------------------------", parse_list_fail)
 
-#            copy_module_files(subdirectory, dest_path, module_name)
 
             sim_out_file = dest_path + "../../" + "sim_results" +  "/" + module_name  + "_sim_out.log"
             if not os.path.isdir(tb_directory):
@@ -464,12 +457,6 @@ def diff_copy_parse(src_path, dest_path):
                 else:
                     sim_fail_list.append(dest_path + module_name + ".v")
                     print("-------------------------------Failure----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
-#                    result = run_simulation_makefile(dest_path, module_name,tb_directory)
-#                    print("sim_out_file",sim_out_file)
-#                    if result:
-#                        print("Simulation ran")
-#                        sim_status = check_simulation_success(sim_out_file)
-#                        print("sim_status = ",sim_status)
 
     src = src_path + "../../blackbox_models"
     dest = dest_path + "../../blackbox_models"
@@ -486,15 +473,6 @@ def diff_copy_parse(src_path, dest_path):
 
     print("-------------------------------Failure list----------------------------------", sim_fail_list)#                if not is_directory_empty(tb_directory):
 
-
-
-#        if "sim_models_internal" in src_path:
-#            src = src_path + "inc"
-#            dest = dest_path + "inc"
-#            copy_files(src,dest)        
-
-    
-#    print("sim_list", len(sim_fail_list), "parse_list", len(parse_list_fail))
     return no_tb_list, sim_fail_list,sim_pass_list, parse_list_fail, new_prim_found, diff_bb, diff_result, bb_Path
 
 
@@ -534,10 +512,6 @@ def search_verilog_for_names(verilog_file, names_to_search):
             successful_matches.append(name)
 
     return successful_matches
-# Example usage
-verilog_file = "/home/users/bilal.ahmed/testing/29August/release/sim_models/verilog/MIPI_TX.v"
-names_to_search =  ['DFFRE', 'CLK_BUF', 'I_DDR', 'O_BUFT', 'FIFO18KX2', 'SOC_FPGA_INTF_AHB_M', 'SOC_FPGA_INTF_IRQ', 'I_SERDES', 'BOOT_CLOCK', 'I_BUF', 'PLL', 'SOC_FPGA_INTF_AHB_S', 'I_DELAY', 'FCLK_BUF', 'LUT5', 'TDP_RAM36K', 'DSP19X2', 'SOC_FPGA_INTF_DMA', 'I_FAB', 'MIPI_TX', 'I_BUF_DS', 'LUT1', 'O_DDR', 'O_SERDES_CLK', 'O_BUF', 'FIFO36K', 'O_DELAY', 'CARRY', 'SOC_FPGA_INTF_AXI_M0', 'DSP38', 'DFFNRE', 'SOC_FPGA_INTF_JTAG', 'SOC_FPGA_INTF_AXI_M1', 'SOC_FPGA_TEMPERATURE', 'O_SERDES', 'LUT4', 'O_BUF_DS', 'LUT3', 'O_BUFT_DS', 'O_FAB', 'LUT6', 'TDP_RAM18KX2', 'LUT2']
-
 
 #generates email for the release
 def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim_found,release,diff_bb, diff_result,release_path, bb_path):
@@ -594,7 +568,7 @@ def email_dump(no_tb_list,sim_fail_list,parse_list_fail,  sim_pass_list,new_prim
 
     Some primitives from release: {release_num} failed with the existing testbench. Kindly debug the failure and update accordingly.
 
-    SImulation/Compilation failure Primitive name :
+    Simulation/Compilation failure Primitive name :
     {sim_fail_list}
     
     Examine the primitive and take appropriate action.

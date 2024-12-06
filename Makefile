@@ -29,8 +29,6 @@ SIM_EXECUTABLE = $(SIM_DIR)/$(DESIGN_NAME)_sim
 # Simulation command
 #SIM_COMMAND = iverilog -g2012 -o $(SIM_EXECUTABLE) $(COMPILE_ARGS) $(SRC_FILES) $(TB_FILES) 
 
-
-
 SIM_COMMAND = iverilog -g2012 -o $(SIM_EXECUTABLE) -DTIMED_SIM $(COMPILE_ARGS) $(TB_FILES)  $(FLIST) 
 
 .PHONY: all clean
@@ -48,6 +46,5 @@ $(SIM_EXECUTABLE): $(SRC_FILES) $(TB_FILES)
 clean:
 	@echo "Cleaning up..."
 	@rm -rf $(SIM_DIR) $(SIM_RESULTS_DIR)
-
 
 
